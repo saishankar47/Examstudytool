@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('t_head.ejs') %>
+
+  <%- include('a_header.ejs') %>
+<body>
+
+
+<script>
+    $(document).ready(function () {
+     
+         $('#example1').dataTable({
+            order: [[0, 'asc']],
+        });
+        
+    });
+</script>
+<div class="row">
+    <div class="col">
+        <div class="col">
+            <a href="/admin/class" >  <button class="btn btn-dark"; type="button" >
+              <i class="fa fa-arrow-left"> </i>
+            </button>
+            </a>
+        </div>
+            <div class="col-12"><h4 style="text-align: center;">"<%=class_name%>" Analytics</h4></div>
+    </div>
+</div>
+  <style>
+    hr.dotted {
+      border-top: 3px dotted #bbb;
+    }
+</style>  
+<hr class="dotted"> 
+  <br><br>
+
+    <div class="container-xl">
+    <div class="row">
+        <div class="col shadow p-3 mb-5 bg-white rounded">
+          
+        
+          <br>
+          <!-- Table -->
+          <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="display center" id="example1"  style="width:100%">
+          
+                        <thead>
+                              <tr>
+                                  <th>Test Name</th>
+                                  <th>Date Assigned</th>
+                                  <th>Due Date</th>
+                                  <th>Class Average</th>
+                                  <th>Total Questions</th>
+                                  <th>Number of Students attempted</th>
+                                
+                                  <th>Not attempted</th>
+                              </tr>
+                          </thead>
+                          
+                          <tbody>
+                            <% for (let i=0; i < data0.length; i++){ %>
+                            <tr class="text-capitalize">
+                              <td><%=data0[i].test_name%></td>
+                              <td><%=data0[i].created_date%></td>
+                              <td><%=data0[i].due_date%></td>
+                              <td><%=data0[i].avg_score%></td>
+                              <td><%=data0[i].total%></td>
+                              <td><%=data0[i].num_attempted%></td>
+                              <td><%=data0[i].not_attempted_count%></td>
+                            </tr>
+                            <% } %>
+                          </tbody>
+                          
+                      
+                  </table>
+              </div>
+            </div>
+           </div>
+           <!-- Table -->
+        </div>
+    </div>
+    </div>
+
+
+
+
+ 
+   
+    <br><br><br>
+    <div style="flex-grow:1"></div>
+    <%- include('a_footer.ejs') %>
+</body>
+
+
+
+</html>

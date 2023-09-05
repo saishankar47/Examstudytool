@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exam Study Tool/Register User</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+<style>
+ html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+ 
+  padding: 10px;
+}
+
+form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+
+
+label {
+  font-size: 1.2rem;
+}
+
+select {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+}
+
+button {
+  font-size: 1.2rem;
+}
+
+.btn-primary {
+  background-color: #70c3ea;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #415e76;
+}
+
+</style>
+<body>
+<!--navbar-->
+<header>
+  <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+      <div class="container-fluid">
+          <a class="navbar-brand" href="#">Exam Study Tool</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+              aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav ms-auto">
+                  <li class="nav-item">
+                      <a class="nav-link" aria-current="page" href="#">Home</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#">Contact Us</a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </nav>
+</header>
+  <main style="
+background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
+  background-blend-mode: soft-light,screen;">
+
+
+    <div class="container">
+      <h3 class="display-5 text-center" style="padding-top: 70px; padding-bottom:30px">REGISTER</h3>
+      <div class="card mx-auto" style="padding-top: 2%; width:50%; border:none; 
+     background: #536976;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #292E49, #536976);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #292E49, #536976); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+"> 
+        <div class="card-body">
+      <form action="/register" method="POST">
+        <div class="form-group row" style="padding:20px;">
+          <label for="user_role" class="text-white col">Select Role:</label>
+          <select class="form-control text-white col text-capitalize" style="border:none; background-color: rgba(0, 0, 0, 0.2);" id="user_role" name="user_role">
+            <% for (let i = 0; i < data1.length; i++){ %>
+              <option  value="<%=data1[i].type_value%>"><%=data1[i].type_value%></option>
+            <% } %>
+          </select>
+        </div>
+        <div class="form-group row"  style="padding:20px;border:none;">
+          <label for="school_name" class="text-white col">Select School Name:</label>
+          <select class="form-control text-white col" style="border:none; background-color: rgba(0, 0, 0, 0.2);" id="school_name" name="school_name">
+            <% for (let i = 0; i < data2.length; i++){ %>
+              <option value="<%=data2[i].type_value%>"><%-data2[i].type_value%></option>
+            <% } %>
+          </select>
+        </div>
+        <div class="form-group row" style="padding:20px; border:none">
+          <label for="preferred_language" class="text-white col">Select Preferred Language:</label>
+          <select class="form-control text-white col" style="border:none; background-color: rgba(0, 0, 0, 0.2);" id="preferred_language" name="preferred_language">
+            <% for (let i = 0; i < data3.length; i++){ %>
+              <option value="<%=data3[i].type_value%>"><%=data3[i].type_value%></option>
+            <% } %>
+          </select>
+        </div>
+        <div style="padding:20px;" class="text-center">
+        <button type="submit" class="btn btn-primary text-center">Submit</button>
+      </div>
+      </form>
+    </div>
+  </div>
+    </div>
+
+
+  </main>
+  
+  <div class=" bg-light" >
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-1  ">
+        <p class="col-md-4 mb-0 text-muted">&copy; Exam Study Tool © 2023</p>
+
+        <ul class="nav col-md-4 justify-content-end">
+            <li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Contact</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Terms and Conditions</a></li>
+        </ul>
+    </footer>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

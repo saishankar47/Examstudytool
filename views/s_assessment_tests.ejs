@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Exam Study Tool</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/s_index.css" rel="stylesheet">
+    <link href="/css/s_assessment_tests.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    .progress.resume::after {
+        border-radius: 3px;
+        background-color: #2A265F;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 5px;
+        width: var(--progress-percentage, 0%);
+    }
+</style>
+
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/student">Exam Study Tool</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" style="border-left: 1px solid darkgray; " id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        <li class="nav-item">
+                            <a class="nav-link" style="padding-left: 15px;" aria-current="page" href="/student">HOME</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle " href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">LEARNING</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/student/learning/topic">TOPICS</a></li>
+                                <li><a class="dropdown-item" href="/student/learning/archive">TEST ARCHIVE</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item active dropdown">
+                            <a class="nav-link dropdown-toggle " href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">ASSESSMENT</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/student/assessment/assigned">ASSIGNED BY TEACHER</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="/student/assessment/tests">PRACTICE TESTS</a></li>
+                                </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/student/profile"><i
+                                    style="padding-right: 4px;" class="fa fa-user"></i><%= user.user_name %></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">LOGOUT</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main style="min-height: 75vh; background-color: #bdcad9;
+    background-image: linear-gradient(315deg, #bdcad9 0%, #e1dada 74%);
+    ">
+
+
+    <h3 class="display-5 text-center text-capitalize" style="padding: 20px; font-weight:350">
+        PRACTICE TESTS</h3>
+
+        
+        <div style="display: flexbox;">
+            <form>
+                <div class="row row-cols-auto" style="justify-content: center;">
+                    <label for="course" class="col col-form-label">Course:</label>
+                    <div class="col-lg-2">
+                        <select id="course" name='course' class='form-select'>
+                            <% courses.forEach(function(course) { %>
+                                <% if (course === selectedCourse) { %>
+                                  <option value='<%= course %>' selected><%= course %></option>
+                                <% } else { %>
+                                  <option value='<%= course %>'><%= course %></option>
+                                <% } %>
+                            <% }); %>                     
+                        </select>
+                    </div>
+                    <div class="col">
+                        <button id="search" class="btn btn-success">Search</button>
+                    </div>
+                </div>
+            </form>
+              
+            <% function calculatePercentage(optionSelected) {
+                const questions = JSON.parse(optionSelected.replace(/'/g, '"'));
+                const attemptedQuestions = questions.filter(([_, option]) => option !== null).length;
+                const totalQuestions = questions.length;
+                return Math.round((attemptedQuestions / totalQuestions) * 100);
+              } %>
+
+              <% data0.forEach(function(data0, index) { %>
+                <% if (data0.is_submitted=='0'){ %>
+                    <%const progressPercentage = calculatePercentage(data0.option_selected);%>
+                    <div class="courses-container col-lg-12 d-flex justify-content-center">
+                        <div class="course">
+                            <div class="course-preview">
+                                <h7>Topic</h7>
+                                <h6><%= data0.topic %></h6>
+                            </div>
+                            <div class="course-info">
+                                <div class="progress-container">
+                                    <div class="progress resume" style="--progress-percentage: <%= progressPercentage %>%;"></div>
+                                    <span class="progress-text">
+                                        <%=progressPercentage%>%
+                                    </span>
+                                </div>
+                                <h5><%= data0.sub_topic %></h5>
+                                <h7><%= data0.test_name %></h7>
+                            </div>
+                            <button class="status resume text-center" onclick="window.location.href='/student/assessment/tests/questions/<%=data0.test_id%>'">
+                                <h5>Resume</h5>
+                            </button>
+                        </div>
+                    </div>
+                <% } else if(data0.is_submitted=='1') { %>
+                    <div class="courses-container col-lg-12 d-flex justify-content-center">
+                        <div class="course">
+                            <div class="course-preview">
+                                <h7>Topic</h7>
+                                <h6><%= data0.topic %></h6>
+                            </div>
+                            <div class="course-info">
+                                <div class="progress-container">
+                                    <div class="progress retake"></div>
+                                    <span class="progress-text">
+                                        100%
+                                    </span>
+                                </div>
+                                <h5><%= data0.sub_topic %></h5>
+                                <h7><%= data0.test_name %></h7>
+                            </div>
+                            <button class="status retake text-center" onclick="window.location.href='/student/assessment/tests/questions/<%=data0.test_id%>'">
+                                <h5>Retake</h5>
+                            </button>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="courses-container col-lg-12 d-flex justify-content-center">
+                        <div class="course">
+                            <div class="course-preview">
+                                <h7>Topic</h7>
+                                <h6><%= data0.topic %></h6>
+                            </div>
+                            <div class="course-info">
+                                <div class="progress-container">
+                                    <div class="progress start"></div>
+                                    <span class="progress-text">
+                                        0%
+                                    </span>
+                                </div>
+                                <h5><%= data0.sub_topic %></h5>
+                                <h7><%= data0.test_name %></h7>
+                            </div>
+                            <button class="status start text-center" onclick="window.location.href='/student/assessment/tests/questions/<%=data0.test_id%>'">
+                                <h5>Start</h5>
+                            </button>
+                        </div>
+                    </div>
+                <% } %>
+            <% }); %>
+
+
+    </main>
+
+    <div class="border-top" style="background-color: white; padding-bottom: 1.5rem;">
+        <div class="container">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3" style="margin-top: 1.5rem">
+                <p class="col-md-4 mb-0 text-muted">&copy; Exam Study Tool © 2023</p>
+    
+                <ul class="nav col-md-4 justify-content-end">
+                    <li class="nav-item"><a href="/student" class="nav-link px-2 text-muted">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Contact</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Terms and Conditions</a></li>
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Select all progress bars
+        const progressBars = document.querySelectorAll('.progress-bar');
+      
+        // Iterate through progress bars and set their width based on the data-percentage attribute
+        progressBars.forEach(progressBar => {
+          const percentage = progressBar.getAttribute('data-percentage');
+          progressBar.style.width = percentage + '%';
+        });
+      </script>
+      
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/s_assessment_assigned.js"></script>
+</body>
+
+</html>

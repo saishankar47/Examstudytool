@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <%- include('a_head.ejs') %>
+        <script type="application/javascript" src="/javascripts/a_student.js"></script>
+</head>
+
+<body>
+    <script>
+        var results = JSON.parse('<%- JSON.stringify(results) %>');
+        var refResults = JSON.parse('<%- JSON.stringify(refResults) %>');
+        //console.log(results, refResults);
+    </script>
+
+    <%- include('a_header.ejs') %>
+        <div style="background-color:#f1f1f7; background-image: linear-gradient(to bottom, #e6e6e6, #f2f2f2);">
+            <br><br>
+            <div class="container">
+
+                <div class="row">
+                    <div class="col shadow p-2 mb-2 bg-light rounded">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5><i class="fa fa-users"></i>&nbsp;Students Information</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="btn-group" style="float: right;">
+    
+                                            <button role="button" onclick="setDropdownData(-1)" class="btn btn-primary btn-sm" aria-pressed="true" data-bs-toggle="modal" data-bs-target="#addstudentModal"> <i class="fa fa-plus"
+                                                    aria-hidden="true"></i> Add Student </button>
+                                            <label class="btn btn-success btn-sm btn-filter" data-target="completed">
+                                                             
+    
+                                                <input type="radio" name="options" value="./TestingUStudent" id="radioUnaffiliatedStudentsIdEscaped" autocomplete="off">
+                                                Unaffiliated Students only
+                                            </label>                                    
+                                            <label class="btn btn-secondary btn-sm btn-filter">
+                                            <input type="radio"  name="options"  value="./student" id="radioStudent" autocomplete="off">
+                                            All
+                                        </label>
+                                            <script>
+                                                const radioUnaffiliatedStudentsIdEscaped = document.getElementById('radioUnaffiliatedStudentsIdEscaped');
+                                                radioUnaffiliatedStudentsIdEscaped.addEventListener('click', () => {
+                                                    localStorage.setItem("studentType", "TestingUStudent");
+                                                    window.location.href = './TestingUStudent';
+                                                });
+    
+                                                const radioStudent = document.getElementById('radioStudent');
+                                                radioStudent.addEventListener('click', () => {
+                                                    localStorage.setItem("studentType", "radioStudent");
+                                                    radioUnaffiliatedStudentsIdEscaped.checked = false;
+                                                    window.location.href = './student';
+                                                });
+    
+                                                // Check local storage to see if the "All Students" button was clicked before
+                                                if (localStorage.getItem("studentType") === "TestingUStudent") {
+                                                    localStorage.setItem("studentType", "none");
+                                                    radioStudent.checked = false
+                                                    radioUnaffiliatedStudentsIdEscaped.checked = true;
+                                                }
+                                                if (localStorage.getItem("studentType") === "radioStudent") {
+                                                    localStorage.setItem("studentType", "none");
+                                                    radioUnaffiliatedStudentsIdEscaped.checked = false;
+                                                    radioStudent.checked = true;
+                                                }
+                                            </script>
+    
+                                        </div>
+    
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="collapse" id="filterCollapse">
+                                                    <div class="card card-body">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <label for="inputEmail4">User Name</label>
+                                                                <input type="text" class="form-control form-control-sm" id="" placeholder="">
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="inputState">School Name</label>
+                                                                <select id="inputState" class="form-control form-control-sm">
+                                                                    <option>Choose...</option>
+                                                                    <option selected>Buffalo</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="inputState">Prefered Language</label>
+                                                                <select id="inputState" class="form-control form-control-sm">
+                                                                    <option>Choose...</option>
+                                                                    <option selected>Spanish</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <!-- <div class="col-ls-10" style="padding-bottom: 2px;">
+                                <a href="/teacher/new" class="btn btn-primary btn-sm" role="button" aria-pressed="true"
+                                    data-toggle="modal" data-target="#exampleModal"> Add New Teacher</a>
+                            </div> -->
+                                    </div>
+    
+    
+    
+                                   
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="container-fluid">                    
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                           
+                                            <script>
+                                                $(document).ready(function() {
+                                                    $('#studentTable').DataTable({
+                                                        order: [
+                                                            [0, 'asc']
+                                                        ],
+                                                    });
+                                                });
+                                            </script>
+                                            <table class="table table-bordered table-hover display" style="font-size:small; margin-bottom: 0px;" id="studentTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">User Name</th>
+                                                        <th scope="col">Email</th>
+                                                        <th scope="col">School Name</th>
+                                                        <th scope="col">Prefered Language</th>
+                                                        <th scope="col">Assign Assignment</th>
+                                                        <th scope="col">View Assignments</th>
+                                                        <th scope="col">Analytics</th>
+                                                        <th scope="col" style="text-align: center;">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbody-AllStudents">
+    
+                                                    <% for (var i = 0; i < results.length; i++) { %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= i+1 %>
+                                                            </td>
+                                                            <td>
+                                                                <%= results[i].user_name %>
+                                                            </td>
+                                                            <td>
+                                                                <%= results[i].user_email %>
+                                                            </td>
+                                                            <td>
+                                                                <%= results[i].school_name %>
+                                                            </td>
+                                                            <td>
+                                                                <%= results[i].preferred_language %>
+                                                            </td>
+                                                            <td>
+                                                                <a href="/admin/student/assigntask?user_name=<%=results[i].user_name%>&user_id=<%=results[i].user_id%>"><img src="https://cdn-icons-png.flaticon.com/512/2098/2098402.png" class="center" data-toggle="modal" data-target="#assigntaskmodel" alt="Assign Task" width="24" height="24"></a>
+                                                            </td>
+    
+                                                            <td>
+                                                                <a href="/admin/student/viewtask1?user_name=<%=results[i].user_name%>&student_id=<%=results[i].user_id%>"><img src="https://cdn-icons-png.flaticon.com/128/8347/8347446.png" class="center" alt="View Task" width="24" height="24"></a>
+                                                            </td>
+    
+                                                            <td>
+                                                                <a href="/admin/studentindex/analytics?user_name=<%=results[i].user_name%>&student_id=<%=results[i].user_id%>"><img src="https://cdn-icons-png.flaticon.com/512/1548/1548914.png" class="center" data-toggle="modal" data-target="#assigntaskmodel" alt="Icon" width="24" height="24"></a>
+                                                            </td>
+    
+                                                            <td style="text-align: center;">
+                                                                <a href="" data-bs-toggle="modal" onclick="setDropdownData('<%=i%>')" data-bs-target="#addstudentModal">
+                                                                    <i class="fa fa-edit"></i></a> &nbsp;
+                                                                <a href="" data-bs-toggle="" onclick="deleteStudent('<%=i%>')" data-bs-target="">
+                                                                    <i class="fa fa-trash" aria-hidden="true"></i></a>&nbsp;
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="row">&nbsp;</div>
+                    </div>
+                </div>
+
+
+                <!-- Button trigger modal -->
+
+
+                <!-- Modal -->
+
+                <div class="modal fade" id="viewTaskStudent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Assigned Tasks</h3><br><br></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <%- include('a_task_student.ejs') %>
+                            </div>
+                            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+                <button type="button" class="btn btn-primary">Assign Task</button>
+            </div>-->
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal fade" id="assignAssignment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Assign Assignment</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <%- include('a_assigntask.ejs') %>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Preview Assignment</button>
+                                <button type="button" class="btn btn-primary">Assign</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="modal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Preview Questions</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <%- include('a_previewquestions')%>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignAssignment">Assign Assignment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal fade" id="analytics" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Student analytics</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <%- include('a_analytics.ejs') %>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="viewstudnetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Student Information</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="deletestudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="exampleModalLabel">Remove Student</h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true"></span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h5 style="color: red;">Are you sure ?</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" onclick="deleteStudent()" data-bs-dismiss="modal">Remove</button>
+                                <button type="button" class="btn btn-primary">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="editstudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Edit Student Information</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true"></span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="container">
+                                        <div class="card card-body">
+                                            <!-- <div class="row">
+                                <div class="col">
+                                    <img src="hi" alt="..." class="rounded-circle">
+                                </div>
+                            </div> -->
+                                            <div class="row">
+                                                <div class="col">
+                                                    <label for="inputEmail4">User Name</label>
+                                                    <input type="text" class="form-control form-control-sm" id="" placeholder="">
+                                                </div>
+                                                <div class="col">
+                                                    <label for="inputState">School Name</label>
+                                                    <select id="inputState" class="form-control form-control-sm">
+                                                        <option>Choose...</option>
+                                                        <option selected>Buffalo</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <label for="inputState">Prefered Language</label>
+                                                    <select id="inputState" class="form-control form-control-sm">
+                                                        <option>Choose...</option>
+                                                        <option selected>Spanish</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Button trigger modal -->
+                <!-- Modal -->
+                <div class="modal fade" id="addstudentModal" tabindex="-1" role="modal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="addstudentModalHeading">Add New Student</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <input type="text" id="selectedid" style="display: none;">
+                                                <label for="username" class="form-label">User Name*</label>
+                                                <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="username" class="form-label">User Email*</label>
+                                                <input type="text" class="form-control" id="useremail" placeholder="Enter email" pattern="/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/" required>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="school" class="form-label">School Name*</label>
+                                                <select class="form-select" id="school" required>
+                                                <option value="" disabled selected hidden>Choose a school...</option>
+                                            <% for (i=0;i<refResults.length;i++) { if (refResults[i].type=="school name"){%>                         
+                                            <option value="<%= refResults[i].type_value%>"><%= refResults[i].type_value%></option>
+                                            <% }} %>
+                                          </select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="language" class="form-label">Preferred Language*</label>
+                                                <select class="form-select" id="language" required>
+                                              <option value="" disabled selected hidden>Choose a school...</option>
+                                                    <% for (i=0;i<refResults.length;i++) { if (refResults[i].type=="language"){%>                         
+                                                        <option value="<%= refResults[i].type_value%>"><%= refResults[i].type_value%></option>
+                                                        <% }} %>
+                                          </select>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                <button type="button" id="addStudentButton" onclick="add_edit()" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="modal fade" id="addlangModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md" role="dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="exampleModalLabel">Add Prefered Language</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="">
+                        <div class="form-row">
+                            <div class="col-lg-8 mx-auto">
+                                <div class="">
+                                    <div class="">
+
+                                        
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-sm table-hover" style="overflow: scroll;">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Prefered Languages</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                
+                                                    <tr>
+                                                        <td scope="row"><div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                          </div></td>
+                                                        <td>English</td>
+                                                        
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row"><div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                          </div></td>
+                                                        <td>Hindi</td>
+                                                      
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row"><div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                          </div></td>
+                                                        <td>Spanish</td>
+                                                       
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row"><div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                          </div></td>
+                                                        <td>French</td>
+                                                  
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row"><div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                          </div></td>
+                                                        <td>Telugu</td>
+                                                    </tr>
+                                                    <tr>
+
+                                                        <td style="text-align: center;">
+                                                              <i class="fa fa-trash"></i>
+                                                        
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group mb-3">
+                                                                <input type="text" class="form-control" placeholder="Text" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                                                <div class="input-group-append">
+                                                                  <span class="input-group-text" id="basic-addon2">Add New</span>
+                                                                </div>
+                                                              </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                       
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+                <br>
+            </div>
+            <%- include('a_footer.ejs') %>
+</body>
+
+
+</html>

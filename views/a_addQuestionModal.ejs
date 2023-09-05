@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+
+<%- include('a_head.ejs') %>
+
+    <script type="application/javascript" src="/javascripts/a_questions_Modal.js"></script>
+
+    <script>
+        function hello() {
+            document.addEventListener('focusin', function(e) {
+                if (e.target.closest('.tox-tinymce-aux, .moxman-window, .tam-assetmanager-root') !== null) {
+                    e.stopImmediatePropagation();
+                }
+            });
+
+            
+            tinymce.init({
+                selector: 'textarea',
+                plugins: 'anchor advlist autolink charmap codesample image link lists media searchreplace table visualblocks wordcount ',
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | charmap | removeformat',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Author name',
+                images_upload_handler: function(blobInfo, success, failure) {
+                    // console.log(blobInfo.blob());
+                    const buffer = blobInfo.blob();
+                    const orginalname = blobInfo.filename();
+                    //image.append('image', blobInfo.blob(), blobInfo.filename());
+
+
+                    fetch('/s3/imageUpload', {
+                            method: 'POST',
+                            body: {
+                                orginalname: orginalname,
+                                buffer: buffer
+                            }
+
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json();
+                            } else {
+                                throw new Error('HTTP Error: ' + response.status);
+                            }
+                        })
+                        .then(data => {
+                            success(data.productImage);
+                        })
+                        .catch(error => {
+                            failure(error.message);    
+                        });
+                }
+
+                ,
+                automatic_uploads: true,
+                mergetags_list: [{
+                    value: 'First.Name',
+                    title: 'First Name'
+                }, {
+                    value: 'Email',
+                    title: 'Email'
+                }, ]
+            });
+        }
+        $(document).ready(function() {
+            // Call the "hello" function when the document is ready
+            hello();
+        });
+    </script>
+
+
+    <script>
+        var refResults = JSON.parse('<%- JSON.stringify(refResults) %>');
+        // console.log(refResults);
+    </script>
+    <div class="modal-body">
+        <!-- <h6 style="text-align: center;">Question Informantion</h6> -->
+        <form>
+            <div class="row">
+                <div class="col">
+                    <div class="card card-body" style="background-color: #f1f1f7;">
+                        <p>
+
+                            <div class="row">
+                                <div class="col">
+                                    <input value="<%=questionResults[0].question_id%>" disabled id="mappedQuestion_id" style="display: none;">
+                                    <div class="form-floating">
+                                        <textarea id="questionTextArea" class="form-control" value="<%= questionResults[0].question %>" placeholder="Type your Question Here*" id="floatingTextarea2" style="height: 100px"> 
+                                <%= questionResults[0].question %></textarea>
+
+                                        <label for="floatingTextarea2">Question</label>
+                                    </div>
+                                </div>
+                            </div><br>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Type your Option Here*" id="floatingTextareaOption1" style="height: 100px"><%= questionResults[0].option_1 %></textarea>
+                                        <label for="floatingTextarea2">Option 1*</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Type your Option Here*" id="floatingTextareaOption2" style="height: 100px"><%= questionResults[0].option_2 %></textarea>
+                                        <label for="floatingTextarea2">Option 2*</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Type your Option Here*" id="floatingTextareaOption3" style="height: 100px"><%= questionResults[0].option_3 %></textarea>
+                                        <label for="floatingTextarea2">Option 3*</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Type your Option Here*" id="floatingTextareaOption4" style="height: 100px"><%= questionResults[0].option_4 %></textarea>
+                                        <label for="floatingTextarea2">Option 4*</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <!-- <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                         Question
+                       </button>
+                     <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
+                       Option 1
+                     </button>
+                     <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                         Option 2
+                       </button>
+                       <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                         Option 3
+                       </button>
+                       <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                         Option 4
+                       </button> -->
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <!-- <div class="col">
+                 <label for="inputEmail4">Test Name*</label>
+                 <input type="text" class="form-control"  id="" placeholder="">
+             </div> -->
+                <div class="col">
+                    <label for="inputStateYear">Year</label>
+                    <select id="inputStateYear" class="form-control form-control-sm form-select">
+                     <option>Choose...</option>
+                     <option value="<%= questionResults[0].year %>" selected><%= questionResults[0].year %></option>
+                     <% for(i=0;i<refResults.length;i++) { if(refResults[i].type=='year' && refResults[i].type_value!=questionResults[0].year){%>
+                        <option value="<%= refResults[i].type_value %>" ><%= refResults[i].type_value %></option>
+                        <% }} %>
+                 </select>
+                </div>
+                <div class="col">
+                    <label for="inputStateMonth">Month</label>
+                    <select id="inputStateMonth" class="form-control  form-control-sm  form-select">
+                     <option >Choose...</option>
+                     <option value="<%= questionResults[0].month %>" selected><%= questionResults[0].month %></option>
+                     <% for(i=0;i<refResults.length;i++) { if(refResults[i].type=='month' && refResults[i].type_value!=questionResults[0].month){%>
+                        <option value="<%= refResults[i].type_value %>" ><%= refResults[i].type_value %></option>
+                        <% }} %>
+                 </select>
+                </div>
+
+                <div class="col">
+                    <label for="inputStateStandard">Standard</label>
+                    <select id="inputStateStandard" class="form-control  form-control-sm  form-select">
+                                 <option >Choose...</option>
+                                 <option value="<%= questionResults[0].standard %>" selected><%= questionResults[0].standard %></option>
+                                 <% for(i=0;i<refResults.length;i++) { if(refResults[i].type=='standard' && refResults[i].type_value!=questionResults[0].standard){%>
+                                    <option value="<%= refResults[i].type_value %>" ><%= refResults[i].type_value %></option>
+                                    <% }} %>
+                                 
+                             </select>
+                </div>
+                <div class="col">
+                    <label for="inputStateAnswer">Correct Option*</label>
+                    <select id="inputStateAnswer" class="form-control  form-control-sm  form-select">
+                                 <option >Choose...</option>
+                                 <option value="<%= questionResults[0].answer %>" selected><%= questionResults[0].answer %></option>
+                                 <% for(i=1;i<5;i++) { if(questionResults[0].answer.slice(-1) != i){%>
+                                    <option value="<%= (questionResults[0].answer.slice(0,-1)+i) %>" ><%= (questionResults[0].answer.slice(0,-1)+i) %></option>
+                                    <% }} %>
+                    
+                             </select>
+                </div>
+                <!-- <div class="col">
+                             <label for="inputState">Approval</label>
+                             <select id="inputState" disabled class="form-control  form-control-sm  form-select" style="cursor: not-allowed;">
+                                 <option selected>Choose...</option>
+                                 <option>Approved</option>
+                                 <option>Pending</option>
+                                 <option>Disapproved</option>
+                             </select>  
+                         </div> -->
+            </div>
+            <br>
+            <div class="row">
+
+                <div class="col">
+                    <label for="inputStateCourse">Course</label>
+                    <select id="inputStateCourse" class="form-control  form-control-sm  form-select" onchange="updateTopicDropdown()">
+                         <option >Choose...</option>
+                         <option selected><%= questionResults[0].course %></option>
+                         <% for(i=0;i<refResults.length;i++) { if(refResults[i].type=='course' && refResults[i].type_value!=questionResults[0].course){%>
+                            <option value="<%= refResults[i].type_value %>" ><%= refResults[i].type_value %></option>
+                            <% }} %>
+
+                     </select>
+                </div>
+                <div class="col">
+                    <label for="inputStateTopic">Topic</label>
+                    <select id="inputStateTopic" class="form-control  form-control-sm  form-select" onchange="updateSubTopicDropdown()">
+                     <option >Choose...</option>
+                     <option value="<%= questionResults[0].topic %>" selected><%= questionResults[0].topic %></option>
+                     <% for(i=0;i<refResults.length;i++) { if(refResults[i].type==questionResults[0].course  && refResults[i].type_value!=questionResults[0].topic){%>
+                        <option value="<%= refResults[i].type_value %>" ><%= refResults[i].type_value %></option>
+                        <% }} %>
+                 </select>
+                </div>
+                <div class="col">
+                    <label for="inputStateSubTopic">Sub-Topic</label>
+                    <select id="inputStateSubTopic" class="form-control  form-control-sm  form-select">
+                     <option >Choose...</option>
+                     <option value="<%= questionResults[0].sub_topic %>" selected><%= questionResults[0].sub_topic %></option>
+                     
+                 </select>
+                </div>
+                <div class="col">
+                    <label for="inputStateDifficulty">Difficulty</label>
+                    <select id="inputStateDifficulty" class="form-control  form-control-sm  form-select">
+                     <option >Choose...</option>
+                     <option selected><%= questionResults[0].difficulty %></option>
+                     <% for(i=0;i<refResults.length;i++) { if(refResults[i].type==questionResults[0].difficulty  && refResults[i].type_value!=questionResults[0].difficulty){%>
+                        <option value="<%= refResults[i].type_value %>" ><%= refResults[i].type_value %></option>
+                        <% }} %>
+                 </select>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col">
+                    <hr class="hr hr-blurry" />
+                    <br>
+                </div>
+            </div>
+            <!-- <div class="row">
+             <div class="col-sm-4">
+                 <label for="inputState" style="font-size: medium; color: black;">Add Translation</label>
+                 <select id="inputState" class="form-control   form-select">
+                     <option selected>Choose...</option>
+                     <option>English (6)</option>
+                     <option>Arabic (1)</option>
+                     <option>Spanish (2)</option>
+                     <option>Bengali (1)</option>
+                     <option>Chinese (Simplified)(2)</option>
+                     <option>Chinese (Traditional)(3)</option>
+                 </select>  
+             </div>
+             </div> -->
+            <div class="row">
+                <div class="col">
+                    <h6 style="text-align: center;">Transilations</h6>
+                </div>
+            </div>
+
+            <!-- exermient fortabs -->
+
+            <div class="row">
+                <div class="col">
+                    <div class="accordion" id="accordionExample">
+
+                        <!-- EJS template code -->
+                        <% let emptyTransilations = []; %>
+                            <% for (let i = 0; i < refResults.length; i++) { %>
+                                <% if (refResults[i].type === 'language') { %>
+                                    <% emptyTransilations.push(refResults[i].type_value); %>
+                                        <% } %>
+                                            <% } %>
+
+                                                <% for (let i = 0; i < translationResults.length; i++) { %>
+                                                    <% let index = emptyTransilations.indexOf(translationResults[i].language); %>
+                                                        <% if (index !== -1) { %>
+                                                            <% emptyTransilations.splice(index, 1); %>
+                                                                <% } %>
+                                                                    <% } %>
+
+
+                                                                        <% for (var i=0;i<translationResults.length;i++) {%>
+                                                                            <div class="accordion-item">
+                                                                                <h2 class="accordion-header" id="headingOne<%=i%>">
+                                                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne<%=i%>" aria-expanded="true" aria-controls="collapseOne<%=i%>">
+                                     <span class="greendot"></span>&nbsp;<span class="languageAccordianHeaderFor"><%= translationResults[i].language %></span>
+                                 </button>
+                                                                                </h2>
+                                                                                <div id="collapseOne<%=i%>" class="accordion-collapse <%if(i==0){ %> show <% } %> collapse" aria-labelledby="headingOne<%=i%>" data-bs-parent="#accordionExample">
+                                                                                    <div class="accordion-body">
+                                                                                        <div class="row">
+                                                                                            <div class="col-md-12">
+                                                                                                <div class="row">
+                                                                                                    <div class="col">
+                                                                                                        <div class="card card-body" style="background-color: #f1f1f7;">
+                                                                                                            <p>
+                                                                                                                <div class="row">
+                                                                                                                    <div class="col">
+                                                                                                                        <div class="form-floating">
+                                                                                                                            <textarea class="form-control" placeholder="Type your Spanish Transilation Here" name="<%=translationResults[i].translation_id%>" id="floatingTextareaQuestion<%=i%>" style="height: 100px"><%=translationResults[i].t_question%></textarea>
+                                                                                                                            <label for="floatingTextarea2">Transiation in <%=translationResults[i].language  %></label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div><br>
+                                                                                                                <div class="row">
+                                                                                                                    <div class="col">
+                                                                                                                        <div class="form-floating">
+                                                                                                                            <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextareaOption1<%=i%>" style="height: 100px"><%=translationResults[i].t_option_1%></textarea>
+                                                                                                                            <label for="floatingTextarea2">Option 1</label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col">
+                                                                                                                        <div class="form-floating">
+                                                                                                                            <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextareaOption2<%=i%>" style="height: 100px"><%=translationResults[i].t_option_2%></textarea>
+                                                                                                                            <label for="floatingTextarea2">Option 2</label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col">
+                                                                                                                        <div class="form-floating">
+                                                                                                                            <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextareaOption3<%=i%>" style="height: 100px"><%=translationResults[i].t_option_3%></textarea>
+                                                                                                                            <label for="floatingTextarea2">Option 3</label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col">
+                                                                                                                        <div class="form-floating">
+                                                                                                                            <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextareaOption4<%=i%>" style="height: 100px"><%=translationResults[i].t_option_4%></textarea>
+                                                                                                                            <label for="floatingTextarea2">Option 4</label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </p>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <% } %>
+
+                                                                                <% var k=0;for(var i=0;i<emptyTransilations.length;i++) {%>
+                                                                                    <div class="accordion-item">
+                                                                                        <h2 class="accordion-header" id="headingOne<%=(i+100)%>">
+
+                                                                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne<%=(i+100)%>" aria-expanded="true" aria-controls="collapseOne<%=(i+100)%>">
+                                     <span class="reddot"></span>&nbsp;<span class="languageAccordianHeader"><%= emptyTransilations[i]  %></span>
+                                 </button>
+                                                                                        </h2>
+                                                                                        <div id="collapseOne<%=(i+100)%>" class="accordion-collapse <%if(i==-1){ %> show <% } %> collapse" aria-labelledby="headingOne<%=(i+100)%>" data-bs-parent="#accordionExample">
+                                                                                            <div class="accordion-body">
+                                                                                                <div class="row">
+                                                                                                    <div class="col-md-12">
+                                                                                                        <div class="row">
+                                                                                                            <div class="col">
+                                                                                                                <div class="card card-body" style="background-color: #f1f1f7;">
+                                                                                                                    <p>
+                                                                                                                        <div class="row">
+                                                                                                                            <div class="col">
+                                                                                                                                <div class="form-floating">
+                                                                                                                                    <textarea class="form-control" placeholder="Type your <%= emptyTransilations[i]  %> transilation here" name="<%=emptyTransilations[i]%>Create" id="floatingTextarea2<%=(++k)%>" style="height: 100px"></textarea>
+                                                                                                                                    <label for="floatingTextarea2">Transiation in </label>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div><br>
+                                                                                                                        <div class="row">
+                                                                                                                            <div class="col">
+                                                                                                                                <div class="form-floating">
+                                                                                                                                    <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2<%=(++k)%>" style="height: 100px"></textarea>
+                                                                                                                                    <label for="floatingTextarea2">Option 1</label>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div class="col">
+                                                                                                                                <div class="form-floating">
+                                                                                                                                    <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2<%=(++k)%>" style="height: 100px"></textarea>
+                                                                                                                                    <label for="floatingTextarea2">Option 2</label>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div class="col">
+                                                                                                                                <div class="form-floating">
+                                                                                                                                    <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2<%=(++k)%>" style="height: 100px"></textarea>
+                                                                                                                                    <label for="floatingTextarea2">Option 3</label>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div class="col">
+                                                                                                                                <div class="form-floating">
+                                                                                                                                    <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2<%=(++k)%>" style="height: 100px"></textarea>
+                                                                                                                                    <label for="floatingTextarea2">Option 4</label>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </p>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <% }%>
+                    </div>
+                </div>
+            </div>
+
+            <!-- end -->
+
+
+
+        </form>
+    </div>
+
+</html>
+
+
+<!-- <div class="row">
+                 <div class="col">
+                     <div class="card text-center">
+                         <div class="card-header" style="align-self: center;">
+                           <ul class="nav nav-tabs card-header-tabs">
+                             <li class="nav-item">
+                               <a role="button" class="nav-link" aria-current="true" data-bs-toggle="collapse" data-bs-target="#collapseSpanishTransilationEdit" > <span class="reddot"></span> Spanish</a>
+                             </li>
+                             <li class="nav-item">
+                               <a role="button" class="nav-link" aria-current="true" data-bs-toggle="collapse" data-bs-target="#collapseHindiTransilationEdit"  tabindex="-1" aria-disabled="true"> <span class="reddot"></span> Hindi</a>
+                             </li>
+                             <li class="nav-item">
+                               <a  role="button" class="nav-link" aria-current="true" data-bs-toggle="collapse" data-bs-target=""  tabindex="3" aria-disabled="true"> <span class="greendot"></span> Japanese</a>
+                             </li>
+                             <li class="nav-item">
+                                 <a role="button" class="nav-link" aria-current="true" data-bs-toggle="collapse"  tabindex="4" aria-disabled="true"><span class="greendot"></span> Korean</a>
+                               </li>
+                               <li class="nav-item">
+                                 <a role="button" class="nav-link" aria-current="true" data-bs-toggle="collapse"  tabindex="4" aria-disabled="true"><span class="greendot"></span> Chinese</a>
+                               </li>
+                               <li class="nav-item">
+                                 <a role="button" class="nav-link" aria-current="true" data-bs-toggle="collapse"  tabindex="4" aria-disabled="true"><span class="greendot"></span> Bengali</a>
+                               </li>
+                               <li class="nav-item">
+                                 <a role="button" class="nav-link" aria-current="true" data-bs-toggle="collapse"  tabindex="4" aria-disabled="true"><span class="greendot"></span> Korean</a>
+                               </li>
+
+                             </ul>
+                         </div>
+                         <div class="card-body" id="navbarSupportedContent">
+
+                            
+
+                             <div class="collapse multi-collapse show" style="background-color: white;" id="collapseSpanishTransilationEdit" >
+                                 <div class="row">
+                                     <div class="col-md-2">
+                                             &nbsp;
+                                     </div>
+                                     <div class="col-md-8">
+                                         <hr class="hr hr-blurry" />
+                                     </div>
+                                 </div>
+                                 <div class="row">
+                                 <div  class="col-md-12">
+                                     <div class="row">
+                                         <div class="col">
+                                             <div class="card card-body" style="background-color: #f1f1f7;">
+                                             <p>
+                                                 <div class="row">
+                                                     <div class="col">  <div class="form-floating">
+                                                         <textarea class="form-control" placeholder="Type your Spanish Transilation Here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                         <label for="floatingTextarea2">Type Your Spanish Transilation here</label>
+                                                       </div></div>
+                                                 </div><br>
+                                                 <div class="row">
+                                                     <div class="col">  <div class="form-floating">
+                                                         <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                         <label for="floatingTextarea2">Option 1</label>
+                                                       </div></div>
+                                                     <div class="col">
+                                                         <div class="form-floating">
+                                                           <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                           <label for="floatingTextarea2">Option 2</label>
+                                                         </div></div>
+                                                     <div class="col"> <div class="form-floating">
+                                                         <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                         <label for="floatingTextarea2">Option 3</label>
+                                                       </div></div>
+                                                     <div class="col"> <div class="form-floating">
+                                                         <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                         <label for="floatingTextarea2">Option 4</label>
+                                                       </div></div>
+                                                 </div>
+                                               </p>
+                                               </div>
+                                         </div>
+                                     </div>
+                                 </div>                                                
+                             </div>     
+                               </div>
+                             
+                               <div class="collapse multi-collapse show" style="background-color: white;" id="collapseHindiTransilationEdit" >
+                                 <div class="row">
+                                     <div class="col-md-2">
+                                             &nbsp;
+                                     </div>
+                                     <div class="col-md-8">
+                                         <hr class="hr hr-blurry" />
+                                     </div>
+                                 </div>
+                                 <div class="row">
+                                 <div  class="col-md-12">
+                                     <div class="row">
+                                         <div class="col">
+                                             <div class="card card-body" style="background-color: #f1f1f7;">
+                                             <p>
+                                                 <div class="row">
+                                                     <div class="col">  <div class="form-floating">
+                                                         <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                         <label for="floatingTextarea2">Type Your Hindi Transilation*</label>
+                                                       </div></div>
+                                                 </div><br>
+                                                 <div class="row">
+                                                     <div class="col">  <div class="form-floating">
+                                                         <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                         <label for="floatingTextarea2">Option 1</label>
+                                                       </div></div>
+                                                     <div class="col">
+                                                         <div class="form-floating">
+                                                           <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                           <label for="floatingTextarea2">Option 2</label>
+                                                         </div></div>
+                                                     <div class="col"> <div class="form-floating">
+                                                         <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                         <label for="floatingTextarea2">Option 3</label>
+                                                       </div></div>
+                                                     <div class="col"> <div class="form-floating">
+                                                         <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                         <label for="floatingTextarea2">Option 4</label>
+                                                       </div></div>
+                                                 </div>
+                                               </p>
+                                               </div>
+                                         </div>
+                                     </div>
+                                 </div>                                                
+                             </div>     
+                               </div>
+                             
+                         </div>   
+             <br>
+                     </div>
+                 </div>
+             </div> -->

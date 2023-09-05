@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('t_head.ejs') %>
+    <style>
+        body{
+          background-image: linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%);
+          
+        }
+  
+      </style>
+<body >
+    <style>
+        div .HiddenText {
+            display: none;
+            -webkit-font-smoothing: antialiased;
+        }
+        div .DivForHoverItem:hover .HiddenText {
+            display:inline-block;
+        }
+        div .DivForHoverItem:hover .initialTextData {
+            display: none;
+        }
+      </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script>
+   
+        function format(question) {
+        // Build the table string using the passed parameter
+        
+        return (
+            '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+            '<tr>' +
+            '<td>Question:</td>' +
+            '<td>' +
+            question+
+            '</td>' +
+            '</tr>' +
+            '</table>'
+        );
+    }
+       $(document).ready(function() {
+         var table = $('#status').DataTable({
+           order: [[0, 'asc']],
+           //
+           
+           columns: [
+                {
+                    className: 'dt-control',
+                    orderable: false,
+                    data: null,
+                    defaultContent: '',
+                },
+                { data: 'Question' },
+                { data: 'Topic' },
+                { data: 'Sub-Topic' },
+                { data: 'Month' },
+                { data: 'Year' },
+                { data: 'Standard' },
+                { data: 'Difficulty' }
+            ],
+            
+            //
+           "drawCallback": function( settings ) {
+             MathJax.Hub.Config({
+                tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+             });
+             
+             MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+         }
+         });
+         //
+         $('#status tbody').on('click', 'td.dt-control', function () {
+       var id = $(this).attr('id');
+        var td = $(this);
+        var row = table.row(td.closest('tr'));
+    
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            td.removeClass('shown');
+        } else {
+            // Open this row
+            row.child(format(document.getElementsByClassName(id)[0].innerHTML)).show();
+            td.addClass('shown');
+        }
+    });
+    
+         //
+       });
+    </script>
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']]
+          },
+          "HTML-CSS": { linebreaks: { automatic: true } },
+          SVG: { linebreaks: { automatic: true } }
+        });
+     </script>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/teacher">Exam Study Tool</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" style="border-left: 1px solid darkgray; " id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        <li class="nav-item">
+                            <a class="nav-link " style="padding-left: 15px;" aria-current="page" href="/teacher">Class</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " style="padding-left: 15px;" aria-current="page" href="/teacher/questions">Questions</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link " style="color: blue;" href="/teacher/status" >Status</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/teacher/profile"><i
+                                    style="padding-right: 4px;" class="fa fa-user"></i><%= user.user_name %></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">LOGOUT</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <br>
+    </header>
+
+
+<h3 style="text-align: center;">Approval Status</h3>
+<br><br>
+
+
+
+
+
+<div class="container-sm text-center ">
+    
+
+    <!-- table -->
+    <!-- <h1>Assigned to You</h1> -->
+
+    <div class="row">
+        <div class="col-md-12 col-md-offset-1">
+            <div class="panel panel-default panel-table">
+                <div class="panel-heading">
+                    <div class="row">
+                        <!-- <div class="col-4">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create Question</button>
+                        </div> -->
+                        <div class="col col-xs-6 text-right">
+                            <div class="pull-right">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-success btn-filter" data-target="approved">
+                                        <input type="radio" name="options" id="option1" autocomplete="off">
+                                        Completed
+                                    </label>
+                                    <label class="btn btn-warning btn-filter" data-target="pending">
+                                        <input type="radio" name="options" id="option2" autocomplete="off">
+                                        Pending
+                                    </label>
+                                    <label class="btn btn-danger btn-filter" data-target="rejected">
+                                        <input type="radio" name="options" id="option4" autocomplete="off">
+                                        Rejected
+                                    </label>
+                                    <label class="btn btn-default btn-filter active" data-target="all">
+                                        <input type="radio" name="options" id="option3" autocomplete="off"
+                                            checked> All
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="status" class="display" data-toggle="table"
+                data-pagination="true" data-toolbar="#toolbar" data-page-list="[10, 20, 50, 100]" data-page-size="10">
+
+                    <thead >
+                        <tr>
+                            <th class="col-text" data-sortable="true">Question Name</th>
+                            <th class="col-text" data-sortable="true">Date Assigned</th>
+                            <!-- <th class="col-text" data-sortable="true">Due Date</th> -->
+                            <th class="col-text" data-sortable="true">Status</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let i=0; i < data0.length; i++){ %>
+                            <tr data-status=<%= data0[i].approval %>>
+                                
+                            <td>
+                       
+                                <!-- <div class="DivForHoverItem"> -->
+                                   <div class="initialTextData" style="text-align: left ; ">
+                                      <%- data0[i].question %>
+                                      <img src="<%=data0[i].question_url%>" class="img-fluid" alt="">
+                                   </div>
+                                   <!-- <div class="<%= i %> HiddenText">
+                                    <%= data0[i].question %>
+                                 </div> -->
+                               <!-- </div> -->
+                             </td>
+                            <td><%= data0[i].created_date %></td>
+                            <!-- <td>12-Jan-23</td> -->
+                            <% if (data0[i].approval === 'approved') { %>
+                                <td><img src="https://cdn-icons-png.flaticon.com/128/9463/9463151.png" class="center" alt="Icon" width="24" height="24"></td>
+                              <% } else if (data0[i].approval === 'pending') { %>
+                                <td><img src="https://cdn-icons-png.flaticon.com/512/9526/9526996.png" class="center" alt="Icon" width="24" height="24"></td>
+                              <% } else { %>
+                                <td><img src="https://cdn-icons-png.flaticon.com/128/3712/3712271.png" class="center" alt="Icon" width="24" height="24"></td>
+                              <% } %>
+                              
+                        </tr>
+                       <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- table -->
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF/jspdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+    integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+    integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
+    crossorigin="anonymous"></script>
+<script src="/js/s_home.js"></script>
+<script src="/js/s_home_table.js"></script>
+<script src="/js/s_home_assigned_table.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.2/bootstrap-table.min.js"></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.2/extensions/editable/bootstrap-table-editable.min.js"></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.2/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+<!-- Modal -->
+
+  <div style="flex-grow:1"></div>
+  <%- include('t_footer.ejs') %>
+</body>
+
+</html>

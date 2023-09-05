@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('t_head.ejs') %>
+  <%- include('a_header.ejs') %>
+  <body>
+   <link href="/css/s_learning_archive.css" rel="stylesheet">
+<style>
+  .modal-title, .col-form-label {
+  font-size: 14px; /* adjust the font size as needed */
+}
+
+</style>
+<style>
+  div .HiddenText {
+      display: none;
+      -webkit-font-smoothing: antialiased;
+  }
+  div .HiddenText1 {
+      display: none;
+      -webkit-font-smoothing: antialiased;
+  }
+  div .DivForHoverItem:hover .HiddenText {
+      display:block;
+  }
+  div .DivForHoverItem:hover .HiddenText1 {
+      display:block;
+  }
+  div .DivForHoverItem:hover .initialTextData {
+      display: none;
+  }
+  
+  tfoot {
+display: table-header-group;
+  }
+  #hidden{
+background-color: rgb(255, 255, 255);
+width: 200px;
+height: 65px;
+/* border: 1px solid black; */
+overflow: hidden;
+}
+ 
+</style>  
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML"></script> 
+<script>
+    $(document).ready(function () {
+   MathJax.Hub.Config({
+            tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+         });
+         MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        
+   });
+       $(document).ready(function () {
+    $('#questions').DataTable({
+        order: [[0, 'asc']],
+        'drawCallback': function( settings ) {
+                      //  MathJax.Hub.Config({
+                      //     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                      //  });
+              
+                      MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+                  }
+    });
+   
+  });
+</script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <link href="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/sp-2.1.2/sl-1.6.2/datatables.min.css" rel="stylesheet"/>
+  <script src="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/sp-2.1.2/sl-1.6.2/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+      // let questionIds = [];
+      
+      let table2 = $('#assigntask2').DataTable({
+              'order': [[0, 'asc']],
+              'drawCallback': function( settings ) {
+                      //  MathJax.Hub.Config({
+                      //     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                      //  });
+              
+                      MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+                  }
+        });
+      
+      let table = $('#assigntask').DataTable({
+        language: {
+            searchPanes: {
+                clearMessage: 'Obliterate Selections',
+                collapse: {0: 'Filters', _: 'Filters (%d)'}
+                    }
+                },
+                       
+                      buttons: [
+                        { 
+                            // text:'Filters',
+                            
+                            extend: 'searchPanes',
+                            className: 'buttons-searchPanes',
+                           
+                            config: {
+                            cascadePanes: true,
+                            
+                            
+                            }
+                        }
+                        ],
+                        columnDefs: [
+                        {
+                            
+                          searchPanes: {
+                            show: true
+                            
+                            },
+                            targets: [2,3,4]
+                        },
+                       
+              ], dom: 'Bftrip',
+              'drawCallback': function( settings ) {
+                      //  MathJax.Hub.Config({
+                      //     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                      //  });
+              
+                      MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+                  },
+          // initComplete: function () {
+            
+          //     var r = $('#assigntask tfoot tr');
+          //     r.find('th').each(function(){
+          //         $(this).css('padding', 8);
+          //     });
+          //     $('#assigntask tfoot th').each(function () {
+          //         var title = $(this).text();
+          //         $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+          //     });
+          // $('#assigntask thead').append(r);
+          // $('#search_0').css('text-align', 'center');
+          // // Apply the search
+          //     this.api()
+          //         .columns()
+          //         .every(function () {
+          //             var that = this;
+  
+          //             $('input', this.footer()).on('keyup change clear', function () {
+          //                 if (that.search() !== this.value) {
+          //                     that.search(this.value).draw();
+          //                 }
+          //             });
+          //         });
+          //   },
+    
+          'order': [[0, 'asc']],
+            
+      });
+  $('#assigntask tbody').on('click', 'tr', function () {
+          $(this).toggleClass('selected');
+          let rows = table.rows('.selected').data();
+    
+          table2.destroy();
+         
+          table2 = $('#assigntask2').DataTable({
+          
+      'order': [[1, 'asc']],
+      'drawCallback': function( settings ) {
+                      //  MathJax.Hub.Config({
+                      //     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                      //  });
+              
+                      MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+                  }
+      
+   });
+   
+          table2.clear().draw();
+          for(let ind = 0; ind<rows.length; ind+=1){
+            table2.row.add(rows[ind]).draw();
+            
+          }
+    });
+//  Assign button   
+const assignBtn = document.querySelector('#assign-button');
+
+        assignBtn.addEventListener('click', () => {
+          let rows = table.rows('.selected').data();
+                  
+              let questionIds = [];
+              rows.each(function(rowData) {
+                const questionId = rowData[0];
+                  if (!questionIds.includes(questionId)) {
+                    questionIds.push(questionId);
+                  }
+              });
+              
+              console.log(" Question Id: ",questionIds);
+           
+              let test_name=`<%-test_name%>`;
+              let user_name=`<%-user_name%>`;
+
+              let student_id=`<%-student_id%>`;
+              let test_id = `<%-test_id%>`;
+             
+             
+const data = { questionIds, test_id ,student_id,test_name,user_name};
+
+if (questionIds.length != 0) {
+  console.log(data);
+  fetch('/admin/studentindex/viewtask1/addquestion', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+    .then(response => {
+      // handle response from server
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Network response was not ok.');
+      }
+    })
+    .then(data => {
+      // redirect to the next route
+      // http://localhost/admin/student/viewtask1/question?test_id=68&student_id=4&test_name=Expressions%20and%20functions%20&user_name=Argus%20Filch
+      window.location.href = `/admin/student/viewtask1/question?test_id=${test_id}&student_id=${student_id}&test_name=${test_name}&user_name=${user_name}`;
+    })
+    .catch(error => {
+      // handle error
+    });
+}
+
+            });
+//change date
+
+const duedate = document.querySelector('#due-date-button');
+
+        duedate.addEventListener('click', () => {
+          let test_name=`<%-test_name%>`;
+              let user_name=`<%-user_name%>`;
+
+              let student_id=`<%-student_id%>`;
+              let test_id = `<%-test_id%>`;
+           
+          let dateValue = document.getElementById("due-date").value;
+          let datetimeMySQL = dateValue.replace('T', ' ') + ':00';
+         
+        const date = {test_id,datetimeMySQL,test_name,user_name,student_id};
+
+  console.log(date);
+  fetch('/admin/studentindex/viewtask1/duedate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(date)
+  })
+    .then(response => {
+      // handle response from server
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Network response was not ok.');
+      }
+    })
+    .then(data => {
+      // http://localhost/admin/viewtask1/student/question?class_id=27&test_id=109&student_id=9&class_name=Algebra&user_name=M.%20Sai%20Rochan&test_name=test%201121
+      
+      window.location.href = `/admin/student/viewtask1/question?test_id=${test_id}&student_id=${student_id}&test_name=${test_name}&user_name=${user_name}`;
+    })
+    .catch(error => {
+    });
+  });
+
+  let previewModal;
+
+const preview1 = document.querySelector('#preview-button1');
+
+ preview1.addEventListener('click', () => {
+           
+           let test_id = `<%-test_id%>`;
+           const data = {  test_id };
+           console.log(data)
+           
+           fetch('/admin/studentpreviewquestions', {
+             method: 'POST',
+             headers: {
+               'Content-Type': 'application/json',
+             },
+             body: JSON.stringify(data),
+           })
+             .then((response) => {
+               return response.json();
+             })
+             .then((data) => {
+               const questionContainer = document.getElementById('question-container1');
+               questionContainer.innerHTML = '';
+               data.forEach((question) => {
+                 const questionElement = document.createElement('div');
+                 questionElement.className = 'question-item';
+                 questionElement.innerHTML = `
+                   <div class="row">
+                     <div class="col border-end">
+                                         <div class="row" style="padding: 10px;">
+                                             <p class="fw-bold" id="newline">
+                                               ${question.question}
+                                                 
+                                                 <div>
+                                                     <img src="${question.question_url}" class="img-fluid" alt="">
+                                                 </div>
+                                             </p>
+                                             <div>
+                                                 <input type="radio">
+                                                 <input type="radio" >
+                                                 <input type="radio" >
+                                                 <input type="radio" >
+                                                 <label for="one" class="box first">
+                                                     <div class="course">
+                                                         <span class="circle"></span>
+                                                         <span class="subject">A. ${question.option_1}</span>
+                                                     </div>
+                                                 </label>
+                                                 <label for="two" class="box second">
+                                                     <div class="course">
+                                                         <span class="circle"></span>
+                                                         <span class="subject">B. ${question.option_2}</span>
+                                                     </div>
+                                                 </label>
+                                                 <label for="three" class="box third">
+                                                     <div class="course">
+                                                         <span class="circle"></span>
+                                                         <span class="subject">C.${question.option_3}</span>
+                                                     </div>
+                                                 </label>
+                                                 <label for="four" class="box forth">
+                                                     <div class="course">
+                                                         <span class="circle"></span>
+                                                         <span class="subject">D.${question.option_4}</span>
+                                                     </div>
+                                                 </label>
+                                                 <div>
+                                                <h5 class="fw-bold mt-3">Solution:</h5>
+                                                <div class="solution">
+                                                  <p class="fw-bold" id="newline">
+                                                    ${question.solution}
+                                                    <div>
+                                                      <img src="${question.solution_url}" class="img-fluid" alt="">
+                                                    </div>
+                                                  </p>
+                                                  <span class="text-muted">End of solution</span>
+                                                  <hr style="border-style: dotted;">
+                                               
+                                                </div>
+                                             </div>
+                                         </div>
+                                     </div>  
+                   </div>
+                 `;
+                 questionContainer.appendChild(questionElement);
+               });
+               const mathJaxScript = document.createElement('script');
+        mathJaxScript.type = 'text/javascript';
+        mathJaxScript.text = `
+          MathJax.Hub.Config({
+            tex2jax: {
+              inlineMath: [['$','$'], ['\\(','\\)']]
+            },
+            "HTML-CSS": { linebreaks: { automatic: true } },
+            SVG: { linebreaks: { automatic: true } }
+          });
+          MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        `;
+        questionContainer.appendChild(mathJaxScript);
+             })
+           .catch((error) => {
+                 // handle error
+               });
+           
+         });
+     document.querySelector('.btn-close').addEventListener('click', () => {
+       if (previewModal) {
+         previewModal.hide();
+       }
+     });
+     document.getElementById('close-modal-btn').addEventListener('click', () => {
+       if (previewModal) {
+         previewModal.hide();
+       }
+       
+     });
+});
+
+
+
+
+</script>
+
+  
+    <div class="container-xl  ">
+        <div class="row">
+            <div class="col shadow p-3 mb-5 bg-white rounded">
+                <div class="row">
+                    <div class="col">
+                        <!-- http://localhost/admin/student/viewtask1?user_name=M.%20Sai%20Rochan&student_id=9 -->
+                      <a href="/admin/student/viewtask1?user_name=<%=user_name%>&student_id=<%=student_id%>" >  <button class="btn btn-dark"; type="button" >
+                        <i class="fa fa-arrow-left"> </i>
+                      </button>
+                      </a>
+                </div>
+                    <div class="col-12"><h4 style="text-align: center;"> Questions in <%=test_name%> </h4></div>
+                </div>
+            <style>
+                hr.dotted {
+                border-top: 3px dotted #bbb;
+                }
+            </style>  
+            <hr class="dotted">  <br><br>
+            <!-- Table -->
+            <div class="row">
+              <div class="col-9">
+              </div>
+              <div class="col float-end">
+                <div>
+                    
+                  <% if(data0!=undefined && data0.length > 0){ %>
+                  <p style="padding-left: 20%;">Due Date: <%=data0[0].due_date%>  <a class="btn btn-primary" id="edit" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    Edit
+                    </a></p>
+                    <div class="collapse" id="collapseExample">
+                      <div class="card card-body">
+                        <div class="input-group">
+                          <label for="due-date" class="input-group-text">Due Date:</label>
+                          <input type="datetime-local" class="form-control" id="due-date" name="due-date" required min="<%= new Date().toISOString().slice(0, 16) %>">
+                        </div>
+                        <!-- <label for="due-date-button">Submit Due-Date:</label> -->
+                        <br>
+                        <button class="btn btn-primary center" style="width: fit-content;" role="button" type="submit" id="due-date-button">Submit</button> 
+                      </div>
+                    </div>
+                  <%}%>
+                </div>
+                
+              </div>
+            </div>
+            <table class="display compact cell-border" id="questions" style="font-size: small;">
+                <thead>
+                <tr>
+                    <th>Question</th>
+                    <th>Topic</th>
+                    <th>Sub-Topic</th>
+                    <th>Month</th>
+                    <th>Year</th>
+                    <th>Standard</th>
+                    <th>Difficulty</th>
+                    <!-- <th>Delete</th> -->
+                </tr>
+            </thead>
+            <tbody>
+            <% for (let i=0; i < data0.length; i++){ %>
+                <tr>
+                    <td><%- data0[i].question %>
+                      <br>  <img src="<%=data0[i].question_url%>" class="img-fluid" alt=""></td>
+                    <td><%= data0[i].topic %></td>
+                    <td><%= data0[i].sub_topic %></td>
+                    <td><%= data0[i].month %></td>
+                    <td><%= data0[i].year %></td>
+                    <td><%= data0[i].standard %></td>
+                    <td><%= data0[i].difficulty %></td>
+                    <!-- <td> <form action="/admin/studentindex/viewtask1/questions/delete" method="POST">
+                        <input type="hidden" name="taskname"  value="<%= i %>">
+                        <button type="button" id="delete" class="btn btn-danger"data-bs-toggle="modal" data-bs-target="#delete-<%= i %>" style="border: none; background: none;"><img src="https://cdn-icons-png.flaticon.com/512/2907/2907762.png" alt="Icon" width="24" height="24"></button>
+                      </form>
+                      </td> -->
+                </tr>
+                <!-- Delete model -->
+                <div class="modal fade " id="delete-<%= i %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="delete-modal-label-<%= i %>" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="delete-modal-label-<%= i %>"   style="color: red;">Warning!</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                              <h5>Are you sure you want to delete this question 
+                                "<%= data0[i].question %> "</h5>
+                              <form action="/admin/studentindex/viewtask1/questions/delete" method="post">
+                                
+                                <input type="hidden" name="test_id" id="test_id" value="<%=data0[i].test_id%>">
+                                
+                                <input type="hidden" name="question_id" id="question_id" value="<%=data0[i].question_id%>">
+                                <input type="hidden" name="student_id" id="student_id" value="<%=student_id%>">
+                                <input type="hidden" name="user_name" id="user_name" value="<%=user_name%>">
+                                <input type="hidden" name="test_name" id="test_name" value="<%=data0[i].test_name%>">
+                                <input type="hidden" name="test_questions_id" id="test_questions_id" value="<%=data0[i].test_questions_id%>">
+                              <br>
+                                <button type="Submit" class="btn btn-primary">Delete</button>
+                                </form> 
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div> 
+                <!-- Delete Modal -->
+            <% } %>
+        </table>
+    </tbody>
+    <div class="row"> <!-- Delete Task -->
+        <div class="col-4"></div>
+        <div class="col-4 center">
+          <div class="btn-group" role="group" aria-label="Third group">
+            <button id="preview-button1" type="button"   class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Preview Assignment</button>
+          </div>
+            <!-- <button type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample1"  class="btn btn-primary center">
+                <i class="fa fa-arrow-up"> </i>
+                Add Question
+              </button> -->
+              
+        </div>
+        <div class="col-4"></div>
+      </div>
+      <div class="collapse" id="collapseExample1">
+        <div class="card card-body">
+          <!-- Add Question -->
+          <div class="row" style="background-color:aliceblue">
+            <div class="col-sm">
+              
+              <table class="display compact cell-border" id="assigntask" style="font-size: small;">
+                <thead>
+                  <tr>
+                    <!-- <th scope="col"></th>  -->
+                    <th ></th>
+                    <th scope="col">Question</th>
+                    <th scope="col">Course</th>
+                    <th scope="col">Topic</th>
+                    <th scope="col">Sub-Topic</th>
+                    <th scope="col">Month</th>
+                    <th scope="col">Year</th>
+                    <!-- <th scope="col">Standard</th>
+                    <th scope="col">Difficulty</th> -->
+                  </tr>
+                </thead>
+                
+                <tbody>
+                  <% for (let i=0; i < data1.length; i++){ %>
+                  <tr>
+                    <td ><%= data1[i].question_id %></td>
+                    <td><div class="DivForHoverItem">
+                            
+                      <% if(data1[i].question.length>350) {%>
+                        <% if(data1[i].question.includes("<math")){%>
+                            <%=data1[i].question.replace(/^<p>|<\/p>$/g, '').replace(/<\/?math[^>]*>/g, '').slice(0,50)  %>
+                        <% }else{ %>
+                            <%- data1[i].question.slice(0,350)  %>
+                            <% }}else{ %>
+                                <%- data1[i].question  %>
+                                <% } %>
+                    
+                      <img src="<%=data1[i].question_url%>" class="img-fluid" alt="">
+                  </div>
+                   </td>
+                   <td><%= data1[i].course %></td>
+                    <td><%= data1[i].topic %></td>
+                    <td><%= data1[i].sub_topic %></td>
+                    <td><%= data1[i].month %></td>
+                    <td><%= data1[i].year %></td>
+                  
+                  </tr>
+                  <% } %>
+                </tbody>
+                <!-- <tfoot>
+                  <tr>
+                  
+                    <th ></th>
+                    <th scope="col">Question</th>
+                    <th scope="col">Course</th>
+                    <th scope="col">Topic</th>
+                    <th scope="col">Sub-Topic</th>
+                    <th scope="col">Month</th>
+                    <th scope="col">Year</th>
+                    
+                  </tr>
+                </tfoot> -->
+              </table>
+            </div>
+            <style>
+                hr.dotted {
+                  border-top: 3px dotted #bbb;
+                }
+            </style>  
+            <hr class="dotted"> 
+           
+            
+                <div class="row">
+                  <div class="col">
+                    <table class="display" id="assigntask2">
+                      <thead>
+                        <tr>
+                          <th ></th>
+                          <th scope="col">Question</th>
+                          <th scope="col">Course</th>
+                          <th scope="col">Topic</th>
+                          <th scope="col">Sub-Topic</th>
+                          <th scope="col">Month</th>
+                          <th scope="col">Year</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                </div>
+             
+              <br>
+            <div class="col-4"></div>
+          </div>
+          <div class="row center" >
+            <div class="col" style="align-items: center;">
+                <a href="/admin/student/viewtask1?user_name=<%=user_name%>&student_id=<%=student_id%>" > <button type="button" class="btn btn-primary"> Cancel </button></a>  
+              
+              <button type="submit" id="assign-button" class="btn btn-primary" > Add </button>
+             
+            </div>
+          </div>
+          <!-- Add Question -->
+
+        </div>
+        
+      </div>
+      
+    
+    </div>
+
+        </div>
+    </div>
+    <!-- container -->
+    <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Preview Questions</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+                <div id="question-container1">
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" data-bs-dismiss="modal" id="close-modal-btn" class="btn btn-secondary" >Close</button>
+          </div>
+        </div>
+    
+      </div>
+    </div>
+     
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <div style="flex-grow:1"></div>
+  <%- include('a_footer.ejs') %>
+
+
+  </body>
+
+ 
+
+  </html>

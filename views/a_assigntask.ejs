@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJAX -->
+    <script>
+        $(document).ready(function() {
+            // $('#example').DataTable({
+            //     order: [[3, 'desc']],
+            // });
+            $('#assigntask2').DataTable({
+                'columnDefs': [{
+                    'targets': 0,
+                    'checkboxes': {
+                        'selectRow': true
+                    }
+                }],
+                'select': {
+                    'style': 'multi'
+                },
+                'order': [
+                    [1, 'asc']
+                ],
+
+                //  "bPaginate": false,
+                //   "bLengthChange": false,
+                //   "bFilter": true,
+                //   "bInfo": false,
+                //   "bAutoWidth": false 
+
+            });
+            $('#assigntask').DataTable({
+                'columnDefs': [{
+                    'targets': 0,
+                    'checkboxes': {
+                        'selectRow': true
+                    }
+                }],
+                'select': {
+                    'style': 'multi'
+                },
+                'order': [
+                    [1, 'asc']
+                ],
+
+                //  "bPaginate": false,
+                //   "bLengthChange": false,
+                //   "bFilter": true,
+                //   "bInfo": false,
+                //   "bAutoWidth": false 
+
+            });
+
+        });
+    </script>
+
+
+    <!-- header -->
+    <div class="container-xl">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col md-8">
+
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="display" style="font-size: small;" id="assigntask">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Select</th>
+                                            <th scope="col">Question</th>
+                                            <th scope="col">Topic</th>
+                                            <th scope="col">Sub-Topic</th>
+                                            <th scope="col">Month</th>
+                                            <th scope="col">Year</th>
+                                            <th scope="col">Standard</th>
+                                            <th scope="col">Difficulty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>Question 1</td>
+                                            <td>Topic 1</td>
+                                            <td>Sub-Topic 1</td>
+                                            <td>January</td>
+                                            <td>2022</td>
+                                            <td>Standard 1</td>
+                                            <td>Easy</td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>Question 2</td>
+                                            <td>Topic 2</td>
+                                            <td>Sub-Topic 2</td>
+                                            <td>February</td>
+                                            <td>2022</td>
+                                            <td>Standard 2</td>
+                                            <td>Difficult</td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>Question 3</td>
+                                            <td>Topic 2</td>
+                                            <td>Sub-Topic 2</td>
+                                            <td>February</td>
+                                            <td>2022</td>
+                                            <td>Standard 2</td>
+                                            <td>Difficult</td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>Question 4</td>
+                                            <td>Topic 2</td>
+                                            <td>Sub-Topic 2</td>
+                                            <td>February</td>
+                                            <td>2022</td>
+                                            <td>Standard 2</td>
+                                            <td>Difficult</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1" style="width: 0;">
+                        <div class="vr" style="height: 350px"></div>
+                    </div>
+
+
+                    <div class="col">
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mb-3">
+                                    <label for="taskname" class="input-group-text">Task Name:</label>
+                                    <input type="text" class="form-control" aria-label="Task Name" placeholder="Taskname">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-group mb-3">
+                                    <label for="date" class="input-group-text">Date:</label>
+                                    <input type="date" class="form-control" id="date">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group ">
+                                    <label for="due-date" class="input-group-text">Due Date:</label>
+                                    <input type="date" class="form-control" id="due-date" name="due-date">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Collapse -->
+                        <p class="float-end">
+
+                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    <i class="fa fa-filter"> </i>
+                  </button>
+                        </p>
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <label for="year" class="input-group-text">  Year :  </label>
+                                            <select class="form-select select2" id="year" name="year" placeholder="Select">
+                              <option selected disabled>Select Year</option>
+                              <option value="2010">2010</option>
+                              <option value="2011">2011</option>
+                              <option value="2012">2012</option>
+                              <option value="2013">2013</option>
+                              <option value="2014">2014</option>
+                              <option value="2015">2015</option>
+                              <option value="2016">2016</option>
+                              <option value="2017">2017</option>
+                              <option value="2018">2018</option>
+                              <option value="2019">2019</option>
+                              <option value="2020">2020</option>
+                              <option value="2021">2021</option>
+                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <label for="month" class="input-group-text">Month:</label>
+                                            <select class="form-select select2 form-control" id="month" name="month">
+                              <option selected>Choose...</option>
+                              <option value="January">January</option>
+                              <option value="June">June</option>
+                              <option value="August">August</option>
+                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <label for="topic" class="input-group-text">Topic:</label>
+                                            <select class="form-select select2" id="topic" name="topic">
+                              <option selected disabled>Topic...</option>
+                              <option value="Algebra 1">Algebra 1</option>
+                              <option value="Algebra 2">Algebra 2</option>
+                              <option value="Geometry">Geometry</option>
+                              <option value="Calcus">Calcus</option>
+                              <option value="Topic 4">Topic 4</option>
+                              <option value="Topic 5">Topic 5</option>
+                              <option value="Topic 6">Topic 6</option>
+                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group">
+                                            <label for="subtopic" class="input-group-text">Sub-Topic:</label>
+                                            <select class="form-select" id="subtopic" name="subtopic">
+                              <option selected>Choose...</option>
+                              <option value="Sub-Topic 1">Sub-Topic 1</option>
+                              <option value="Sub-Topic 2">Sub-Topic 2</option>
+                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="input-group">
+                                            <label for="standard" class="input-group-text">Standard:</label>
+                                            <select class="form-select" id="standard" name="standard">
+                              <option selected>Choose...</option>
+                              <option value="Algebra 1">Standard 1</option>
+                              <option value="Algebra 2">Standard 2</option>
+                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <label for="diffculity" class="input-group-text">Diffculity:</label>
+                                            <select class="form-select" id="subtopic" name="subtopic">
+                            <option selected>Choose...</option>
+                            <option value="Hard">Hard</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Easy">Easy</option>
+                          </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="float-end">
+                                    <button class="btn btn-primary">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Collapse -->
+
+                    </div>
+                </div>
+
+
+
+                <!-- container -->
+
+                <style>
+                    hr.dotted {
+                        border-top: 3px dotted #bbb;
+                    }
+                </style>
+                <hr class="dotted">
+                <!-- Preview Question -->
+                <div class="row">
+                    <div class="col-12">
+                        <table class="display " id="assigntask2">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Select</th>
+                                    <th scope="col">Question</th>
+                                    <th scope="col">Topic</th>
+                                    <th scope="col">Sub-Topic</th>
+                                    <th scope="col">Month</th>
+                                    <th scope="col">Year</th>
+                                    <th scope="col">Standard</th>
+                                    <th scope="col">Difficulty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td>Question 1</td>
+                                    <td>Topic 1</td>
+                                    <td>Sub-Topic 1</td>
+                                    <td>January</td>
+                                    <td>2022</td>
+                                    <td>Standard 1</td>
+                                    <td>Easy</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td>Question 2</td>
+                                    <td>Topic 2</td>
+                                    <td>Sub-Topic 2</td>
+                                    <td>February</td>
+                                    <td>2022</td>
+                                    <td>Standard 2</td>
+                                    <td>Difficult</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td>Question 3</td>
+                                    <td>Topic 2</td>
+                                    <td>Sub-Topic 2</td>
+                                    <td>February</td>
+                                    <td>2022</td>
+                                    <td>Standard 2</td>
+                                    <td>Difficult</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td>Question 4</td>
+                                    <td>Topic 2</td>
+                                    <td>Sub-Topic 2</td>
+                                    <td>February</td>
+                                    <td>2022</td>
+                                    <td>Standard 2</td>
+                                    <td>Difficult</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Preview Questions -->
+
+
+
+
+                <br>
+
+                <!-- <div class="btn-toolbar" style="justify-content: center" role="toolbar" >
+          <div class="btn-group me-2" role="group" aria-label="First group">
+            <button type="button" class="btn btn-primary">Cancel</button>
+            
+          </div>
+          <div class="btn-group me-2" role="group" aria-label="Second group">
+            <button type="button" class="btn btn-primary">Save Changes</button>
+            
+          </div>
+          <div class="btn-group" role="group" aria-label="Third group">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Preview Assignment</button>
+          </div>
+          <div class="btn-group" role="group" aria-label="Fourth group">
+            &nbsp;
+            <button type="button" class="btn btn-primary">Assign</button>
+          </div>
+        </div> -->
+
+
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!-- modal -->
+
+
+    <!-- <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="modal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Preview Questions</h5>
+        <button type="button" class="btn-close" data-bs-target="#v" onclick="assignAssignment()" data-bs-toggle="modal" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <- include('a_previewquestions')%>
+      </div>
+      
+    </div>
+  </div>
+</div> -->
+
+
+
+
+    <!-- modal -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <div style="flex-grow:1"></div>
+</body>
+
+
+
+</html>

@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Free Web tutorials">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="author" content="sai_rochan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .textStyler {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+
+<%- include('a_head.ejs') %>
+
+    
+<link type="html/javascript" href="/public/javascripts/plugin.min.js">
+    <script type="application/javascript" src="/javascripts/a_questions_modal.js"></script>
+
+    <script>
+          
+        var editors = []; //holds all ediots instances of trasli and qQnsdnkfjs dataas
+        var imageLocArray = []; //holds the link to question image
+        var textAreaindex = 0;
+        var textareas = document.getElementById("accordionExample").querySelectorAll("textarea"); //trasilations
+
+
+        function hello() {
+
+            var textareas = document.getElementById("accordionExample").querySelectorAll("textarea"); //trasilation
+
+            //Textarea fro question
+            const questionTextAreaIds = ['#questionTextArea', '#solutionTextArea', '#floatingTextareaOption1', '#floatingTextareaOption2', '#floatingTextareaOption3', '#floatingTextareaOption4'];
+            for (var i = 0; i < questionTextAreaIds.length; i++) {
+                //escape bellw if for all images in question
+                if (1) {
+                    tinymce.init({
+                        selector: questionTextAreaIds[i],
+                        plugins: 'anchor advlist autolink charmap codesample image lists searchreplace table visualblocks wordcount',
+                        toolbar: ' image table| undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | charmap | removeformat ',
+                        tinycomments_mode: 'embedded',
+                        tinycomments_author: 'Author name',
+                        images_upload_handler: function(blobInfo, success, failure, editor) {
+                            return new Promise(function(resolve, reject) {
+                                var xhr, formData;
+                                xhr = new XMLHttpRequest();
+                                xhr.withCredentials = false;
+                                xhr.open('POST', '/s3/imageUpload');
+                                xhr.onload = function() {
+                                    var json;
+                                    if (xhr.status != 200) {
+                                        reject(xhr.responseText);
+                                        return;
+                                    }
+
+                                    json = JSON.parse(xhr.responseText);
+                                    //console.log(xhr.responseText)
+
+                                    if (!json || typeof json.productImage != 'string') {
+                                        console.log("hello");
+                                        reject(xhr.responseText);
+                                        return;
+                                    }
+                                    // success(json.productImage);
+                                    imageLocArray.push({
+                                        editor: tinymce.activeEditor,
+                                        textAreaId: questionTextAreaIds[i],
+                                        productImage: json.productImage
+                                    })
+                                    resolve(json.productImage)
+                                };
+
+                                formData = new FormData();
+                                formData.append('image', blobInfo.blob(), blobInfo.filename());
+                                xhr.send(formData);
+                            })
+                        },
+                        automatic_uploads: false,
+                        mergetags_list: [{
+                            value: 'First.Name',
+                            title: 'First Name'
+                        }, {
+                            value: 'Email',
+                            title: 'Email'
+                        }, ],
+                        setup: function(editor) {
+                            editors.push(editor);
+                            textAreaindex++;
+                        }
+                    }); //end
+                }
+
+            }
+          
+            document.addEventListener('focusin', function(e) {
+                if (e.target.closest('.tox-tinymce-aux, .moxman-window, .tam-assetmanager-root') !== null) {
+                    e.stopImmediatePropagation();
+                }
+            });
+
+        }
+
+        function transilationLoad() {
+            document.addEventListener('focusin', function(e) {
+                if (e.target.closest('.tox-tinymce-aux, .moxman-window, .tam-assetmanager-root') !== null) {
+                    e.stopImmediatePropagation();
+                }
+            });
+            console.log("textareas[0].id from hello() tu=inymce", textareas[0]);
+            for (var j = 0; j < textareas.length; j++) {
+                //console.log(j)
+                if (1) {
+                    //console.log("if J % 5 j's", j)
+                    tinymce.init({
+                        selector: '#' + textareas[j].id,
+                        plugins: 'anchor advlist autolink charmap codesample image  lists  searchreplace table visualblocks wordcount',
+                        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough |  image  table | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | charmap | removeformat ',
+                        tinycomments_mode: 'embedded',
+                        tinycomments_author: 'Author name',
+                        draggable_modal: true,
+                        images_upload_handler: function(blobInfo, success, failure, editor) {
+                            return new Promise(function(resolve, reject) {
+                                var xhr, formData;
+                                xhr = new XMLHttpRequest();
+                                xhr.withCredentials = false;
+                                xhr.open('POST', '/s3/imageUpload');
+                                xhr.onload = function() {
+                                    var json;
+                                    if (xhr.status != 200) {
+                                        reject(xhr.responseText);
+                                        return;
+                                    }
+
+                                    json = JSON.parse(xhr.responseText);
+                                    console.log(xhr.responseText)
+
+                                    if (!json || typeof json.productImage != 'string') {
+                                        console.log("hello");
+                                       reject(xhr.responseText);
+                                        return;
+                                    }
+                                   // success(json.productImage);
+                                    var tareasTemp = document.getElementById("accordionExample").querySelectorAll("textarea"); //trasilations
+                                    console.log(tinymce.activeEditor)
+                                    imageLocArray.push({
+                                        editor: tinymce.activeEditor,
+                                        textAreaId: '',
+                                        productImage: json.productImage
+                                    })
+                                    console.log(json.productImage)
+                                    resolve(json.productImage)
+                                };
+
+                                formData = new FormData();
+                                formData.append('image', blobInfo.blob(), blobInfo.filename());
+                                xhr.send(formData);
+                            })
+                        },
+                        automatic_uploads: false,
+                        mergetags_list: [{
+                            value: 'First.Name',
+                            title: 'First Name'
+                        }, {
+                            value: 'Email',
+                            title: 'Email'
+                        }, ],
+                        setup: function(editor) {
+                            editors.push(editor);
+                            textAreaindex++;
+                        }
+                    });
+
+                }
+                // else {
+                //     //optins ki image optins remove
+
+                //     tinymce.init({
+                //         selector: '#' + textareas[j].id,
+                //         plugins: 'anchor advlist autolink charmap codesample  lists searchreplace table visualblocks wordcount ',
+                //         toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough |  table | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | charmap | removeformat',
+                //         tinycomments_mode: 'embedded',
+                //         tinycomments_author: 'Author name',
+
+                //         automatic_uploads: false,
+                //         mergetags_list: [{
+                //             value: 'First.Name',
+                //             title: 'First Name'
+                //         }, {
+                //             value: 'Email',
+                //             title: 'Email'
+                //         }, ],
+                //         setup: function(editor) {
+                //             editors.push(editor);
+                //             textAreaindex++;
+                //         }
+                //     });
+
+
+                // }
+            }
+        }
+
+        $(document).ready(function() {
+            // Call the "hello" function 
+            hello()
+        });
+
+        function distroyTiny(){
+            location.reload();
+                            if(editors!=null || editors.length!=0)
+                            for(i=0;i<editors.length;i++){
+            editors[i].remove();}
+        }
+    </script>
+
+
+    <script>
+        var refResults = JSON.parse('<%- JSON.stringify(refResults) %>');
+        //console.log(refResults);
+    </script>
+    <div class="modal-body" style="padding-top: unset;">
+        <!-- <h6 style="text-align: center;">Question Informantion</h6> -->
+        <form id="editQuestionModalForm">
+            <div class="row">
+                <div class="col">
+                    <div class="card card-body" style="background-color: #f1f1f7; padding-top: unset;">
+                        <p>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <input value="<%=questionResults[0].question_id%>" disabled id="mappedQuestion_id" style="display: none;">
+                                    <div id="questionForm" class="form-floating  border-2 border-top-0 border-danger rounded-4">
+                                        <h6 style="padding-left: 10px;" class="textStyler">Question Box*</h6>
+                                        <textarea id="questionTextArea" class="form-control" value="<%= questionResults[0].question %>" placeholder="Type your Question Here*" style="height: 100px">
+                                <%= questionResults[0].question %> <% if(questionResults[0].question_url){%><img src="<%=questionResults[0].question_url %>" alt="" width="100" height="100"><% } %></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div id="solutionForm" class="form-floating ">
+                                        <h6 style="padding-left: 10px;" class="textStyler">Solution Box</h6>
+                                        <textarea id="solutionTextArea" class="form-control" value="<%= questionResults[0].solution %>" placeholder="Type your Solution Here" style="height: 100px">
+                                <%= questionResults[0].solution %> <% if(questionResults[0].solution_url){%><img src="<%=questionResults[0].solution_url %>" alt="" width="100" height="100"><% } %></textarea>
+
+                                    </div>
+                                </div>
+                            </div><br>
+                            <div class="row justify-content-center" style="padding-bottom: 7px;">
+                                <div class="col-md-6">
+                                    <label for="inputStateAnswer">Correct Option*</label>
+                                    <select id="inputStateAnswer" class="form-control  form-control-sm  form-select rounded-4 ">
+                                                <option>Choose...</option>
+                        
+                        
+                                                <% if(questionResults[0].answer!='') {%>
+                                                <option value="<%= questionResults[0].answer %>" selected>
+                                                    <%= questionResults[0].answer %>
+                                                </option>
+                                                <%}%>
+                        
+                        
+                                                <% for(i=1;i<5;i++) { if(questionResults[0].answer.slice(-1) !=i){%>
+                                                    <option value="option_<%=i%>">
+                                                        option_<%=i %>
+                                                    </option>
+                                                    <% }} %>
+                        
+                                            </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div id="floatingFormareaOption1" class="form-floating rounded-4">
+                                        <textarea class="form-control " value="<%= questionResults[0].option_1 %>" placeholder="Type your Option 1 Here*" id="floatingTextareaOption1" style="height: 100px">
+                                            <%= questionResults[0].option_1 %> <% if(questionResults[0].option_1_url){%><img src="<%=questionResults[0].option_1_url %>" alt="" width="100" height="100"><% } %>
+                                        </textarea>
+                                        <label for="floatingTextareaOption1">Option 1*</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div id="floatingFormareaOption2" class="form-floating rounded-4">
+                                        <textarea class="form-control" value="<%= questionResults[0].option_2 %>" placeholder="Type your Option 2 Here*" id="floatingTextareaOption2" style="height: 100px">
+                                            <%= questionResults[0].option_2 %> <% if(questionResults[0].option_2_url){%><img src="<%=questionResults[0].option_2_url %>" alt="" width="100" height="100"><% } %>
+                                        </textarea>
+                                        <label for="floatingTextareaOption2">Option 2*</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div id="floatingFormareaOption3" class="form-floating rounded-4">
+                                        <textarea class="form-control" value="<%= questionResults[0].option_3 %>" placeholder="Type your Option 3 Here*" id="floatingTextareaOption3" style="height: 100px">
+                                            <%= questionResults[0].option_3 %> <% if(questionResults[0].option_3_url){%><img src="<%=questionResults[0].option_3_url %>" alt="" width="100" height="100"><% } %>
+                                        </textarea>
+                                        <label for="floatingTextareaOption4">Option 3*</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div id="floatingFormareaOption4" class="form-floating rounded-4 ">
+                                        <textarea class="form-control" value="<%= questionResults[0].solution %>" placeholder="Type your Option 4 Here*" id="floatingTextareaOption4" style="height: 100px">
+                                            <%= questionResults[0].option_4 %> <% if(questionResults[0].option_4_url){%><img src="<%=questionResults[0].option_4_url %>" alt="" width="100" height="100"><% } %>
+                                        </textarea>
+                                        <label for="floatingTextareaOption4">Option 4*</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <!-- <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                         Question
+                       </button>
+                     <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
+                       Option 1
+                     </button>
+                     <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                         Option 2
+                       </button>
+                       <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                         Option 3
+                       </button>
+                       <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                         Option 4
+                       </button> -->
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <!-- <div class="col">
+                 <label for="inputEmail4">Test Name*</label>
+                 <input type="text" class="form-control"  id="" placeholder="">
+             </div> -->
+                <div class="col">
+                    <label for="inputStateYear">Year</label>
+                    <select id="inputStateYear" class="form-control form-control-sm form-select">
+                        <option>Choose...</option>
+                        <% if(questionResults[0].year!='') {%>
+                        <option value="<%= questionResults[0].year %>" selected>
+                            <%= questionResults[0].year %>
+                        </option><% } %>
+                        <% for(i=0;i<refResults.length;i++) {%>
+                        <% if(refResults[i].type=='year' && refResults[i].type_value!=questionResults[0].year){%>
+                            <option value="<%= refResults[i].type_value %>">
+                                <%= refResults[i].type_value %>
+                            </option>
+                            <% }} %>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="inputStateMonth">Month</label>
+                    <select id="inputStateMonth" class="form-control  form-control-sm  form-select">
+                        <option>Choose...</option>
+                        
+                        <% if(questionResults[0].month!=null && questionResults[0].month!='') {%>
+                        <option value="<%= questionResults[0].month %>" selected>
+                            <%= questionResults[0].month.toUpperCase() %>
+                        </option>
+                        <%}%>
+
+                        <% for(i=0;i<refResults.length;i++) { %> 
+                        <% if(refResults[i].type.toUpperCase()=='month'.toUpperCase() && refResults[i].type_value!=questionResults[0].month){%>
+                            <option value="<%= refResults[i].type_value %>">
+                                <%= refResults[i].type_value.toUpperCase() %>
+                            </option>
+                            <% }} %>
+                    </select>
+                </div>
+
+                <div class="col">
+                    <label for="inputStateStandard">Standard</label>
+                    <select id="inputStateStandard" class="form-control  form-control-sm  form-select">
+
+                        <option>Choose...</option>
+                        <% if(questionResults[0].standard!='') {%>
+                        <option value="<%= questionResults[0].standard %>" selected>
+                            <%= questionResults[0].standard.toUpperCase() %>
+                        </option>
+                        <%}%>
+
+                        <% for(i=0;i<refResults.length;i++) {%>
+                            <%  if(refResults[i].type=='standard' && refResults[i].type_value!=questionResults[0].standard){%>
+                            <option value="<%= refResults[i].type_value %>">
+                                <%= refResults[i].type_value.toUpperCase() %>
+                            </option>
+                            <% }} %>
+
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="inputStateDifficulty">Difficulty</label>
+                    <select id="inputStateDifficulty" class="form-control  form-control-sm  form-select">
+                        <option>Choose...</option>
+
+                        <%if(questionResults[0].difficulty != ''){%>
+                        <option selected>
+                            <%= questionResults[0].difficulty %>
+                        </option>
+                        <%}%>
+
+                        <% for(i=0;i<refResults.length;i++) { %>
+                            <% if(refResults[i].type=="difficulty" && refResults[i].type_value!=questionResults[0].difficulty){%>
+                            <option value="<%= refResults[i].type_value %>">
+                                <%= refResults[i].type_value %>
+                            </option>
+                            <% }} %>
+                    </select>
+                </div>
+                <!-- <div class="col">
+                             <label for="inputState">Approval</label>
+                             <select id="inputState" disabled class="form-control  form-control-sm  form-select" style="cursor: not-allowed;">
+                                 <option selected>Choose...</option>
+                                 <option>Approved</option>
+                                 <option>Pending</option>
+                                 <option>Disapproved</option>
+                             </select>  
+                         </div> -->
+            </div>
+            <br>
+            <div class="row">
+
+                <div class="col">
+                    <label for="inputStateCourse">Course*</label>
+                    <select id="inputStateCourse" class="form-control  form-control-sm  form-select" onchange="updateTopicDropdown()">
+                        <option>Choose...</option>
+
+                        <% if(questionResults[0].course!='') {%>                        
+                        <option selected>
+                            <%= questionResults[0].course.toUpperCase() %>
+                        </option>
+                        <%}%>
+
+
+                        <% for(i=0;i<refResults.length;i++) {  %>
+                           <% if(refResults[i].type=='course' && refResults[i].type_value!=questionResults[0].course){%>
+                            <option value="<%= refResults[i].type_value %>">
+                                <%= refResults[i].type_value.toUpperCase() %>
+                            </option>
+                            <% }} %>
+
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="inputStateTopic">Topic</label>
+                    <select id="inputStateTopic" class="form-control  form-control-sm  form-select" onchange="updateSubTopicDropdown()">
+                        <option>Choose...</option>
+
+                        <%if(questionResults[0].topic != ''){%>
+                        <option value="<%= questionResults[0].topic %>" selected>
+                            <%= questionResults[0].topic.toUpperCase() %>
+                        </option>
+                        <%}%>
+
+
+                        <% for(i=0;i<refResults.length;i++) {  %>
+                          <% if(refResults[i].type.toUpperCase()==questionResults[0].course.toUpperCase() && refResults[i].type_value.toUpperCase()!=questionResults[0].topic.toUpperCase()){%>
+                            <option value="<%= refResults[i].type_value %>">
+                                <%= refResults[i].type_value.toUpperCase() %>
+                            </option>
+                            <% }} %>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="inputStateSubTopic">Sub-Topic</label>
+                    <select id="inputStateSubTopic" class="form-control  form-control-sm  form-select">
+                        <option>Choose...</option>
+
+                        <%if(questionResults[0].sub_topic != ''){%>
+                        <option value="<%= questionResults[0].sub_topic %>" selected>
+                            <%= questionResults[0].sub_topic.toUpperCase() %>
+                        </option>
+                        <%}%>
+
+                        <% for(i=0;i<refResults.length;i++) {  %>
+                            <% if(refResults[i].type.toUpperCase()==questionResults[0].topic.toUpperCase() && refResults[i].type_value.toUpperCase()!=questionResults[0].sub_topic.toUpperCase()){%>
+                              <option value="<%= refResults[i].type_value %>">
+                                  <%= refResults[i].type_value.toUpperCase() %>
+                              </option>
+                              <% }} %>
+
+                    </select>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col">
+                    <hr class="hr hr-blurry" />
+                    <br>
+                </div>
+            </div>
+            <!-- <div class="row">
+             <div class="col-sm-4">
+                 <label for="inputState" style="font-size: medium; color: black;">Add Translation</label>
+                 <select id="inputState" class="form-control   form-select">
+                     <option selected>Choose...</option>
+                     <option>English (6)</option>
+                     <option>Arabic (1)</option>
+                     <option>Spanish (2)</option>
+                     <option>Bengali (1)</option>
+                     <option>Chinese (Simplified)(2)</option>
+                     <option>Chinese (Traditional)(3)</option>
+                 </select>  
+             </div>
+             </div> -->
+            <div class="row">
+                <div class="col">
+                    <h6 style="text-align: center;">Translations</h6>
+                </div>
+            </div>
+
+            <!-- exermient fortabs -->
+
+            <div class="row">
+                <div class="col">
+                    <div class="accordion" id="accordionExample">
+
+                        <!-- EJS template code -->
+                        <% let emptyTransilations=[]; %>
+                            <% for (let i=0; i < refResults.length; i++) { %>
+                                <% if (refResults[i].type==='language' ) { %>
+                                    <% emptyTransilations.push(refResults[i].type_value); %>
+                                        <% } %>
+                                            <% } %>
+
+                                                <% for (let i=0; i < translationResults.length; i++) { %>
+                                                    <% let
+                                                        index=emptyTransilations.indexOf(translationResults[i].language);
+                                                        %>
+                                                        <% if (index !==-1) { %>
+                                                            <% emptyTransilations.splice(index, 1); %>
+                                                                <% } %>
+                                                                    <% } %>
+
+
+                                                                        <% for (var i=0;i<translationResults.length;i++)
+                                                                            {%>
+                                                                            <div class="accordion-item">
+                                                                                <h2 class="accordion-header" id="headingOne<%=i%>">
+                                                                                    <button class="accordion-button" onclick="transilationLoad()" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne<%=i%>" aria-expanded="true" aria-controls="collapseOne<%=i%>">
+                                                                                        <span
+                                                                                            class="greendot"></span>&nbsp;<span
+                                                                                            class="languageAccordianHeaderFor">
+                                                                                            <%= translationResults[i].language %>
+                                                                                        </span>
+                                                                                    </button>
+                                                                                </h2>
+                                                                                <div id="collapseOne<%=i%>" class="accordion-collapse <%if(i==0){ %>  <% } %> collapse" aria-labelledby="headingOne<%=i%>" data-bs-parent="#accordionExample">
+                                                                                    <div class="accordion-body">
+                                                                                        <div class="row">
+                                                                                            <div class="col-md-12">
+                                                                                                <div class="row">
+                                                                                                    <div class="col">
+                                                                                                        <div class="card card-body" style="background-color: #f1f1f7;">
+                                                                                                            <p>
+                                                                                                                <div class="row">
+                                                                                                                    <div class="col">
+                                                                                                                        <div class="form-floating">
+                                                                                                                            <textarea class="form-control" name="<%=translationResults[i].translation_id%>" id="floatingTextareaQuestion<%=i%>" style="height: 100px"><%=translationResults[i].t_question%> <% if(translationResults[i].t_question_url){%><br><br><img src="<%=translationResults[i].t_question_url %>" alt="" width="100" height="100"><% } %></textarea>
+                                                                                                                            <label for="floatingTextareaQuestion<%=i%>">Transiation
+                                                                                                                            in
+                                                                                                                            <%=translationResults[i].language %>
+                                                                                                                                </label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col">
+                                                                                                                        <div class="form-floating">
+                                                                                                                            <textarea class="form-control" id="floatingTextareaSolution<%=i%>" style="height: 100px"><%=translationResults[i].t_solution%> <% if(translationResults[i].t_solution_url){%><img src="<%=translationResults[i].t_solution_url %>" alt="" width="100" height="100"><% } %></textarea>
+                                                                                                                            <label for="floatingTextareaSolution<%=i%>">Transiation
+                                                                                                                            in
+                                                                                                                            <%=translationResults[i].language %>
+                                                                                                                                </label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div><br>
+                                                                                                                <div class="row">
+                                                                                                                    <div class="col">
+                                                                                                                        <div class="form-floating">
+                                                                                                                            <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextareaOption1<%=i%>" style="height: 100px"><%=translationResults[i].t_option_1%> <% if(translationResults[i].t_option_1_url){%><img src="<%=translationResults[i].t_option_1_url %>" alt="" width="100" height="100"><% } %></textarea>
+                                                                                                                            <label for="floatingTextareaQuestion<%=i%>">Option
+                                                                                                                            1</label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col">
+                                                                                                                        <div class="form-floating">
+                                                                                                                            <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextareaOption2<%=i%>" style="height: 100px"><%=translationResults[i].t_option_2%> <% if(translationResults[i].t_option_2_url){%><img src="<%=translationResults[i].t_option_2_url %>" alt="" width="100" height="100"><% } %></textarea>
+                                                                                                                            <label for="floatingTextareaOption2<%=i%>">Option
+                                                                                                                            2</label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col">
+                                                                                                                        <div class="form-floating">
+                                                                                                                            <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextareaOption3<%=i%>" style="height: 100px"><%=translationResults[i].t_option_3%> <% if(translationResults[i].t_option_3_url){%><img src="<%=translationResults[i].t_option_3_url %>" alt="" width="100" height="100"><% } %></textarea>
+                                                                                                                            <label for="floatingTextareaOption3<%=i%>">Option
+                                                                                                                            3</label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col">
+                                                                                                                        <div class="form-floating">
+                                                                                                                            <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextareaOption4<%=i%>" style="height: 100px"><%=translationResults[i].t_option_4%> <% if(translationResults[i].t_option_4_url){%><img src="<%=translationResults[i].t_option_4_url %>" alt="" width="100" height="100"><% } %></textarea>
+                                                                                                                            <label for="floatingTextareaOption4<%=i%>">Option
+                                                                                                                            4</label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </p>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <% } %>
+
+                                                                                <% var k=0;for(var i=0;i<emptyTransilations.length;i++){%>
+                                                                                    <div class="accordion-item">
+                                                                                        <h2 class="accordion-header" id="headingOne<%=(i+100)%>">
+
+                                                                                            <button class="accordion-button" onclick="transilationLoad()" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne<%=(i+100)%>" aria-expanded="true" aria-controls="collapseOne<%=(i+100)%>">
+                                                                                                <span
+                                                                                                    class="reddot"></span>&nbsp;<span
+                                                                                                    class="languageAccordianHeader">
+                                                                                                    <%= emptyTransilations[i] %>
+                                                                                                </span>
+                                                                                            </button>
+                                                                                        </h2>
+                                                                                        <div id="collapseOne<%=(i+100)%>" class="accordion-collapse collapse" aria-labelledby="headingOne<%=(i+100)%>" data-bs-parent="#accordionExample">
+                                                                                            <div class="accordion-body">
+                                                                                                <div class="row">
+                                                                                                    <div class="col-md-12">
+                                                                                                        <div class="row">
+                                                                                                            <div class="col">
+                                                                                                                <div class="card card-body" style="background-color: #f1f1f7;">
+                                                                                                                    <p>
+                                                                                                                        <div class="row">
+                                                                                                                            <div class="col">
+                                                                                                                                <div class="form-floating">
+                                                                                                                                    <textarea class="form-control" placeholder="Type your <%= emptyTransilations[i]  %> transilation here" name="<%=emptyTransilations[i]%>Create" id="floatingTextarea2<%=(++k)%>" style="height: 100px"></textarea>
+                                                                                                                                    <label for="floatingTextarea2<%=(++k)%>">Transiation
+                                                                                                                                    in
+                                                                                                                                </label>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div class="col">
+                                                                                                                                <div class="form-floating">
+                                                                                                                                    <textarea class="form-control" placeholder="Type your <%= emptyTransilations[i]  %> solution here" name="<%=emptyTransilations[i]%>Create" id="floatingTextarea2<%=(++k)%>" style="height: 100px"></textarea>
+                                                                                                                                    <label for="floatingTextarea2<%=(++k)%>">Transiation
+                                                                                                                                    in
+                                                                                                                                </label>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <br>
+                                                                                                                        <div class="row">
+                                                                                                                            <div class="col">
+                                                                                                                                <div class="form-floating">
+                                                                                                                                    <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2<%=(++k)%>" style="height: 100px"></textarea>
+                                                                                                                                    <label for="floatingTextarea2<%=(++k)%>">Option
+                                                                                                                                    1</label>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div class="col">
+                                                                                                                                <div class="form-floating">
+                                                                                                                                    <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2<%=(++k)%>" style="height: 100px"></textarea>
+                                                                                                                                    <label for="floatingTextarea2<%=(++k)%>">Option
+                                                                                                                                    2</label>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div class="col">
+                                                                                                                                <div class="form-floating">
+                                                                                                                                    <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2<%=(++k)%>" style="height: 100px"></textarea>
+                                                                                                                                    <label for="floatingTextarea2<%=(++k)%>">Option
+                                                                                                                                    3</label>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div class="col">
+                                                                                                                                <div class="form-floating">
+                                                                                                                                    <textarea class="form-control" placeholder="Type your Option Here" id="floatingTextarea2<%=(++k)%>" style="height: 100px"></textarea>
+                                                                                                                                    <label for="floatingTextarea2<%=(++k)%>">Option
+                                                                                                                                    4</label>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </p>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <% }%>
+                                                                                    
+                    </div>
+                </div>
+            </div>
+
+            <!-- end -->
+
+
+
+        </form>
+    </div>
+
+</html>

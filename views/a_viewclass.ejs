@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('t_head.ejs') %>
+  <%- include('a_header.ejs') %>
+<body >
+ <!-- script -->
+ <style>
+  .select2-container {
+      z-index: 99999;
+  }
+</style>
+ <script>
+      $(document).ready(function () {
+        $('.select2').select2();
+    $('#viewclass').DataTable({
+        order: [[1, 'asc']],
+    });
+    
+      })
+    </script>
+
+
+
+<div class="container-xl">
+  
+
+<div class="row">
+  <div class="col shadow p-3 mb-5 bg-white rounded">
+    <div class="row">
+      <div class="col">
+        <a href="/admin/class" >  <button class="btn btn-dark"; type="button" >
+          <i class="fa fa-arrow-left"> </i>
+        </button>
+        </a>
+     </div>
+      <div class="col-12"><h4 style="text-align: center;">"<%=class_name%>" Student Information</h4></div>
+    </div>
+    <style>
+      hr.dotted {
+        border-top: 3px dotted #bbb;
+      }
+  </style>  
+  <hr class="dotted"> 
+
+<br><br>
+<div class="row">
+  <div class="col-8"></div>
+    <div class="col-2">
+      <button type="button" onclick="" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+        Add Student
+      </button>   
+    </div>
+    <div class="col">
+       <button type="button" onclick="" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#coteacher">
+            Add Co-teacher
+        </button>
+</div>
+  
+</div><br>
+
+<div class="">
+ 
+<table id="viewclass" class="display" style="width:100%">
+  
+  <thead>
+      <tr>
+        <th></th>
+          <th>Student Name</th>
+          <th>Email</th>
+        
+          <th>Create Assignment</th>
+          <th>View Assignments</th>
+          <th>Analytics</th>
+          <th>Delete</th>
+      </tr>
+  </thead>
+  <tbody>
+    <% for (let i=0; i < data0.length; i++){ %>
+      <tr>
+        <td></td>
+        <td><%= data0[i].user_name %></td>
+        <td><%= data0[i].user_email %></td>
+        
+        <td ><a href="/admin/assignstudent?user_name=<%=data0[i].user_name%>&class_id=<%=data0[i].class_id%>&student_id=<%=data0[i].student_id%>&student_name=<%=data0[i].user_name%>&class_name=<%=class_name%>"><img src="https://cdn-icons-png.flaticon.com/512/2098/2098402.png" class="center" data-toggle="modal" data-target="#assigntaskmodel"alt="Icon" width="24" height="24" ></a></td>
+         <td><a href="/admin/viewtask1?class_id=<%=data0[i].class_id%>&student_id=<%=data0[i].student_id%>&class_name=<%=class_name%>&user_name=<%=data0[i].user_name%>"><img src="https://cdn-icons-png.flaticon.com/128/8347/8347446.png" class="center" alt="Icon" width="24" height="24"></a></td>
+         <td><a href="/admin/student/analytics?class_id=<%=data0[i].class_id%>&class_name=<%=class_name%>&user_name=<%=data0[i].user_name%>&student_id=<%=data0[i].student_id%>"><img src="https://cdn-icons-png.flaticon.com/512/1548/1548914.png" class="center" data-toggle="modal" data-target="#assigntaskmodel"alt="Icon" width="24" height="24"></a></td>
+         <td> <form action="/admin/student/delete" method="POST">
+          <input type="hidden" name="classname"  value="<%= data0[i].student_id %>">
+          <button type="button" id="delete" class="btn btn-danger"data-bs-toggle="modal" data-bs-target="#delete-<%= data0[i].student_id %>" style="border: none; background: none;"><img src="https://cdn-icons-png.flaticon.com/512/2907/2907762.png" alt="Icon" width="24" height="24"></button>
+        </form>
+        
+      <!-- Delete Modal Class -->
+      <div class="modal fade " id="delete-<%= data0[i].student_id %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="delete-modal-label-<%= data0[i].student_id %>" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="delete-modal-label-<%= data0[i].student_id %>"   style="color: red;">Warning!</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                  <h5>Are you sure you want to delete  <%= data0[i].user_name %></h5>
+                  <form action="/admin/student/delete" method="post">
+                    <input type="hidden" name="student_id" id="student_id" value="<%= data0[i].student_id %>">
+                    <input type="hidden" name="class_id" id="class_id" value="<%= class_id %>">
+                    
+                    <input type="hidden" name="class_name" id="class_name" value="<%= class_name %>">
+                    <br>
+                    <button type="Submit" class="btn btn-primary">Delete</button>
+                    </form> 
+            </div>
+            
+          </div>
+        </div>
+      </div> 
+        <!-- Delete Modal Class --></td>
+      </tr>
+      <% } %>
+
+  
+  </tbody>
+ 
+</table>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- <h3>bottom</h3> -->
+
+
+    
+
+<!-- Add Student Modal -->
+<div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Add Student</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/class/<%=class_id%>/students" method="POST">
+          <div class="form-group row">
+            <input type="hidden" name="class_name" id="class_name" value="<%=class_name%>">
+            <label for="studentname" class="col-sm-4 col-form-label">Student Name/Email<span class="text-danger">*</span></label>
+            <div class="col-sm-8">
+              <select style="width: 300px;" name="studentname[]" id="studentname" class="form-control select2" multiple required="required">
+             
+                <option value="Select student"  disabled>Select Student</option>
+                <% for (let i=0; i < data1.length; i++){ %>
+                  
+                  <option value="<%= data1[i].user_id %>"><%= data1[i].user_name %>,<%= data1[i].user_email %></option>
+                 
+                <% } %>
+              </select>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="Submit" class="btn btn-primary">Add</button>
+          </div>
+         
+          </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<!-- Add Co-teacher Modal -->
+<div class="modal fade" id="coteacher" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="coteacher" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="coteacher">Add Co-Teacher</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/class/<%=class_id%>/coteachers" method="POST">
+          <div class="form-group row">
+            <label for="coteachername" class="col-sm-4 col-form-label">Teacher Name/Email <span class="text-danger">*</span></label>
+            <input type="hidden" name="class_name" id="class_name" value="<%=class_name%>">
+            <div class="col-sm-8">
+              <select style="width: 300px;" name="coteachername[]" id="coteachername" class="form-control select2" required multiple>
+                <option value="Select Co-Teachers"  disabled>Select Co-teachers</option>
+                <% for (let i=0; i < data2.length; i++){ %>
+                  <option value="<%= data2[i].user_id %>"><%= data2[i].user_name %>,<%= data2[i].user_email %></option>
+                <% } %>
+              </select>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="Submit" class="btn btn-primary">Create</button>
+          </div>
+          </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Add co teacher modal -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<div style="flex-grow:1"></div>
+
+<%- include('a_footer.ejs') %>
+
+
+</body>
+
+</html>

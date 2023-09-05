@@ -1,0 +1,235 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Exam Study Tool</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/s_index.css" rel="stylesheet">
+    <link href="/css/s_profile.css" rel="stylesheet">
+
+
+</head>
+
+<body style="background-color: none;">
+    <header>
+        <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Exam Study Tool</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" style="border-left: 1px solid darkgray; " id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        <li class="nav-item">
+                            <a class="nav-link " style="padding-left: 15px; " aria-current="page" href="/teacher">Class</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link " style="padding-left: 15px;" aria-current="page" href="/teacher/questions">Questions</a>
+                      </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/teacher/status" >Status</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                  <ul class="navbar-nav ms-auto">
+                      <li class="nav-item active">
+                          <a class="nav-link " style="color: blue;" aria-current="page" href="/teacher/profile"><i
+                                  style="padding-right: 4px;" class="fa fa-user text-capitalize"></i><%= user.user_name %></a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="/">LOGOUT</a>
+                      </li>
+                  </ul>
+              </div>
+            </div>
+        </nav>
+        <br>
+    </header>
+
+
+    <main class="back-img" style="min-height: 77vh;">
+        <div class="container ">
+            <h3 class="display-5 text-center" style="padding: 20px;">PROFILE</h3>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-4 border-end">
+                            <form class="text-center">
+                                <div class="row" style="padding-top: 20%;">
+                                    <div class="form-group">
+                                        <div class="circle">
+                                            <span class="avatar" id="initials"></span>
+                                          </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control text-center" id="name" value="<%= user.user_name %>"
+                                            readonly>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-8">
+                            <form id="myForm" style="padding: 5%;">
+                                <div class="row mb-3">
+                                    <label for="email" class="col-sm-4 col-form-label">Email address:</label>
+                                    <div class="col-sm-8">
+                                        <input type="email" class="form-control" id="email" value=<%= user.user_email %>
+                                            readonly required>
+                                    </div>
+                                </div>
+                              
+                                <div class="row mb-3">
+                                    <label for="preferred_language" class="col-sm-4 col-form-label">Preferred Language:</label>
+                                    <div class="col-sm-8">
+                                        <select id="preferred_language" name='preferred_language' class='form-select' disabled>
+                                            <option selected value='<%- data2[0].preferred_language %>'><%- data2[0].preferred_language %></option>
+                                            <% for (let i = 0; i < data0.length; i++){ %>
+                                            <option value="<%= data0[i].type_value %>"><%= data0[i].type_value %></option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="school_name" class="col-sm-4 col-form-label">School:</label>
+                                    <div class="col-sm-8">
+                                        <select id="school_name" name='school_name' class='form-select' disabled>
+                                            <option selected value='<%- data2[0].school_name %>'><%- data2[0].school_name %></option>
+                                            <% for (let i = 0; i < data1.length; i++){ %>
+                                            <option value="<%- data1[i].type_value %>"><%- data1[i].type_value %></option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="padding-top:5%;padding-left:45%;">
+                                    <button type="button" id='edit' class='btn' style="background-color: #E7E2DA;">Edit</button>
+                                    <button type="submit" id='save' class='btn btn-success d-none'>Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Modal -->
+    <div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="saveModalLabel">Success</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            Profile updated successfully.
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+  
+
+    <div class="border-top" style="background-color: white; padding-bottom: 1.5rem;">
+        <div class="container">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3" style="margin-top: 1.5rem">
+                <p class="col-md-4 mb-0 text-muted">&copy; Exam Study Tool © 2023</p>
+    
+                <ul class="nav col-md-4 justify-content-end">
+                    <li class="nav-item"><a href="/student" class="nav-link px-2 text-muted">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Contact</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Terms and Conditions</a></li>
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <!-- <script src="/js/s_profile.js"></script> -->
+    <script>
+        function getInitials(name) {
+            return name.split(' ').map(part => part.charAt(0).toUpperCase()).join('');
+        }
+
+        const nameInput = document.getElementById('name');
+        document.getElementById('initials').innerText = getInitials(nameInput.value);
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const editBtn = document.getElementById('edit');
+            const saveBtn = document.getElementById('save');
+            const form = document.getElementById('myForm');
+          
+            editBtn.addEventListener('click', () => {
+              form.querySelectorAll('select').forEach((select) => select.disabled = false);
+              editBtn.classList.add('d-none');              
+              saveBtn.classList.remove('d-none');
+            });
+          
+            form.addEventListener('submit', async (event) => {
+              event.preventDefault();
+          
+              const preferredLanguage = document.getElementById('preferred_language').value;
+              const schoolName = document.getElementById('school_name').value;
+          
+              const updatedData = {
+                preferred_language: preferredLanguage,
+                school_name: schoolName,
+              };
+          
+              try {
+                const response = await fetch('/teacher/profile', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(updatedData),
+                });
+          
+                if (response.ok) {
+                  const saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
+                  saveModal.show();
+                } else {
+                  throw new Error('Update failed');
+                }
+              } catch (error) {
+                console.error('Error:', error);
+              }
+            });
+          
+            $('#saveModal').on('hidden.bs.modal', () => {
+              form.querySelectorAll('select').forEach((select) => select.disabled = true);
+              saveBtn.classList.add('d-none');
+              editBtn.classList.remove('d-none');
+            });
+          
+            // Initialize the form with the select fields disabled and the edit button visible
+            form.querySelectorAll('select').forEach((select) => select.disabled = true);
+            editBtn.classList.remove('d-none');
+            saveBtn.classList.add('d-none');
+          });
+          
+    </script>
+</body>
+
+</html>

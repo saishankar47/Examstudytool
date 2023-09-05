@@ -1,0 +1,148 @@
+<html>
+    <style>
+        
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-item .nav-link {
+  color: #444 !important;
+  transition: 0.3s;
+}
+
+.nav-item .nav-link:hover {
+  color: #007BFF !important;
+}
+
+.nav-item.active .nav-link {
+  color: #007BFF !important;
+  border-bottom: 3px solid #007BFF !important;
+}
+    </style>
+<header>
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/admin/student">Exam Study Tool</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" style="border-left: 1px solid darkgray; " id="navbarCollapse">
+                <ul id="myD" class="navbar-nav me-auto mb-2 mb-sm-0">
+                    <li class="nav-item" id="studentTab">
+                        <a class="nav-link"  href="/admin/student" aria-expanded="true">Student</a>
+                    </li>
+                    <li class="nav-item" id="Teacher">
+                        <a class="nav-link"  href="/admin/teacher" aria-expanded="false">Teacher</a>
+                    </li>
+                    <li class="nav-item" id="Class">
+                        <a class="nav-link"  href="/admin/class" aria-expanded="false">Class</a>
+                    </li>
+                    <li class="nav-item" id="Questions">
+                        <a class="nav-link"  href="/admin/questions" aria-expanded="false">Questions</a>
+                    </li>
+                    <li class="nav-item" id="References">
+                        <a class="nav-link" href="/admin/referencedata" aria-expanded="false">References</a>
+                    </li>
+                    <li class="nav-item dropdown" id="Requests">
+                        <a class="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Requests
+                </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/admin/questionsRequests">Question Approval</a></li>
+                            <li><a class="dropdown-item" href="/admin/teacherRequests">Teacher Registration</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" id="PracticeTests">
+                        <a class="nav-link" href="/admin/tests" aria-expanded="false">Practice Tests</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/admin/profile"><i
+                                style="padding-right: 4px;" class="fa fa-user"></i><%= user.user_name %></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">LOGOUT</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<br>
+
+</html>
+
+<script>
+       if (window.location.href.toUpperCase().includes("admin/tests".toUpperCase()) || window.location.href.toUpperCase().includes("admin/tests".toUpperCase())) {
+        document.getElementById('PracticeTests').classList.add('active');
+        document.getElementById('Requests').classList.remove('active');
+        document.getElementById('studentTab').classList.remove('active');
+        document.getElementById('Teacher').classList.remove('active');
+        document.getElementById('Class').classList.remove('active');
+        document.getElementById('Questions').classList.remove('active');
+        document.getElementById('References').classList.remove('active');
+    }
+    else if (window.location.href.toUpperCase().includes("Requests".toUpperCase()) || window.location.href.toUpperCase().includes("Requests".toUpperCase())) {
+        document.getElementById('Requests').classList.add('active');
+        document.getElementById('studentTab').classList.remove('active');
+        document.getElementById('Teacher').classList.remove('active');
+        document.getElementById('Class').classList.remove('active');
+        document.getElementById('Questions').classList.remove('active');
+        document.getElementById('References').classList.remove('active');
+        document.getElementById('PracticeTests').classList.remove('active');
+    }
+    else if (window.location.href.toUpperCase().includes("admin/student".toUpperCase())) {
+        document.getElementById('studentTab').classList.add('active');
+        document.getElementById('Teacher').classList.remove('active');
+        document.getElementById('Class').classList.remove('active');
+        document.getElementById('Questions').classList.remove('active');
+        document.getElementById('References').classList.remove('active');
+        document.getElementById('Requests').classList.remove('active');
+        document.getElementById('PracticeTests').classList.remove('active');
+    }
+    else if (window.location.href.toUpperCase().includes("admin/teacher".toUpperCase())) {
+        document.getElementById('Teacher').classList.add('active');
+        document.getElementById('studentTab').classList.remove('active');
+        document.getElementById('Class').classList.remove('active');
+        document.getElementById('Questions').classList.remove('active');
+        document.getElementById('References').classList.remove('active');
+        document.getElementById('Requests').classList.remove('active');
+        document.getElementById('PracticeTests').classList.remove('active');
+    }
+    else if (window.location.href.toUpperCase().includes("admin/class".toUpperCase())) {
+        document.getElementById('Class').classList.add('active');
+        document.getElementById('studentTab').classList.remove('active');
+        document.getElementById('Teacher').classList.remove('active');
+        document.getElementById('Questions').classList.remove('active');
+        document.getElementById('References').classList.remove('active');
+        document.getElementById('Requests').classList.remove('active');
+        document.getElementById('PracticeTests').classList.remove('active');
+    }
+    else if (window.location.href.toUpperCase().includes("admin/questions".toUpperCase())) {
+        document.getElementById('Questions').classList.add('active');
+        document.getElementById('studentTab').classList.remove('active');
+        document.getElementById('Teacher').classList.remove('active');
+        document.getElementById('Class').classList.remove('active');
+        document.getElementById('References').classList.remove('active');
+        document.getElementById('Requests').classList.remove('active');
+        document.getElementById('PracticeTests').classList.remove('active');
+    }
+    else if(window.location.href.toUpperCase().includes("admin/referencedata".toUpperCase())) {
+        document.getElementById('References').classList.add('active');
+        document.getElementById('studentTab').classList.remove('active');
+        document.getElementById('Teacher').classList.remove('active');
+        document.getElementById('Class').classList.remove('active');
+        document.getElementById('Questions').classList.remove('active');
+        document.getElementById('Requests').classList.remove('active');
+        document.getElementById('PracticeTests').classList.remove('active');
+    }
+    else{
+        
+    }
+ 
+</script>

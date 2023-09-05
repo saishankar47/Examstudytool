@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('t_head') %>
+  <%- include('a_header.ejs') %>
+  <body>
+    <style>
+      div .HiddenText {
+          display: none;
+          -webkit-font-smoothing: antialiased;
+      }
+      div .DivForHoverItem:hover .HiddenText {
+          display:block;
+      }
+      div .DivForHoverItem:hover .initialTextData {
+          display: none;
+      }
+      .select2-container {
+          z-index: 99999;
+      }
+      tfoot {
+    display: table-header-group;
+      }
+      .input-error {
+                border-color: red;
+              }
+     
+    </style>
+     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+     
+     <link href="/css/s_learning_archive.css" rel="stylesheet">
+   
+   <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <link href="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/sp-2.1.2/sl-1.6.2/datatables.min.css" rel="stylesheet"/>
+  <script src="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/sp-2.1.2/sl-1.6.2/datatables.min.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML"></script> 
+  <script>
+      $(document).ready(function () {
+     MathJax.Hub.Config({
+              tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+           });
+           MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+          
+     });
+      $(document).ready(function () {
+        // let questionIds = [];
+        
+        let table2 = $('#assigntask2').DataTable({
+                'order': [[0, 'asc']],
+                columnDefs: [
+                    { width: 400, targets: 1 },
+                    { width: 100, targets: 2 },
+                    { width: 250, targets: 3 },
+                    { width: 250, targets: 4 }
+                ],
+                'drawCallback': function( settings ) {
+                      //  MathJax.Hub.Config({
+                      //     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                      //  });
+              
+                      MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+                  }
+
+          });
+          
+        
+        let table = $('#assigntask').DataTable({
+          language: {
+            searchPanes: {
+                clearMessage: 'Obliterate Selections',
+                collapse: {0: 'Filters', _: 'Filters (%d)'}
+            }
+        },
+                       
+                      buttons: [
+                        { 
+                            // text:'Filters',
+                            
+                            extend: 'searchPanes',
+                            className: 'buttons-searchPanes',
+                           
+                            config: {
+                            cascadePanes: true,
+                            
+                            
+                            }
+                        }
+                        ],
+                        columnDefs: [
+                        {
+                            
+                          searchPanes: {
+                            show: true
+                            
+                            },
+                            targets: [2,3,4]
+                        },
+                        { width: 400, targets: 1 },
+                        { width: 100, targets: 2 },
+                        { width: 250, targets: 3 },
+                        { width: 250, targets: 4 }
+                       
+              ], dom: 'Bftrip',
+           
+      
+            'order': [[0, 'asc']],
+            'drawCallback': function( settings ) {
+                      //  MathJax.Hub.Config({
+                      //     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                      //  });
+              
+                      MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+                  }
+              
+        });
+    $('#assigntask tbody').on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+            let rows = table.rows('.selected').data();
+      
+            table2.destroy();
+           
+            table2 = $('#assigntask2').DataTable({
+            
+        'order': [[1, 'asc']],
+        'drawCallback': function( settings ) {
+                      //  MathJax.Hub.Config({
+                      //     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                      //  });
+              
+                      MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+                  }
+        
+     });
+     
+            table2.clear().draw();
+            for(let ind = 0; ind<rows.length; ind+=1){
+              table2.row.add(rows[ind]).draw();
+              
+            }
+      });
+  //  Assign button   
+  const assignBtn = document.querySelector('#assign-button');
+
+          assignBtn.addEventListener('click', () => {
+            let rows = table.rows('.selected').data();
+                    
+                let questionIds = [];
+                rows.each(function(rowData) {
+                  const questionId = rowData[0];
+                    if (!questionIds.includes(questionId)) {
+                      questionIds.push(questionId);
+                    }
+                });
+                
+                const assignmentName = document.getElementById("assignment-name").value;
+                const coursevalue = document.getElementById("course-value").value;
+                const dueDate = document.getElementById("due-date").value;
+                const isTimed = document.getElementById("timed-assignment").checked;
+                const timer = isTimed ? document.getElementById("countdown-time").value : null;
+                if (!assignmentName || !coursevalue || !dueDate || (isTimed && !timer)) {
+                        let errorMessage = "Please provide the following details: ";
+                        if (!assignmentName) {
+                          errorMessage += "assignment name, ";
+                          document.getElementById("assignment-name").classList.add("input-error");
+                          document.getElementById("assignment-name").focus();
+                        } else {
+                          document.getElementById("assignment-name").classList.remove("input-error");
+                        }
+                        if (!coursevalue) {
+                          errorMessage += "course value, ";
+                          if (!document.activeElement || document.activeElement.tagName.toLowerCase() != 'input') {
+                            document.getElementById("course-value").classList.add("input-error");
+                            document.getElementById("course-value").focus();
+                          }
+                        } else {
+                          document.getElementById("course-value").classList.remove("input-error");
+                        }
+                        if (!dueDate) {
+                          errorMessage += "due date, ";
+                          if (!document.activeElement || document.activeElement.tagName.toLowerCase() != 'input') {
+                            document.getElementById("due-date").classList.add("input-error");
+                            document.getElementById("due-date").focus();
+                          }
+                        } else {
+                          document.getElementById("due-date").classList.remove("input-error");
+                        }
+                        if (isTimed && !timer) {
+                          errorMessage += "timer value, ";
+                          if (!document.activeElement || document.activeElement.tagName.toLowerCase() != 'input') {
+                            document.getElementById("countdown-time").classList.add("input-error");
+                            document.getElementById("countdown-time").focus();
+                          }
+                        } else {
+                          document.getElementById("countdown-time").classList.remove("input-error");
+                        }
+                        errorMessage = errorMessage.slice(0, -2) + "."; // remove last ", " and add a "."
+                        alert(errorMessage);
+                        return;
+                  } const student_id1=`<%-student_id%>`;
+                const class_id=`<%-class_id%>`;
+                const class_name=`<%-class_name%>`;
+               
+                const data = { questionIds,assignmentName,dueDate,student_id1,class_id,class_name,isTimed,timer,coursevalue};
+                
+                if(questionIds.length!=0 )
+                {
+                  console.log(data);
+                  fetch('/admin/assignstudent', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(data)
+                })
+                .then(response => {
+                    // handle response from server
+                    if (response.ok) {
+                      return response.json();
+                    } else {
+                      throw new Error('Network response was not ok.');
+                    }
+                  })
+                  .then(data => {
+                    // redirect to the next route
+                    window.location.href = `/admin/viewclass/${class_id}?class_name=${class_name}`;
+                  })
+                  .catch(error => {
+                    // handle error
+                  });
+                }
+              });
+ //preview
+ let previewModal;
+
+  const preview1 = document.querySelector('#preview-button1');
+
+preview1.addEventListener('click', () => {
+
+
+  let rows = table.rows('.selected').data();
+  let questionIds = [];
+  rows.each(function(rowData) {
+    const questionId = rowData[0];
+    if (!questionIds.includes(questionId)) {
+      questionIds.push(questionId);
+    }
+  });
+  let class_id = `<%-class_id%>`;
+  const data = { questionIds, class_id };
+  console.log(data)
+  if (questionIds.length != 0) {
+  fetch('/admin/assigntaskstudent/preview', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      const questionContainer = document.getElementById('question-container');
+      questionContainer.innerHTML = '';
+      data.forEach((question) => {
+        const questionElement = document.createElement('div');
+        questionElement.className = 'question-item';
+        questionElement.innerHTML = `
+          <div class="row">
+            <div class="col border-end">
+                                <div class="row" style="padding: 10px;">
+                                    <p class="fw-bold" id="newline">
+                                      ${question.question}
+                                         
+                                        <div>
+                                            <img src="${question.question_url}" class="img-fluid" alt="">
+                                        </div>
+                                    </p>
+                                    <div>
+                                        <input type="radio">
+                                        <input type="radio" >
+                                        <input type="radio" >
+                                        <input type="radio" >
+                                        <label for="one" class="box first">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">A. ${question.option_1}</span>
+                                            </div>
+                                        </label>
+                                        <label for="two" class="box second">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">B. ${question.option_2}</span>
+                                            </div>
+                                        </label>
+                                        <label for="three" class="box third">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">C.${question.option_3}</span>
+                                            </div>
+                                        </label>
+                                        <label for="four" class="box forth">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">D.${question.option_4}</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>  
+          </div>
+        `;
+        questionContainer.appendChild(questionElement);
+      });
+      const mathJaxScript = document.createElement('script');
+                    mathJaxScript.type = 'text/javascript';
+                    mathJaxScript.text = `
+                      MathJax.Hub.Config({
+                        tex2jax: {
+                          inlineMath: [['$','$'], ['\\(','\\)']]
+                        },
+                        "HTML-CSS": { linebreaks: { automatic: true } },
+                        SVG: { linebreaks: { automatic: true } }
+                      });
+                      MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+                    `;
+                    questionContainer.appendChild(mathJaxScript);
+    })
+   .catch((error) => {
+        // handle error
+      });
+  }
+});
+document.querySelector('.btn-close').addEventListener('click', () => {
+  if (previewModal) {
+    previewModal.hide();
+  }
+});
+document.querySelector('#close-modal-btn').addEventListener('click', () => {
+  if (previewModal) {
+    previewModal.hide();
+  }
+});
+
+  });
+
+
+
+
+  </script>
+   <script>
+    $(document).ready(function() {
+      // Add event listener to checkbox
+      $('#timed-assignment').change(function() {
+        if ($(this).is(':checked')) {
+          // Show countdown timer input field
+          $('#due-date').prop('required', false);
+          $('#due-date').show();
+          $('#countdown-timer').show();
+          $('#countdown-time').prop('required', true);
+        } else {
+          // Show due date input field
+          $('#due-date').prop('required', true);
+          $('#due-date').show();
+          $('#countdown-timer').hide();
+          $('#countdown-time').prop('required', false);
+        }
+      });
+    });
+  </script>
+  
+
+   
+    <!-- header -->
+    <div class="container-xl">
+      <div class="row">
+        <div class="col shadow p-4 mb-5 bg-white rounded">
+          <div class="row">
+            <div class="col">
+             
+              <a href="/admin/viewclass/<%=class_id%>?class_name=<%=class_name%>" >  <button class="btn btn-dark"; type="button" >
+                <i class="fa fa-arrow-left"> </i>
+              </button>
+              </a>
+           </div>
+
+            <div class="col-12"><h4 style="text-align: center;">Assign Assignment to "<%=user_name%>" </h4></div>
+          </div>
+        
+          <div class="row">
+            <div class="col-6">
+              <div class="input-group mb-3">
+                <label for="assignment-name" class="input-group-text"><span class="text-danger">*</span> Assignment Name:</label>
+                <input type="text" id="assignment-name" class="form-control" aria-label="Assignment Name" placeholder="Assignment Name" required>
+                <div class="invalid-feedback">
+                  Please enter an assignment name.
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="input-group mb-3">
+                <label for="course-value" class="input-group-text"><span class="text-danger">*</span> Course:</label>
+                <select id="course-value" class="form-select" aria-label="Course Name" required>
+                  <option value="" selected disabled>Select a course value</option>
+
+                    <% for (let i=0; i < data1.length; i++){ %>
+                
+                  <option value="<%= data1[i].course %>"><%= data1[i].course %></option>
+            
+                <% } %>
+                </select>
+                <div class="invalid-feedback">
+                  Please select an assignment name.
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="input-group ">
+                <label for="due-date" class="input-group-text"><span class="text-danger">*</span> Due Date:</label>
+                <input type="datetime-local" class="form-control" id="due-date" name="due-date"  required min="<%= new Date().toISOString().slice(0, 16) %>">
+                <div class="invalid-feedback">
+                  Please enter a due date.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-6">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="timed-assignment" value="1">
+                <label class="form-check-label" for="timed-assignment">
+                  Timed Assignment
+                </label>
+              </div>
+            </div>
+            <div class="col">
+              <div class="input-group" style="display: none;" id="countdown-timer">
+                <label for="countdown-time" class="input-group-text"><span class="text-danger">*</span> Countdown Timer:</label>
+                <input type="text" class="form-control" id="countdown-time" name="countdown-time" placeholder="hh:mm:ss" required>
+                <div class="invalid-feedback">
+                  Please enter a valid countdown time (hh:mm:ss).
+                </div>
+              </div>
+            </div>
+          </div>
+          <style>
+            hr.dotted {
+              border-top: 3px dotted #bbb;
+            }
+          </style>  
+          <hr class="dotted"> 
+          <br><br>
+          <div class="row" >
+            <h5 style="padding: 0%;"><small>Questions to be selected</small> </h5>
+            <div class="col-sm">
+              <!-- content for the left column here -->
+              <div class="row" style="background-color:aliceblue">
+                <div class="col-sm">
+                  
+                  <table class="display compact cell-border" id="assigntask" style="font-size: small;">
+                    <thead>
+                      <tr>
+                        <!-- <th scope="col"></th>  -->
+                        <th ></th>
+                        <th scope="col">Question</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Topic</th>
+                        <th scope="col">Sub-Topic</th>
+                        <th scope="col">Month</th>
+                        <th scope="col">Year</th>
+                        <!-- <th scope="col">Standard</th>
+                        <th scope="col">Difficulty</th> -->
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                      <% for (let i=0; i < data0.length; i++){ %>
+                      <tr class="text-capitalize">
+                        <td >      <%= data0[i].question_id %></td>
+                        <td>
+                          
+                          <div class="DivForHoverItem">
+                            
+                            <div class="initialTextData">
+                               <%- data0[i].initialText %>
+                               <br>
+                               
+                               <img src="<%=data0[i].question_url%>" class="img-fluid" alt=""  >
+
+                            </div>
+                       
+                             
+                            <div class="HiddenText">
+                               <%- data0[i].question %>
+                               <img src="<%=data0[i].question_url%>" class="img-fluid" alt="">
+                            </div>
+                        </div>
+                       </td>
+                        <td><%= data0[i].course %></td>
+                        <td><%= data0[i].topic %></td>
+                        <td><%= data0[i].sub_topic %></td>
+                        <td><%= data0[i].month %></td>
+                        <td><%= data0[i].year %></td>
+                        <!-- <td><%= data0[i].standard %></td>
+                        <td><%= data0[i].difficulty %></td> -->
+                      </tr>
+                      <% } %>
+                    </tbody>
+                   
+                  </table>
+                </div>
+               
+              </div>
+            </div>
+       
+          </div>
+
+        <!-- container -->
+       
+        <style>
+          hr.dotted {
+            border-top: 3px dotted #bbb;
+          }
+      </style>  
+      <hr class="dotted"> 
+     
+      
+          <div class="row">
+            <div class="col">
+              <table class="display  cell-border" id="assigntask2" style="font-size: small;">
+                <thead>
+                  <tr>
+                    <th ></th>
+                    <th scope="col">Question</th>
+                    <th scope="col">Course</th>
+                    <th scope="col">Topic</th>
+                    <th scope="col">Sub-Topic</th>
+                    <th scope="col">Month</th>
+                    <th scope="col">Year</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                </tbody>
+              </table>
+            </div>
+            
+          </div>
+       
+        <br>
+        <div class="row">
+        <div class="col-4"></div><div class="col-4 center">
+
+          
+          <div class="btn-group " role="group" aria-label="First group">
+            <a href="/admin/viewclass/<%=class_id%>?class_name=<%=class_name%>" >  <button type="button" class="btn btn-primary">Cancel</button></a>
+          </div>
+          
+          <div class="btn-group" role="group" aria-label="Third group">
+            <button type="button" id="preview-button1" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Preview Assignment</button>
+          </div>
+          <div class="btn-group" role="group" aria-label="Third group">
+            <button type="button" id="assign-button" class="btn btn-primary">Assign</button>
+          </div>
+        
+
+
+      </div><div class="col-4"></div>
+        
+    </div>
+</div></div>
+
+
+
+</div>
+     
+<!-- modal -->
+<div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Preview Questions</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="question-container">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" data-bs-dismiss="modal" id="close-modal-btn" class="btn btn-secondary" >Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <!-- modal -->
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  
+<script>
+
+</script>
+
+
+<div style="flex-grow:1"></div>
+<%- include('a_footer.ejs') %>
+</body>
+
+ 
+
+  </html>

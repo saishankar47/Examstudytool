@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Regent's Study Tool</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/s_index.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/s_assessment_assigned.css" rel="stylesheet">
+
+    <style>
+        .progress.resume::after {
+            border-radius: 3px;
+            background-color: #2A265F;
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 5px;
+            width: var(--progress-percentage, 0%);
+        }
+    </style>
+</head>
+
+<body style="background-color: #b8c6db;
+background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 74%);">
+    <header>
+        <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/student">Exam Study Tool</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" style="border-left: 1px solid darkgray; " id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        <li class="nav-item">
+                            <a class="nav-link" style="padding-left: 15px;" aria-current="page" href="/student">HOME</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle " href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">LEARNING</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/student/learning/topic">TOPICS</a></li>
+                                <li><a class="dropdown-item" href="/student/learning/archive">TEST ARCHIVE</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item active dropdown">
+                            <a class="nav-link dropdown-toggle " href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">ASSESSMENT</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/student/assessment/assigned">ASSIGNED BY TEACHER</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="/student/assessment/tests">PRACTICE TESTS</a></li>
+                                </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/student/profile"><i
+                                    style="padding-right: 4px;" class="fa fa-user"></i><%= user.user_name %></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">LOGOUT</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container-fluid" style="min-height: 75vh; ">
+
+        <h3 class="display-5 text-center text-capitalize" style="padding: 20px; font-weight:350">
+            ASSIGNED BY TEACHER</h3>
+
+        <% function calculatePercentage(optionSelected) {
+            const questions = JSON.parse(optionSelected.replace(/'/g, '"'));
+            const attemptedQuestions = questions.filter(([_, option]) => option !== null).length;
+            const totalQuestions = questions.length;
+            return Math.round((attemptedQuestions / totalQuestions) * 100);
+          } %>
+
+
+        <% for (let i=0; i < data0.length; i++){ %>
+            <% if (data0[i].is_submitted=='0'){ %>
+                <%const progressPercentage = calculatePercentage(data0[i].option_selected);%>
+                <div class="courses-container col-lg-12">
+                    <div class="course">
+                        <div class="course-preview resume">
+                            <h6>TEST</h6>
+                            <h6 style="opacity: 1;"><%= data0[i].test_name %></h6>
+                        </div>
+                        <div class="course-info">
+                            <div class="progress-container">
+                                <div class="progress resume" style="--progress-percentage: <%= progressPercentage %>%;"></div>
+                                <span class="progress-text">
+                                    <%=progressPercentage%>%
+                                </span>
+                            </div>
+                            <% if (data0[i].is_timed=='1'){ %>
+                                <h6>Test Type: Timed %></h6>
+                            <% } else { %>
+                                <h6>Test Type: Not Timed %></h6>
+                            <% } %>
+                            <h6>Due: <%= data0[i].due_date %></h6>
+
+
+                            <div style="padding-top: 5%">
+                                <h6 class="text-capitalize">Teacher Name:<%= data0[i].teacher_name %></h6>
+                                <h6>Course Name: <%= data0[i].course %></h6>
+                                <% if (data0[i].class_name!='n'){ %>
+                                <h6>Class Name: <%= data0[i].class_name %></h6>
+                                <% } else { %>
+                                <h6>Total Questions: <%= data0[i].question_count %></h6>
+                                <% } %>
+                            </div>
+                            <a href="/student/assessment/assigned/questions/<%=data0[i].test_id%>/<%=data0[i].class_id%>/<%=data0[i].assigned_questions_id%>" role="button" class="btn resume">Resume</a>
+                        </div>
+                    </div>
+                </div>
+            <% } else { %>
+                <div class="courses-container col-lg-12">
+                    <div class="course">
+                        <div class="course-preview start">
+                            <h6>TEST</h6>
+                            <h6 style="opacity: 1;"><%= data0[i].test_name %></h6>
+                        </div>
+                        <div class="course-info">
+                            <div class="progress-container">
+                                <div class="progress start"></div>
+                                <span class="progress-text">
+                                    0%
+                                </span>
+                            </div>
+                            <% if (data0[i].is_timed=='1'){ %>
+                                <h6>Test Type: Timed %></h6>
+                            <% } else { %>
+                                <h6>Test Type: Not Timed %></h6>
+                            <% } %>
+                            <h6>Due: <%= data0[i].due_date %></h6>
+
+                            <div style="padding-top: 7%">
+                                <h6 class="text-capitalize">Teacher Name: <%= data0[i].teacher_name %></h6>
+                                <h6>Course Name: <%= data0[i].course %></h6>
+                                <% if (data0[i].class_name!='n'){ %>
+                                    <h6>Class Name: <%= data0[i].class_name %></h6>
+                                    <% } else { %>
+                                    <h6>Total Questions: <%= data0[i].question_count %></h6>
+                                    <% } %>                                
+                                    <h6>Total Questions: <%= data0[i].question_count %></h6>
+                            </div>
+                            <a href="/student/assessment/assigned/questions/<%=data0[i].test_id%>/<%=data0[i].class_id%>/<%=data0[i].assigned_questions_id%>" role="button" class="btn start">Start</a>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        <% } %>
+    </main>
+    
+    <div class="border-top" style="background-color: white; padding-bottom: 1.5rem;">
+        <div class="container">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3" style="margin-top: 1.5rem">
+                <p class="col-md-4 mb-0 text-muted">&copy; Exam Study Tool © 2023</p>
+    
+                <ul class="nav col-md-4 justify-content-end">
+                    <li class="nav-item"><a href="/student" class="nav-link px-2 text-muted">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Contact</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Terms and Conditions</a></li>
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/s_assessment_tests.js"></script>
+</body>
+
+</html>

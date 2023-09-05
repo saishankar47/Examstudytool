@@ -1,0 +1,1272 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Exam Study Tool</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/s_index.css" rel="stylesheet">
+    <link href="/css/s_learning_archive.css" rel="stylesheet">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML"></script> 
+    <script>
+        $(document).ready(function () {
+       MathJax.Hub.Config({
+                tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+             });
+             MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+            
+       })</script>
+
+    <style>
+        .score-container {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #999;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .score-title {
+            margin-bottom: 10px;
+            font-size: 24px;
+            color: #333;
+        }
+        
+        .score-value {
+            font-size: 30px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .percentage-container {
+            margin-bottom: 10px;
+            font-size: 24px;
+            color: #333;
+        }
+        
+        .percentage-value {
+            font-size: 30px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        #startTestBtn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #startTestBtn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        #timerDisplay {
+            font-size: 20px;
+            font-weight: bold;
+            color: #dc3545;
+            justify-content: center; 
+        }
+        
+        #timerWrapper {
+            display: none;
+            border: 1px solid #000;
+            border-radius: 50px;
+            padding: 5px 15px;
+            background-color: white;
+            border-color: white;
+        }
+
+        .button-row {
+            display: flex;
+            align-items: center;
+            padding-bottom: 20px;
+        }
+
+        .correct {
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            position: relative;
+        }
+        .correct::before {
+            content: '✔';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .wrong {
+            color: #721c24;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            position: relative;
+        }
+        .wrong::before {
+            content: '✖';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        
+    .img-fluid{
+        max-width: 70%;
+    }
+    </style>
+
+</head>
+
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/student">Exam Study Tool</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" style="border-left: 1px solid darkgray; " id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        <li class="nav-item">
+                            <a class="nav-link" style="padding-left: 15px;" aria-current="page" href="/student">HOME</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle " href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">LEARNING</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/student/learning/topic">TOPICS</a></li>
+                                <li><a class="dropdown-item" href="/student/learning/archive">TEST ARCHIVE</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item active dropdown">
+                            <a class="nav-link dropdown-toggle " href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">ASSESSMENT</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/student/assessment/assigned">ASSIGNED BY TEACHER</a>
+                                </li>
+                                <li><a class="dropdown-item" href="/student/assessment/tests">PRACTICE TESTS</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/student/profile"><i
+                                    style="padding-right: 4px;" class="fa fa-user"></i>
+                                <%= user.user_name %>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">LOGOUT</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main style="min-height: 75vh; background-color: #bdcad9;
+    background-image: linear-gradient(315deg, #bdcad9 0%, #e1dada 74%);">
+
+        <h3 class="display-5 text-center text-capitalize" style="padding: 20px; font-weight:350">
+            <%= data0[0].test_name %>
+        </h3>
+
+
+        <div class="container">
+            <% if (data0[0].is_submitted=='0'){ %>
+                <div class="d-flex d-none justify-content-between button-row">
+                    <div>
+                        <button id="startTestBtn" data-bs-toggle="modal" data-bs-target="#confirmationModal">Timed Test</button>
+                    </div>
+                    <div id="timerWrapper">Time remaining: <span id="timerDisplay">--</span></div>
+                </div>
+            <% } else { %>
+                <div class="d-flex justify-content-between button-row">
+                    <div>
+                        <button id="startTestBtn" data-bs-toggle="modal" data-bs-target="#confirmationModal">Timed Test</button>
+                    </div>
+                    <div id="timerWrapper">Time remaining: <span id="timerDisplay">--</span></div>
+                </div>
+            <% } %>
+
+            <div class="card" style="padding: 20px;">
+                <div class="card-body">
+                    <form id="quizForm">
+
+                    <!-- <div class="container mb-5"> -->
+                    <div class="col-12 text-center border-bottom fw-bold" style="padding-bottom: 10px;">
+                        <p>Questions</p>
+                    </div>
+                    <% if (data0[0].is_submitted=='0'){ %>
+                        <% for (let i=0; i < data0.length; i++){ %>
+                            <div class="row border-bottom">
+                                <div class="col-6 border-end">
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="fw-bold" id="newline">
+                                            <%= i+1 %>. <%- data0[i].question ? data0[i].question.replace('<p>', '') : data0[i].question %>
+                                                <% if (data0[i].question_url && data0[i].question_url.trim() !== '') { %>
+                                                <div>
+                                                    <img src="<%= data0[i].question_url %>" class="img-fluid" alt="">
+                                                </div>
+                                            <% } %>
+                                        </p>
+                                        <div>
+                                            <input type="radio">
+                                            <input type="radio">
+                                            <input type="radio">
+                                            <input type="radio">
+                                            <label for="one<%= i %>" class="box boxd first">
+                                                <div class="course">
+                                                    <span class="circle"></span>
+                                                    <span class="subject">A. <%- data0[i].option_1 ? data0[i].option_1.replace('<p>', '') : data0[i].option_1 %>
+                                                        <% if (data0[i].option_1_url && data0[i].option_1_url.trim() !== '') { %>
+                                                            <div>
+                                                                <img src="<%= data0[i].option_1_url %>" class="img-fluid" alt="">
+                                                            </div>
+                                                        <% } %>
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            <label for="two<%= i %>" class="box boxd second">
+                                                <div class="course">
+                                                    <span class="circle"></span>
+                                                    <span class="subject">B. <%- data0[i].option_2 ? data0[i].option_2.replace('<p>', '') : data0[i].option_2 %>
+                                                        <% if (data0[i].option_2_url && data0[i].option_2_url.trim() !== '') { %>
+                                                            <div>
+                                                                <img src="<%= data0[i].option_2_url %>" class="img-fluid" alt="">
+                                                            </div>
+                                                        <% } %>  
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            <label for="three<%= i %>" class="box boxd third">
+                                                <div class="course">
+                                                    <span class="circle"></span>
+                                                    <span class="subject">C. <%- data0[i].option_3 ? data0[i].option_3.replace('<p>', '') : data0[i].option_3 %>
+                                                        <% if (data0[i].option_3_url && data0[i].option_3_url.trim() !== '') { %>
+                                                            <div>
+                                                                <img src="<%= data0[i].option_3_url %>" class="img-fluid" alt="">
+                                                            </div>
+                                                        <% } %>
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            <label for="four<%= i %>" class="box boxd forth">
+                                                <div class="course">
+                                                    <span class="circle"></span>
+                                                    <span class="subject">D. <%- data0[i].option_4 ? data0[i].option_4.replace('<p>', '') : data0[i].option_4 %>
+                                                        <% if (data0[i].option_4_url && data0[i].option_4_url.trim() !== '') { %>
+                                                            <div>
+                                                                <img src="<%= data0[i].option_4_url %>" class="img-fluid" alt="">
+                                                            </div>
+                                                        <% } %>
+                                                    </span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="col-6">
+                                    <% if (data0[i].translation_id!=null){ %>
+                                        <div class="row" dir="<%= data0[i].language === 'Arabic' ? 'rtl' : 'ltr' %>" lang="<%= data0[i].language %>"  style="padding: 10px;">
+                                            <% if (data0[i].language === 'Arabic') { %>
+                                                <p>
+                                                    <%= i+1 %>. <%- data0[i].t_question ? data0[i].t_question.replace('<p>', '') : data0[i].t_question %>
+                                                        <% if (data0[i].t_question_url && data0[i].t_question_url.trim() !== '') { %>
+                                                        <div>
+                                                            <img src="<%= data0[i].t_question_url %>" class="img-fluid" alt="">
+                                                        </div>
+                                                    <% } %>
+                                                </p>
+                                                <div>
+                                                    <% if (saved[i] && saved[i][1] == 'option_1') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_one<%= i %>"
+                                                        value="option_1" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_one<%= i %>"
+                                                        value="option_1" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+                                                    <% if (saved[i] && saved[i][1] == 'option_2') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_two<%= i %>"
+                                                        value="option_2" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_two<%= i %>"
+                                                        value="option_2" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+                                                    <% if (saved[i] && saved[i][1] == 'option_3') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_three<%= i %>"
+                                                        value="option_3" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_three<%= i %>"
+                                                        value="option_3" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+                                                    <% if (saved[i] && saved[i][1] == 'option_4') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_four<%= i %>"
+                                                        value="option_4" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_four<%= i %>"
+                                                        value="option_4" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+                                                    <label for="t_one<%= i %>" class="box boxh t_first">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">A. <%- data0[i].t_option_1 ? data0[i].t_option_1.replace('<p>', '') : data0[i].t_option_1 %>
+                                                                <% if (data0[i].t_option_1_url && data0[i].t_option_1_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].t_option_1_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <label for="t_two<%= i %>" class="box boxh t_second">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">B. <%- data0[i].t_option_2 ? data0[i].t_option_2.replace('<p>', '') : data0[i].t_option_2 %>
+                                                                <% if (data0[i].t_option_2_url && data0[i].t_option_2_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].t_option_2_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <label for="t_three<%= i %>" class="box boxh t_third">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">C. <%- data0[i].t_option_3 ? data0[i].t_option_3.replace('<p>', '') : data0[i].t_option_3 %>
+                                                                <% if (data0[i].t_option_3_url && data0[i].t_option_3_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].t_option_3_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <label for="t_four<%= i %>" class="box boxh t_forth">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">D. <%- data0[i].t_option_4 ? data0[i].t_option_4.replace('<p>', '') : data0[i].t_option_4 %>
+                                                                <% if (data0[i].t_option_4_url && data0[i].t_option_4_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].t_option_4_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                              <% } else { %>
+                                                <p>
+                                                    <%= i+1 %>. <%- data0[i].t_question ? data0[i].t_question.replace('<p>', '') : data0[i].t_question %>
+                                                        <% if (data0[i].t_question_url && data0[i].t_question_url.trim() !== '') { %>
+                                                        <div>
+                                                            <img src="<%= data0[i].t_question_url %>" class="img-fluid" alt="">
+                                                        </div>
+                                                    <% } %>
+                                                </p>
+                                                <div>
+                                                    <% if (saved[i] && saved[i][1] == 'option_1') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_one<%= i %>"
+                                                        value="option_1" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_one<%= i %>"
+                                                        value="option_1" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+                                                    <% if (saved[i] && saved[i][1] == 'option_2') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_two<%= i %>"
+                                                        value="option_2" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_two<%= i %>"
+                                                        value="option_2" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+                                                    <% if (saved[i] && saved[i][1] == 'option_3') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_three<%= i %>"
+                                                        value="option_3" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_three<%= i %>"
+                                                        value="option_3" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+                                                    <% if (saved[i] && saved[i][1] == 'option_4') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_four<%= i %>"
+                                                        value="option_4" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_four<%= i %>"
+                                                        value="option_4" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+                                                    <label for="t_one<%= i %>" class="box boxh t_first">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">A. <%- data0[i].t_option_1 ? data0[i].t_option_1.replace('<p>', '') : data0[i].t_option_1 %>
+                                                                <% if (data0[i].t_option_1_url && data0[i].t_option_1_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].t_option_1_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <label for="t_two<%= i %>" class="box boxh t_second">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">B. <%- data0[i].t_option_2 ? data0[i].t_option_2.replace('<p>', '') : data0[i].t_option_2 %>
+                                                                <% if (data0[i].t_option_2_url && data0[i].t_option_2_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].t_option_2_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <label for="t_three<%= i %>" class="box boxh t_third">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">C. <%- data0[i].t_option_3 ? data0[i].t_option_3.replace('<p>', '') : data0[i].t_option_3 %>
+                                                                <% if (data0[i].t_option_3_url && data0[i].t_option_3_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].t_option_3_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <label for="t_four<%= i %>" class="box boxh t_forth">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">D. <%- data0[i].t_option_4 ? data0[i].t_option_4.replace('<p>', '') : data0[i].t_option_4 %>
+                                                                <% if (data0[i].t_option_4_url && data0[i].t_option_4_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].t_option_4_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                              <% } %>
+                                        </div>
+    
+                                        <% } else { %>
+                                            <div class="row" style="padding: 10px;">
+                                                <p>
+                                                    <%= i+1 %>. <%- data0[i].question ? data0[i].question.replace('<p>', '') : data0[i].question %>
+                                                        <% if (data0[i].question_url && data0[i].question_url.trim() !== '') { %>
+                                                        <div>
+                                                            <img src="<%= data0[i].question_url %>" class="img-fluid" alt="">
+                                                        </div>
+                                                    <% } %>
+                                                </p>
+                                                <div>
+                                                    <% if (saved[i] && saved[i][1] == 'option_1') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_one<%= i %>"
+                                                        value="option_1" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_one<%= i %>"
+                                                        value="option_1" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+                                                    <% if (saved[i] && saved[i][1] == 'option_2') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_two<%= i %>"
+                                                        value="option_2" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_two<%= i %>"
+                                                        value="option_2" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+                                                    <% if (saved[i] && saved[i][1] == 'option_3') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_three<%= i %>"
+                                                        value="option_3" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_three<%= i %>"
+                                                        value="option_3" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+                                                    <% if (saved[i] && saved[i][1] == 'option_4') { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_four<%= i %>"
+                                                        value="option_4" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>" checked="checked">
+                                                    <% } else { %>
+                                                        <input type="radio" name="box<%= i %>" id="t_four<%= i %>"
+                                                        value="option_4" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                    <% } %>
+
+
+                                                    <label for="t_one<%= i %>" class="box boxh t_first">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">A. <%- data0[i].option_1 ? data0[i].option_1.replace('<p>', '') : data0[i].option_1 %>
+                                                                <% if (data0[i].option_1_url && data0[i].option_1_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].option_1_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <label for="t_two<%= i %>" class="box boxh t_second">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">B. <%- data0[i].option_2 ? data0[i].option_2.replace('<p>', '') : data0[i].option_2 %>
+                                                                <% if (data0[i].option_2_url && data0[i].option_2_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].option_2_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <label for="t_three<%= i %>" class="box boxh t_third">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">C. <%- data0[i].option_3 ? data0[i].option_3.replace('<p>', '') : data0[i].option_3 %>
+                                                                <% if (data0[i].option_3_url && data0[i].option_3_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].option_3_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <label for="t_four<%= i %>" class="box boxh t_forth">
+                                                        <div class="course">
+                                                            <span class="circle"></span>
+                                                            <span class="subject">D. <%- data0[i].option_4 ? data0[i].option_4.replace('<p>', '') : data0[i].option_4 %>
+                                                                <% if (data0[i].option_4_url && data0[i].option_4_url.trim() !== '') { %>
+                                                                    <div>
+                                                                        <img src="<%= data0[i].option_4_url %>" class="img-fluid" alt="">
+                                                                    </div>
+                                                                <% } %>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                         <% } %>
+                                </div>
+                            </div>
+                            <% } %>
+
+                    <% } else { %>
+                    <% for (let i=0; i < data0.length; i++){ %>
+                        <div class="row border-bottom">
+                            <div class="col-6 border-end">
+                                <div class="row" style="padding: 10px;">
+                                    <p id="newline">
+                                        <%= i+1 %>. <%- data0[i].question ? data0[i].question.replace('<p>', '') : data0[i].question %>
+                                            <% if (data0[i].question_url && data0[i].question_url.trim() !== '') { %>
+                                            <div>
+                                                <img src="<%= data0[i].question_url %>" class="img-fluid" alt="">
+                                            </div>
+                                        <% } %>
+                                    </p>
+                                    <div>
+                                        <input type="radio">
+                                        <input type="radio">
+                                        <input type="radio">
+                                        <input type="radio">
+                                        <label for="one<%= i %>" class="box boxd first">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">A. <%- data0[i].option_1 ? data0[i].option_1.replace('<p>', '') : data0[i].option_1 %>
+                                                    <% if (data0[i].option_1_url && data0[i].option_1_url.trim() !== '') { %>
+                                                        <div>
+                                                            <img src="<%= data0[i].option_1_url %>" class="img-fluid" alt="">
+                                                        </div>
+                                                    <% } %>
+                                                </span>
+                                            </div>
+                                        </label>
+                                        <label for="two<%= i %>" class="box boxd second">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">B. <%- data0[i].option_2 ? data0[i].option_2.replace('<p>', '') : data0[i].option_2 %>
+                                                    <% if (data0[i].option_2_url && data0[i].option_2_url.trim() !== '') { %>
+                                                        <div>
+                                                            <img src="<%= data0[i].option_2_url %>" class="img-fluid" alt="">
+                                                        </div>
+                                                    <% } %>
+                                                </span>
+                                            </div>
+                                        </label>
+                                        <label for="three<%= i %>" class="box boxd third">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">C. <%- data0[i].option_3 ? data0[i].option_3.replace('<p>', '') : data0[i].option_3 %>
+                                                    <% if (data0[i].option_3_url && data0[i].option_3_url.trim() !== '') { %>
+                                                        <div>
+                                                            <img src="<%= data0[i].option_3_url %>" class="img-fluid" alt="">
+                                                        </div>
+                                                    <% } %>
+                                                </span>
+                                            </div>
+                                        </label>
+                                        <label for="four<%= i %>" class="box boxd forth">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">D. <%- data0[i].option_4 ? data0[i].option_4.replace('<p>', '') : data0[i].option_4 %>
+                                                    <% if (data0[i].option_4_url && data0[i].option_4_url.trim() !== '') { %>
+                                                        <div>
+                                                            <img src="<%= data0[i].option_4_url %>" class="img-fluid" alt="">
+                                                        </div>
+                                                    <% } %>
+                                                </span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <% if (data0[i].translation_id!=null){ %>
+                                    <div class="row" dir="<%= data0[i].language === 'Arabic' ? 'rtl' : 'ltr' %>" lang="<%= data0[i].language %>"  style="padding: 10px;">
+                                        <% if (data0[i].language === 'Arabic') { %>
+                                            <p>
+                                                <%= i+1 %>. <%- data0[i].t_question ? data0[i].t_question.replace('<p>', '') : data0[i].t_question %>
+                                                    <% if (data0[i].t_question_url && data0[i].t_question_url.trim() !== '') { %>
+                                                    <div>
+                                                        <img src="<%= data0[i].t_question_url %>" class="img-fluid" alt="">
+                                                    </div>
+                                                <% } %>
+                                            </p>
+                                            <div>
+    
+                                                <input type="radio" name="box<%= i %>" id="t_one<%= i %>" value="option_1"
+                                                    data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <input type="radio" name="box<%= i %>" id="t_two<%= i %>" value="option_2"
+                                                    data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <input type="radio" name="box<%= i %>" id="t_three<%= i %>"
+                                                    value="option_3" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <input type="radio" name="box<%= i %>" id="t_four<%= i %>"
+                                                    value="option_4" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <label for="t_one<%= i %>" class="box boxh t_first">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">A. <%- data0[i].t_option_1 ? data0[i].t_option_1.replace('<p>', '') : data0[i].t_option_1 %>
+                                                            <% if (data0[i].t_option_1_url && data0[i].t_option_1_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].t_option_1_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                                <label for="t_two<%= i %>" class="box boxh t_second">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">B. <%- data0[i].t_option_2 ? data0[i].t_option_2.replace('<p>', '') : data0[i].t_option_2 %>
+                                                            <% if (data0[i].t_option_2_url && data0[i].t_option_2_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].t_option_2_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                                <label for="t_three<%= i %>" class="box boxh t_third">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">C. <%- data0[i].t_option_3 ? data0[i].t_option_3.replace('<p>', '') : data0[i].t_option_3 %>
+                                                            <% if (data0[i].t_option_3_url && data0[i].t_option_3_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].t_option_3_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                                <label for="t_four<%= i %>" class="box boxh t_forth">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">D. <%- data0[i].t_option_4 ? data0[i].t_option_4.replace('<p>', '') : data0[i].t_option_4 %>
+                                                            <% if (data0[i].t_option_4_url && data0[i].t_option_4_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].t_option_4_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                          <% } else { %>
+                                            <p>
+                                                <%= i+1 %>. <%- data0[i].t_question ? data0[i].t_question.replace('<p>', '') : data0[i].t_question %>
+                                                    <% if (data0[i].t_question_url && data0[i].t_question_url.trim() !== '') { %>
+                                                    <div>
+                                                        <img src="<%= data0[i].t_question_url %>" class="img-fluid" alt="">
+                                                    </div>
+                                                <% } %>
+                                            </p>
+                                            <div>
+    
+                                                <input type="radio" name="box<%= i %>" id="t_one<%= i %>" value="option_1"
+                                                    data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <input type="radio" name="box<%= i %>" id="t_two<%= i %>" value="option_2"
+                                                    data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <input type="radio" name="box<%= i %>" id="t_three<%= i %>"
+                                                    value="option_3" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <input type="radio" name="box<%= i %>" id="t_four<%= i %>"
+                                                    value="option_4" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <label for="t_one<%= i %>" class="box boxh t_first">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">A. <%- data0[i].t_option_1 ? data0[i].t_option_1.replace('<p>', '') : data0[i].t_option_1 %>
+                                                            <% if (data0[i].t_option_1_url && data0[i].t_option_1_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].t_option_1_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                                <label for="t_two<%= i %>" class="box boxh t_second">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">B. <%- data0[i].t_option_2 ? data0[i].t_option_2.replace('<p>', '') : data0[i].t_option_2 %>
+                                                            <% if (data0[i].t_option_2_url && data0[i].t_option_2_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].t_option_2_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                                <label for="t_three<%= i %>" class="box boxh t_third">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">C. <%- data0[i].t_option_3 ? data0[i].t_option_3.replace('<p>', '') : data0[i].t_option_3 %>
+                                                            <% if (data0[i].t_option_3_url && data0[i].t_option_3_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].t_option_3_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                                <label for="t_four<%= i %>" class="box boxh t_forth">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">D. <%- data0[i].t_option_4 ? data0[i].t_option_4.replace('<p>', '') : data0[i].t_option_4 %>
+                                                            <% if (data0[i].t_option_4_url && data0[i].t_option_4_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].t_option_4_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                          <% } %>
+                                    </div>
+
+                                    <% } else { %>
+                                        <div class="row" style="padding: 10px;">
+                                            <p>
+                                                <%= i+1 %>. <%- data0[i].question ? data0[i].question.replace('<p>', '') : data0[i].question %>
+                                                    <% if (data0[i].question_url && data0[i].question_url.trim() !== '') { %>
+                                                    <div>
+                                                        <img src="<%= data0[i].question_url %>" class="img-fluid" alt="">
+                                                    </div>
+                                                <% } %>
+                                            </p>
+                                            <div>
+                                                <input type="radio" name="box<%= i %>" id="t_one<%= i %>"
+                                                    value="option_1" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <input type="radio" name="box<%= i %>" id="t_two<%= i %>"
+                                                    value="option_2" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <input type="radio" name="box<%= i %>" id="t_three<%= i %>"
+                                                    value="option_3" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <input type="radio" name="box<%= i %>" id="t_four<%= i %>"
+                                                    value="option_4" data-answer="<%= data0[i].answer %>" data-question-id="<%= data0[i].question_id %>">
+                                                <label for="t_one<%= i %>" class="box boxh t_first">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">A. <%- data0[i].option_1 ? data0[i].option_1.replace('<p>', '') : data0[i].option_1 %>
+                                                            <% if (data0[i].option_1_url && data0[i].option_1_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].option_1_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                                <label for="t_two<%= i %>" class="box boxh t_second">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">B. <%- data0[i].option_2 ? data0[i].option_2.replace('<p>', '') : data0[i].option_2 %>
+                                                            <% if (data0[i].option_2_url && data0[i].option_2_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].option_2_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                                <label for="t_three<%= i %>" class="box boxh t_third">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">C. <%- data0[i].option_3 ? data0[i].option_3.replace('<p>', '') : data0[i].option_3 %>
+                                                            <% if (data0[i].option_3_url && data0[i].option_3_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].option_3_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                                <label for="t_four<%= i %>" class="box boxh t_forth">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">D. <%- data0[i].option_4 ? data0[i].option_4.replace('<p>', '') : data0[i].option_4 %>
+                                                            <% if (data0[i].option_4_url && data0[i].option_4_url.trim() !== '') { %>
+                                                                <div>
+                                                                    <img src="<%= data0[i].option_4_url %>" class="img-fluid" alt="">
+                                                                </div>
+                                                            <% } %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                            </div>
+                        </div>
+                        <% } %>
+                    <% } %>
+
+
+                            
+
+                            <div class="col-12 text-center fw-bold" id="submit" style="padding-bottom: 10px;">
+                                <div class="d-flex justify-content-center"> 
+                                    <button type="button" class="btn btn-primary px-4 py-2 fw-bold" id="savebtn" style="margin-right: 10px;" onclick="saveTest()">SAVE</button>
+                                    <button type="button" class="btn btn-primary px-4 py-2 fw-bold" onclick="submitTest(event)">SUBMIT</button>
+                                </div>
+                            </div>
+                            <div id="score-container" class="score-container text-center d-none">
+                                <h4 class="score-title">Your score:<span class="score-value">0</span></h4>
+                                <h4 id="percentage-container" style="display: none;">Percentage: <span class="percentage-value"></span></h4>
+                            </div>
+                            </form>
+                </div>
+
+                <div class="col-12 inv border-top" id="show" style="padding-top: 20px; padding-bottom: 20px;">
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-warning px-4 py-2 fw-bold" onclick="ShowAndHide()">Show
+                            Solution</button>
+                    </div>
+                </div>
+
+                <div class="card-body border-bottom inv" id="answer">
+                    <% for (let i=0; i < data0.length; i++){ %>
+                        <div class="row">
+                            <div class="col-6 border-end">
+                                <div style="padding-bottom: 10px;">
+                                    <div>
+                                        <%= i+1 %>. <%- data0[i].solution ? data0[i].solution.replace('<p>', '') : data0[i].solution %>
+                                            <% if (data0[i].solution_url && data0[i].solution_url.trim() !== '') { %>
+                                            <div>
+                                                <img src="<%= data0[i].solution_url %>" class="img-fluid" alt="">
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="fw-bold" style="padding-bottom: 10px;padding-left: 20px;">
+                                    <% if (data0.t_solution==null){ %>
+                                        <div>
+                                            <%= i+1 %>. <%- data0[i].solution ? data0[i].solution.replace('<p>', '') : data0[i].solution %>
+                                                <% if (data0[i].solution_url && data0[i].solution_url.trim() !== '') { %>
+                                                <div>
+                                                    <img src="<%= data0[i].solution_url %>" class="img-fluid" alt="">
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                        <% } else { %>
+                                            <div dir="<%= data0[i].language === 'Arabic' ? 'rtl' : 'ltr' %>" lang="<%= data0[i].language %>">
+                                                <% if (data0[i].language === 'Arabic') { %>
+                                                    <%= i+1 %>. <%- data0[i].t_solution ? data0[i].t_solution.replace('<p>', '') : data0[i].t_solution %>
+                                                        <% if (data0[i].t_solution_url && data0[i].t_solution_url.trim() !== '') { %>
+                                                        <div>
+                                                            <img src="<%= data0[i].t_solution_url %>" class="img-fluid" alt="">
+                                                        </div>
+                                                    <% } %>
+                                                  <% } else { %>
+                                                    <%= i+1 %>. <%- data0[i].t_solution ? data0[i].t_solution.replace('<p>', '') : data0[i].t_solution %>
+                                                        <% if (data0[i].t_solution_url && data0[i].t_solution_url.trim() !== '') { %>
+                                                        <div>
+                                                            <img src="<%= data0[i].t_solution_url %>" class="img-fluid" alt="">
+                                                        </div>
+                                                    <% } %>
+                                                  <% } %>
+                                            </div>
+                                        <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                </div>
+            </div>
+
+        <!-- Test Submitted Modal -->
+        <div class="modal fade" id="testSubmittedModal" tabindex="-1" aria-labelledby="testSubmittedModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="testSubmittedModalLabel">Test Submitted</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                Your test has been submitted.
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
+  
+
+        <!-- Save Test Modal -->
+        <div class="modal fade" id="saveTestModal" tabindex="-1" aria-labelledby="saveTestModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="saveTestModalLabel">Test Saved</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                Your test has been saved.
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    <!-- Timed Test Modal -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Start Timed Test</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to start the timed test?</p> 
+                    <p>You will have 10 seconds to complete the test.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" onclick="startTest()" data-bs-dismiss="modal">Start Timed Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+            <!-- ques end -->
+        </div>
+        <div class="row text-center fw-bold" style="padding-bottom: 50px; padding-left: 20px;">
+            <div class="d-flex justify-content-end">
+                <button id="back-button" role="button" class="btn btn-primary px-4 py-2 fw-bold">Back
+                    to Practice Tests</button>
+            </div>
+        </div>
+        </div>
+    </main>
+
+    <div class="border-top" style="background-color: white; padding-bottom: 1.5rem;">
+        <div class="container">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3" style="margin-top: 1.5rem">
+                <p class="col-md-4 mb-0 text-muted">&copy; Exam Study Tool © 2023</p>
+    
+                <ul class="nav col-md-4 justify-content-end">
+                    <li class="nav-item"><a href="/student" class="nav-link px-2 text-muted">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Contact</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Terms and Conditions</a></li>
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+
+    <script>
+        const data0 = `<%- JSON.stringify(data0) %>`;
+      </script>
+      
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let timer;
+        const totalQuestions = `<%- JSON.stringify(data0.length) %>`;
+        let testSubmitted = false;
+        let timeInSeconds = totalQuestions*120; // Set your desired timer duration in seconds
+        let timeRemaining = timeInSeconds;
+        let timed = false;
+
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeRemaining / 3600);
+            const minutes = Math.floor((timeRemaining % 3600) / 60);
+            const seconds = timeRemaining % 60;
+            const displayString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById("timerDisplay").textContent = displayString;
+        }
+
+        function startTest() {
+            document.getElementById("startTestBtn").disabled = true;
+            document.getElementById("savebtn").style.display = 'none';
+            document.getElementById("timerWrapper").style.display = 'block';
+            document.getElementById("back-button").disabled = true;
+
+
+
+            updateTimerDisplay();
+            timer = setInterval(countdown, 1000);
+            timed = true;
+        }
+
+        function countdown() {
+            timeRemaining--;
+            updateTimerDisplay();
+            if (timeRemaining <= 0) {
+                clearInterval(timer);
+                if (!testSubmitted) {
+                    submitTest();
+                }
+            }
+        }
+        
+
+            function submitTest(event) {
+                if (event) {
+                    event.preventDefault();
+                }
+
+                testSubmitted = true;
+                clearInterval(timer);
+                document.getElementById("startTestBtn").disabled = true;
+                document.getElementById("back-button").disabled = false;
+
+
+                console.log("Test submitted"); 
+
+                // Calculate the score
+                let score = 0;
+                const totalQuestions = `<%- JSON.stringify(data0.length) %>`;
+        
+                for (let i = 0; i < totalQuestions; i++) {
+                    let radios = document.getElementsByName('box' + i);
+                    for (let j = 0; j < radios.length; j++) {
+                        if (radios[j].checked && radios[j].value === radios[j].getAttribute('data-answer')) {
+                            score++;
+                            break;
+                        }
+                    }
+                }
+
+                // Calculate the percentage
+                let percentage = (score / totalQuestions) * 100;
+
+                // Display the percentage
+                document.querySelector('.percentage-value').innerHTML = percentage.toFixed(2) + '%';
+                document.getElementById('percentage-container').style.display = 'block';
+
+                // Collect selected options and question IDs
+                let selectedOptions = [];
+                for (let i = 0; i < totalQuestions; i++) {
+                    let userAnswer = document.querySelector(`input[name="box${i}"]:checked`);
+                    let questionId = document.querySelector(`input[name="box${i}"]`).dataset.questionId;
+                    selectedOptions.push({
+                        questionId: questionId,
+                        option: userAnswer ? userAnswer.value : null,
+                    });
+                }
+                // Display the score
+                document.querySelector('.score-value').innerHTML = score+'/'+totalQuestions;
+                document.getElementById('score-container').style.display = 'block';
+
+                document.getElementById('submit').style.display = 'none';
+                document.getElementById("score-container").classList.remove("d-none");
+
+        
+                // Show the answer section
+                var x = document.getElementById("show");
+                x.className = "vis";
+
+                // Send data to the server
+                sendDataOnSubmit(selectedOptions, score, percentage, timed);
+
+                
+                for (let i = 0; i < totalQuestions; i++) {
+                    let radios = document.getElementsByName('box' + i);
+                    for (let j = 0; j < radios.length; j++) {
+                        radios[j].disabled = true;
+                    }
+                }
+
+                // Show the test submitted modal
+                var testSubmittedModal = new bootstrap.Modal(document.getElementById('testSubmittedModal'));
+                testSubmittedModal.show();
+            }
+
+            function sendDataOnSubmit(selectedOptions, score, percentage, timed) {
+                // Replace this URL with your server URL where you want to send the data
+                const serverUrl = '/student/assessment/tests/questions/<%- JSON.stringify(data0[0].test_id) %>/submit-score';
+            
+                fetch(serverUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        options: selectedOptions,
+                        score: score,
+                        percentage: percentage,
+                        timed : timed,
+                    }),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+            
+
+        function saveTest() {
+            // Prevent the form from submitting
+            event.preventDefault();
+
+            document.getElementById('startTestBtn').style.display = 'none';
+
+
+            // Calculate the score
+            let score = 0;
+            const totalQuestions = `<%- JSON.stringify(data0.length) %>`;
+            console.log(totalQuestions);
+    
+            for (let i = 0; i < totalQuestions; i++) {
+                let radios = document.getElementsByName('box' + i);
+                for (let j = 0; j < radios.length; j++) {
+                    if (radios[j].checked && radios[j].value === radios[j].getAttribute('data-answer')) {
+                        score++;
+                        break;
+                    }
+                }
+            }
+
+            // Calculate the percentage
+            let percentage = (score / totalQuestions) * 100;
+            
+            // Collect selected options and question IDs
+            let selectedOptions = [];
+            for (let i = 0; i < totalQuestions; i++) {
+                let userAnswer = document.querySelector(`input[name="box${i}"]:checked`);
+                let questionId = document.querySelector(`input[name="box${i}"]`).dataset.questionId;
+                selectedOptions.push({
+                    questionId: questionId,
+                    option: userAnswer ? userAnswer.value : null,
+                });
+            }
+
+
+            // Send data to the server
+            sendDataOnSave(selectedOptions, score, percentage);
+
+            // Show the test save modal
+            var saveTestModal = new bootstrap.Modal(document.getElementById('saveTestModal'));
+            saveTestModal.show();
+        }
+
+
+        function sendDataOnSave(selectedOptions, score, percentage) {
+            // Replace this URL with your server URL where you want to send the data
+            const serverUrl = '/student/assessment/tests/questions/<%- JSON.stringify(data0[0].test_id) %>/save-test';
+        
+            fetch(serverUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    options: selectedOptions,
+                    score: score,
+                    percentage: percentage,
+                }),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }       
+
+        function ShowAndHide() {
+            var x = document.getElementById('answer');
+            if (x.className == 'inv') {
+                x.className = 'vis';
+                highlightCorrectAnswers();
+            } else {
+                x.className = 'inv';
+            }
+        }
+    
+        function highlightCorrectAnswers() {
+            const totalQuestions = `<%- JSON.stringify(data0.length) %>`;
+
+            for (let i = 0; i < totalQuestions; i++) {
+                let correctAnswer = document.querySelector(`input[name="box${i}"][value="${document.querySelector(`input[name="box${i}"]`).dataset.answer}"]`);
+                let selectedAnswer = document.querySelector(`input[name="box${i}"]:checked`);
+        
+                if (correctAnswer) {
+                    let correctAnswerLabel = document.querySelector(`label[for="${correctAnswer.id}"]`);
+                    correctAnswerLabel.classList.add("correct");
+                }
+        
+                if (selectedAnswer) {
+                    let selectedAnswerLabel = document.querySelector(`label[for="${selectedAnswer.id}"]`);
+                    selectedAnswerLabel.classList.add(selectedAnswer === correctAnswer ? "correct" : "wrong");
+                }
+            }
+        }
+        
+    </script>
+    <script>
+        const backButton = document.getElementById('back-button');
+        backButton.addEventListener('click', () => {
+            window.location.replace(document.referrer);
+        });
+    </script>
+    
+    
+    
+    
+        
+
+</body>
+
+</html>

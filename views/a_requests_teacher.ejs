@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="application/javascript" src="/javascripts/a_requests_teacher.js"></script>
+    <%- include('a_head.ejs') %>
+</head>
+<script>
+    var results = JSON.parse('<%- JSON.stringify(results) %>');
+    var refResults = JSON.parse('<%- JSON.stringify(refResults) %>');
+    // console.log(results, refResults);
+</script>
+
+<body>
+    <%- include('a_header.ejs') %>
+        <div style="background-color:#f1f1f7; background-image: linear-gradient(to bottom, #e6e6e6, #f2f2f2);">
+            <br>
+
+            <div class="container">
+                <br>
+
+                <div class="row">
+                    <div class="col-md-12">&nbsp;</div>
+                </div>
+
+                <div class="row">
+                    <div class="col shadow p-3 mb-5 bg-light rounded">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-md-12" align="center">
+                                        <h5><i class="fa fa-user-plus"></i>&nbsp;Teacher Registration Requests</h5>
+                                    </div>
+                                </div>
+                            </div>
+                       
+                        <div class="card-body">
+                            <div class="container">
+                               
+
+                                <div class="row">
+                                    <div class="col-md-12" >
+                                        <script>
+                                            $(document).ready(function() {
+                                                $('#teacherTable').DataTable({
+                                                    order: [
+                                                        [1, 'desc']
+                                                    ],
+                                                });
+                                            });
+                                        </script>
+                                        <table class="table table-bordered table-hover display" id="teacherTable" style="font-size:small; margin-bottom: 0px;">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Username</th>
+                                                    <th scope="col">School Name</th>
+                                                    <th scope="col">Email</th>
+                                                    <th scope="col">Date</th>
+                                                    <th scope="col">Approval</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% for(var i=0;i<results.length;i++) {%>
+                                                    <tr>
+                                                        <td scope="row">
+                                                            <%= (i+1) %>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <%= results[i].user_name %>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <%= results[i].school_name %>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <%= results[i].user_email %>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <%= results[i].created_date %>
+                                                        </td>
+                                                        <td scope="row"><button class="btn btn-secondary btn-sm" data-bs-toggle="modal" onclick="setDropDownDataTeacher('<%=i%>')" data-bs-target="#addteacherModal"><i class="fa fa-eye"></i> &nbsp;Pending</button></td>
+                                                    </tr>
+                                                    <% } %>
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                           
+                        </div>
+                    </div>
+                </div><br><br>
+                  
+                <div class="row"> 
+                    <div class="col">
+                        &nbsp;
+                    </div>
+                   </div>
+            </div>
+
+
+            <!-- Button trigger modal -->
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteteacherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Remove Teacher</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                        </div>
+                        <div class="modal-body">
+                            Are You Sure ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Remove</button>
+                            <button type="button" class="btn btn-primary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="viewteacherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">View Teacher Information</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="addteacherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addteacherModalHeading">Add Teacher</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="username" class="form-label">User Name</label>
+                                            <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="username" class="form-label">User Email</label>
+                                            <input type="text" class="form-control" id="useremail" placeholder="Enter email" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="school" class="form-label">School Name</label>
+                                            <select class="form-select" id="school" required>
+                                            <option value="" disabled selected hidden>Choose a school...</option>
+                                        <% for (i=0;i<refResults.length;i++) { if (refResults[i].type=="school name"){%>                         
+                                        <option value="<%= refResults[i].type_value%>"><%= refResults[i].type_value%></option>
+                                        <% }} %>
+                                      </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="language" class="form-label">Preferred Language</label>
+                                            <select class="form-select" id="language" required>
+                                          <option value="" disabled selected hidden>Choose a school...</option>
+                                                <% for (i=0;i<refResults.length;i++) { if (refResults[i].type=="language"){%>                         
+                                                    <option value="<%= refResults[i].type_value%>"><%= refResults[i].type_value%></option>
+                                                    <% }} %>
+                                      </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" onclick="rejectTeacherRequest()" class="btn btn-danger">Reject</button>
+                            <button type="button" onclick="approveTeacherRequest()" class="btn btn-primary">Approve</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="addschoolModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New School</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+
+                                <div class="">
+                                    <div class="form-row">
+                                        <div class="col-lg-8 mx-auto">
+                                            <div class="">
+                                                <div class="">
+
+                                                    <!--  Bootstrap table-->
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-sm table-hover" style="overflow: scroll;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">#</th>
+                                                                    <th scope="col">Schools List</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>English</td>
+
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Hindi</td>
+
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Spanish</td>
+
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>French</td>
+
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Telugu</td>
+                                                                </tr>
+                                                                <tr>
+
+                                                                    <td style="text-align: center;">
+                                                                        <i class="fa fa-trash"></i>
+
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="input-group mb-3">
+                                                                            <input type="text" class="form-control" placeholder="Text" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-text" id="basic-addon2">Add New</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <!-- Add rows button-->
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="manageRequestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Requests</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+
+                                <div class="">
+                                    <div class="form-row">
+                                        <div class="col-lg-8 mx-auto">
+                                            <div class="">
+                                                <div class="">
+
+                                                    <!--  Bootstrap table-->
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-sm table-hover" style="overflow: scroll;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">#</th>
+                                                                    <th scope="col">Requests List</th>
+                                                                    <th scope="col">Actions</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Request 1</td>
+                                                                    <td>
+                                                                        <a href="" data-bs-toggle="modal" data-bs-target="#editquestionModal">
+                                                                        </a><i class="fa fa-edit"></i> &nbsp;
+                                                                        <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;<i class="fa fa-eye" aria-hidden="true"></i>
+                                                                    </td>
+
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Request 2</td>
+                                                                    <td><i class="fa fa-check" aria-hidden="true"></i> &nbsp;
+                                                                        <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;<i class="fa fa-eye" aria-hidden="true"></i>
+                                                                    </td>
+
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Request 3</td>
+                                                                    <td><i class="fa fa-check" aria-hidden="true"></i> &nbsp;
+                                                                        <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;<i class="fa fa-eye" aria-hidden="true"></i>
+                                                                    </td>
+
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Request 4</td>
+                                                                    <td><i class="fa fa-check" aria-hidden="true"></i> &nbsp;
+                                                                        <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;<i class="fa fa-eye" aria-hidden="true"></i>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Request 5</td>
+                                                                    <td><i class="fa fa-check" aria-hidden="true"></i> &nbsp;
+                                                                        <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;<i class="fa fa-eye" aria-hidden="true"></i>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <!-- Add rows button-->
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+
+            <div class="modal fade" id="editquestionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable" role="dialog">
+                    <div class="modal-content" modal-dialog-scrollabletyle="font-size: small;">
+                        <div class="modal-header">
+                            <h5 class="modal-title fs-5" id="exampleModalLabel">Edit Question</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"></span>
+            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="card card-body" style="background-color: #f1f1f7;">
+                                            <p>
+
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                            <label for="floatingTextarea2">Type Your Question*</label>
+                                                        </div>
+                                                    </div>
+                                                </div><br>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                            <label for="floatingTextarea2">Option 1*</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                            <label for="floatingTextarea2">Option 2*</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                            <label for="floatingTextarea2">Option 3*</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                            <label for="floatingTextarea2">Option 4*</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <!-- <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                Question
+                              </button>
+                            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
+                              Option 1
+                            </button>
+                            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                Option 2
+                              </button>
+                              <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                Option 3
+                              </button>
+                              <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                Option 4
+                              </button> -->
+                                            </p>
+                                            <div class="collapse" id="collapseExample">
+                                                <div class="form-group">
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                                </div>
+
+                                            </div>
+                                            <div class="collapse" id="collapseExample1">
+
+                                                <div class="form-group">
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <!-- <div class="col">
+                        <label for="inputEmail4">Test Name*</label>
+                        <input type="text" class="form-control"  id="" placeholder="">
+                    </div> -->
+                                    <div class="col">
+                                        <label for="inputState">Year</label>
+                                        <select id="inputState" class="form-control form-control-sm form-select">
+                            <option selected>Choose...</option>
+                            <option>2023</option>
+                            <option>2022</option>
+                            
+                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label for="inputState">Month</label>
+                                        <select id="inputState" class="form-control  form-control-sm  form-select">
+                            <option selected>Choose...</option>
+                            <option>JAN</option>
+                            <option>JUN</option>
+                            <option>AUG</option>
+                        </select>
+                                    </div>
+
+                                    <div class="col">
+                                        <label for="inputState">Standard</label>
+                                        <select id="inputState" class="form-control  form-control-sm  form-select">
+                                        <option selected>Choose...</option>
+                                        <option >8.NS.A.2</option>
+                                        <option>6.EE.A.2</option>
+                                    </select>
+                                    </div>
+                                    <div class="col">
+                                        <label for="inputState">Correct Option*</label>
+                                        <select id="inputState" class="form-control  form-control-sm  form-select">
+                                        <option selected>Choose...</option>
+                                        <option >1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                                    </div>
+                                    <div class="col">
+                                        <label for="inputState">Approval</label>
+                                        <select id="inputState" class="form-control  form-control-sm  form-select">
+                                        <option selected>Choose...</option>
+                                        <option>Approved</option>
+                                        <option>Pending</option>
+                                        <option>Disapproved</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+
+                                    <div class="col">
+                                        <label for="inputState">Main Topic</label>
+                                        <select id="inputState" class="form-control  form-control-sm  form-select">
+                                <option selected>Choose...</option>
+                                <option>Algebra1</option>
+                            </select>
+                                    </div>
+                                    <div class="col">
+                                        <label for="inputState">Topic</label>
+                                        <select id="inputState" class="form-control  form-control-sm  form-select">
+                            <option selected>Choose...</option>
+                            <option>NUMBERS, OPERATIONS AND PROPERTIES</option>
+                            <option>EXPRESSIONS AND EQUATIONS</option>
+                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label for="inputState">Sub-Topic</label>
+                                        <select id="inputState" class="form-control  form-control-sm  form-select">
+                            <option selected>Choose...</option>
+                            <option>Order of Operations</option>
+                            <option>Evaluating Expressions</option>
+                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label for="inputState">Under Sub-Topic</label>
+                                        <select id="inputState" class="form-control  form-control-sm  form-select">
+                            <option selected>Choose...</option>
+                            <option>Order of Operations 1a</option>
+                            <option>Order of Operations 1b</option>
+                        </select>
+                                    </div>
+
+                                    <div class="col">
+                                        <label for="inputState">Difficulty</label>
+                                        <select id="inputState" class="form-control  form-control-sm  form-select">
+                            <option selected>Choose...</option>
+                            <option>Part I</option>
+                            <option>Part II</option>
+                            <option>Part III</option>
+                            <option>Part IV</option>
+                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <hr class="hr hr-blurry" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label for="inputState" style="font-size: medium; color: black;">Add Translation</label>
+                                        <select id="inputState" class="form-control   form-select">
+                            <option selected>Choose...</option>
+                            <option>English (6)</option>
+                            <option>Arabic (1)</option>
+                            <option>Spanish (2)</option>
+                            <option>Bengali (1)</option>
+                            <option>Chinese (Simplified)(2)</option>
+                            <option>Chinese (Traditional)(3)</option>
+                        </select>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="card card-body" style="background-color: #f1f1f7;">
+                                            <p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                            <label for="floatingTextarea2">Type Your Question Transilation</label>
+                                                        </div>
+                                                    </div>
+                                                </div><br>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                            <label for="floatingTextarea2">Option 1</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                            <label for="floatingTextarea2">Option 2</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                            <label for="floatingTextarea2">Option 3</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                            <label for="floatingTextarea2">Option 4</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </p>
+                                            <div class="collapse" id="collapseExample">
+
+                                                <div class="form-group">
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-success"> <i class="fa fa-plus"></i> &nbsp;Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       
+      
+        <%- include('a_footer.ejs') %>
+</body>
+
+</html>
+<!-- <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">School Name</th>
+        <th scope="col">Actions</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <th scope="row">1</th>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td>@skool1</td>
+        <td><a></a></td>
+    </tr>
+    <tr>
+        <th scope="row">2</th>
+        <td>Jacob</td>
+        <td>Thornton</td>
+        <td>@skool1</td>
+    </tr>
+    <tr>
+        <th scope="row">3</th>
+        <td>Larry</td>
+        <td>the Bird</td>
+        <td>@skool1</td>
+    </tr>
+</tbody> -->

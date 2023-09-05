@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Regent's Study Tool</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/s_index.css" rel="stylesheet">
+    <link href="/css/s_learning_archive.css" rel="stylesheet">
+
+
+</head>
+
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/student">Exam Study Tool</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" style="border-left: 1px solid darkgray; " id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        <li class="nav-item">
+                            <a class="nav-link" style="padding-left: 15px;" aria-current="page" href="/student">HOME</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">LEARNING</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/student/learning/topic">TOPICS</a></li>
+                                <li><a class="dropdown-item" href="/student/learning/archive">TEST ARCHIVE</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">ASSESSMENT</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/student/assessment/assigned">ASSIGNED BY TEACHER</a>
+                                </li>
+                                <li><a class="dropdown-item" href="/student/assessment/tests">TESTS</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/student/profile"><i
+                                    style="padding-right: 4px;" class="fa fa-user"></i><%= user.user_name %></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">LOGOUT</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main style="background-color: #F1F1F7;">
+        <h3 class="display-5 text-center" style="padding: 20px;">TEST ARCHIVE</h3>
+
+        <div class="container">
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">MONTH: </label>
+                </div>
+
+                <select class="custom-select" id="targetmonth">
+                    <option selected>Select Month</option>
+                    <% for (let i = 0; i < data1.length; i++){ %>
+                    <option value="<%= data1[i].month %>"><%= data1[i].month %></option>
+                    <% } %>
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">YEAR: </label>
+                </div>
+                <select class="custom-select" id="targetyear">
+                    <option selected>Select Year</option>
+                    <% for (let i = 0; i < data0.length; i++){ %>
+                    <option value="<%= data0[i].year %>"><%= data0[i].year %></option>
+                    <% } %>                    
+                </select>
+            </div>
+
+            <div class="card" style="padding: 20px;">
+                
+                <div class="card-body">
+                    <% for (let i=0; i < data2.length; i++){ %>
+                        <div class="row" >
+                            <div class="col-6 english-question border-end">
+                                <div class="row" style="padding: 10px;">
+                                    <p class="fw-bold" id="newline">
+                                        <%= i+1 %>. <%= data2[i].question %>
+                                    </p>
+                                    <div>
+                                        <div>
+                                        <input type="radio" name="box<%= i %>" id="one<%= i %>" data-answer="<%= data2[i].answer === 'option_1' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                        <label for="one<%= i %>" class="box first">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">A. <%= data2[i].option_1 %></span>
+                                            </div>
+                                        </label>
+                                    </div>
+
+                                    <div>
+                                        <input type="radio" name="box<%= i %>" id="two<%= i %>" data-answer="<%= data2[i].answer === 'option_2' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                        <label for="two<%= i %>" class="box second">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">B. <%= data2[i].option_2 %></span>
+                                            </div>
+                                        </label>
+                                    </div>
+
+                                    <div>
+                                        <input type="radio" name="box<%= i %>" id="three<%= i %>" data-answer="<%= data2[i].answer === 'option_3' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                        <label for="three<%= i %>" class="box third">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">C. <%= data2[i].option_3 %></span>
+                                            </div>
+                                        </label>
+                                    </div>
+
+                                    <div>
+                                        <input type="radio" name="box<%= i %>" id="four<%= i %>" data-answer="<%= data2[i].answer === 'option_4' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                        <label for="four<%= i %>" class="box forth">
+                                            <div class="course">
+                                                <span class="circle"></span>
+                                                <span class="subject">D. <%= data2[i].option_4 %></span>
+                                            </div>
+                                        </label>
+                                    </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6 translated-question">
+                                <% if (data2[i].translation_id!=null){ %>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="fw-bold">
+                                            <%= i+1 %>. <%= data2[i].t_question %>
+                                        </p>
+                                        <div>
+
+                                        <div>
+                                            <input type="radio" name="t_box<%= i %>" id="t_one<%= i %>" data-answer="<%= data2[i].answer === 'option_1' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                            <label for="t_one<%= i %>" class="box t_first">
+                                                <div class="course">
+                                                    <span class="circle"></span>
+                                                    <span class="subject" lang="bn">A. <%= data2[i].t_option_1 %></span>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div>
+                                            <input type="radio" name="t_box<%= i %>" id="t_two<%= i %>" data-answer="<%= data2[i].answer === 'option_2' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                            <label for="t_two<%= i %>" class="box t_second">
+                                                <div class="course">
+                                                    <span class="circle"></span>
+                                                    <span class="subject">B. <%= data2[i].t_option_2 %></span>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                            <div>
+                                            <input type="radio" name="t_box<%= i %>" id="t_three<%= i %>" data-answer="<%= data2[i].answer === 'option_3' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                            <label for="t_three<%= i %>" class="box t_third">
+                                                <div class="course">
+                                                    <span class="circle"></span>
+                                                    <span class="subject">C. <%= data2[i].t_option_3 %></span>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                            <div>
+                                            <input type="radio" name="t_box<%= i %>" id="t_four<%= i %>" data-answer="<%= data2[i].answer === 'option_4' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                            <label for="t_four<%= i %>" class="box t_forth">
+                                                <div class="course">
+                                                    <span class="circle"></span>
+                                                    <span class="subject">D. <%= data2[i].t_option_4 %></span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <% } else { %>
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="fw-bold">
+                                                <%= i+1 %>. <%= data2[i].question %>
+                                            </p>
+
+                                            <div>
+                                                <div>
+                                                <input type="radio" name="t_box<%= i %>" id="t_one<%= i %>" data-answer="<%= data2[i].answer === 'option_1' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                                <label for="t_one<%= i %>" class="box t_first">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject" lang="bn">A. <%= data2[i].option_1 %>
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                            </div>
+
+                                                <div>
+                                                <input type="radio" name="t_box<%= i %>" id="t_two<%= i %>" data-answer="<%= data2[i].answer === 'option_2' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                                <label for="t_two<%= i %>" class="box t_second">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">B. <%= data2[i].option_2 %></span>
+                                                    </div>
+                                                </label>
+                                            </div>
+
+                                                <div>
+                                                <input type="radio" name="t_box<%= i %>" id="t_three<%= i %>" data-answer="<%= data2[i].answer === 'option_3' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                                <label for="t_three<%= i %>" class="box t_third">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">C. <%= data2[i].option_3 %></span>
+                                                    </div>
+                                                </label>
+                                            </div>
+
+                                                <div>
+                                                <input type="radio" name="t_box<%= i %>" id="t_four<%= i %>" data-answer="<%= data2[i].answer === 'option_4' %>" onclick="checkAnswer(this, '<%= i %>')">
+                                                <label for="t_four<%= i %>" class="box t_forth">
+                                                    <div class="course">
+                                                        <span class="circle"></span>
+                                                        <span class="subject">D. <%= data2[i].option_4 %></span>
+                                                    </div>
+                                                </label>
+                                            </div>
+
+
+                                            </div>
+                                        </div>
+                                        <% } %>
+                            </div>
+                        </div>
+                        <% } %>
+
+
+                    
+                    <div class="card-body border-bottom inv" id="answer">
+                        <div class="row">
+                            <div class="col-6 border-end">
+                                <div class=" text-center fw-bold" style="padding-bottom: 10px;">
+                                    <p>answer 1</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center fw-bold" style="padding-bottom: 10px;">
+                                    <p>answer 1</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- jan end -->
+
+
+                <div class="card-body inv" id="august">
+                    aug </div>
+                <div class="card-body inv" id="2021">
+                    20233 </div>
+                <div class="card-body inv" id="2020">
+                    2020 </div>
+            <div class="card-body inv" id="jan2020">
+               jan2020 </div>
+        </div>
+        </div>
+        <hr class="featurette-divider" style="margin-bottom:0;">
+    </main>
+
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 ">
+            <p class="col-md-4 mb-0 text-muted">&copy; Exam Study Tool © 2023</p>
+
+            <ul class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="/student" class="nav-link px-2 text-muted">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Contact</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Terms and Conditions</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        document
+            .getElementById('targetmonth')
+            .addEventListener('change', function () {
+                'use strict';
+                var vis = document.querySelector('.vis'),
+                    targetmonth = document.getElementById(this.value);
+                if (vis !== null) {
+                    vis.className = 'inv';
+                }
+                if (targetmonth !== null) {
+                    targetmonth.className = 'vis';
+                }
+            });
+    </script>
+    <script>
+        document
+            .getElementById('targetyear')
+            .addEventListener('change', function () {
+                'use strict';
+                var vis = document.querySelector('.vis'),
+                    targetyear = document.getElementById(this.value);
+                if (vis !== null) {
+                    vis.className = 'inv';
+                }
+                if (targetyear !== null) {
+                    targetyear.className = 'vis';
+                }
+            });
+    </script>
+    <script>
+        document
+            .getElementById('targetyear')
+            .addEventListener('change', function () {
+                'use strict';
+                var vis = document.querySelector('.vis'),
+                    targetyear = document.getElementById(this.value);
+                if (vis !== null) {
+                    vis.className = 'inv';
+                }
+                if (targetyear !== null) {
+                    targetyear.className = 'vis';
+                }
+            });
+    </script>
+    <script>
+        function ShowAndHide() {
+            var x = document.getElementById('answer');
+            if (x.className == 'inv') {
+                x.className = 'vis';
+            } else {
+                x.className = 'inv';
+            }
+        }
+    </script>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</body>
+
+</html>

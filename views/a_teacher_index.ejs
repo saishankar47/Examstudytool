@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <%- include('a_head.ejs') %>
+        <script type="application/javascript" src="/javascripts/a_teacher.js"></script>
+</head>
+
+<body>
+    <script>
+        var results = JSON.parse('<%- JSON.stringify(results) %>');
+        var refResults = JSON.parse('<%- JSON.stringify(refResults) %>');
+        //console.log(results, refResults);
+    </script>
+    <%- include('a_header.ejs') %>
+        <div style="background-color:#f1f1f7; background-image: linear-gradient(to bottom, #e6e6e6, #f2f2f2);">
+            <br><br>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col shadow p-2 mb-2 bg-light rounded">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-md-6" >
+                                        <h5><i class="fa fa-user"></i>&nbsp;Teacher Information</h5>
+                                    </div>
+                                    <div class="col-md-6" >
+                                        <a href="/teacher/new" class="btn btn-primary btn-sm position-relative" style="display: revert; float: right;" role="button" aria-pressed="true" data-bs-toggle="modal" onclick="setDropDownDataTeacher(-1)" data-bs-target="#addteacherModal"> <i class="fa fa-plus" aria-hidden="true"></i> Add Teacher </a>
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                            </div>
+                        <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12" >
+                                        <script>
+                                            $(document).ready(function() {
+                                                $('#teacherTable').DataTable({
+                                                    order: [
+                                                        [0, 'asc']
+                                                    ],
+                                                });
+                                            });
+                                        </script>
+                                        <table class="table table-bordered table-hover display" id="teacherTable" style="font-size:small; margin-bottom: 0px;">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Username</th>
+                                                    <th scope="col">Email</th>
+                                                    <th scope="col">School Name</th>
+                                                    <th scope="col" style="text-align: center;">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% for (var i = 0; i < results.length; i++) { %>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <%= (i+1) %>
+                                                        </th>
+                                                        <td>
+                                                            <%= results[i].user_name %>
+                                                        </td>
+                                                        <td>
+                                                            <%= results[i].user_email %>
+                                                        </td>
+                                                        <td>
+                                                            <%= results[i].school_name %>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <a href="" data-bs-toggle="modal" onclick="setDropDownDataTeacher('<%=i%>')" data-bs-target="#addteacherModal">
+                                                                <i class="fa fa-edit"></i></a> &nbsp;
+                                                            <a href="" data-bs-toggle="" onclick="setdeleteTeacher('<%=i%>')" data-bs-target="">
+                                                                <i class="fa fa-trash" aria-hidden="true"></i></a>&nbsp;
+                                                            <a href="" type="button" onclick="makeTeacherAsAdmin('<%=i%>')" class="btn btn-outline-secondary btn-sm">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i> Make Admin</a>&nbsp;
+                                                        </td>
+
+                                                    </tr>
+                                                    <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>                       
+                        </div>
+                        </div>
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            <script>
+                function showDiv() {
+                    console.log("fromdiv")
+                    document.getElementById('welcomeDiv').style.display = "block";
+                    var elem = document.getElementById('welcomeDiv');
+                    console.log(elem)
+                    elem.scrollIntoView();
+                }
+
+                function removeTagByTagName(tagName) {
+                    console.log(tagName);
+                    var ele = document.getElementsByTagName(tagName);
+                    console.log(ele);
+                    return ele[0].parentNode.removeChild(ele[0]);
+                }
+
+                function removeTag(tag) {
+                    console.log("hi");
+                    var ele = document.getElementsByTagName(tag);
+                    console.log("hi");
+                    console.log(ele[0].parentNode.removeChild(ele[0]));
+                    return ele[0].parentNode.removeChild(ele[0]);
+                }
+
+                // var btn = document.getElementById("delet");
+                // btn.addEventListener("click", function() {
+                //     removeTagByTagName("footer");
+                // });
+
+                function removeHeaderFooter() {
+                    var frame = document.querySelector("iframe");
+                    console.log(document.querySelector("iframe"));
+                    header = frame.contentDocument.querySelector("header");
+                    console.log(document.querySelector("iframe"));
+                    console.log(document.querySelector("iframe"));
+                    header.remove();
+                    footer = frame.contentDocument.querySelector("footer");
+                    footer.remove();
+                }
+            </script>
+            <div class="d-flex justify-content-center">
+                <div class="col-md-11" id="welcomeDiv" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="card-header">
+                                        <div class="d-flex justify-content-center">
+                                            <h6>Prof. Hazel View</h6>
+                                        </div>
+                                    </div>
+                                    <iframe src="http://localhost:1000/teacher" width="100%" height="700" style="border:none;">
+                </iframe>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- <div class="d-flex justify-content-center" >
+    <div class="col-md-11" id="welcomeDiv"  style="display:none;">
+    <div class="row">
+        <div class="col-md-12">
+        
+                <div class="d-flex justify-content-center">
+                </div>
+               
+                < include('a_view_teacher_portal.ejs') %>
+        </div>
+</div></div></div> -->
+
+
+            <!-- Button trigger modal -->
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteteacherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Remove Teacher</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                        </div>
+                        <div class="modal-body">
+                            Are You Sure ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" onclick="deleteTeacher()" data-bs-dismiss="modal">Remove</button>
+                            <button type="button" class="btn btn-primary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="viewteacherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">View Teacher Information</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+                        </div>
+                        <div class="modal-body">
+                            <%- include('a_view_teacher_portal.ejs') %>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="editteacherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Teacher Information</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+                        </div>
+                        <div class="modal-body">
+                            removed
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="addteacherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addteacherModalHeading">Add Teacher</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="username" class="form-label">User Name</label>
+                                            <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="username" class="form-label">User Email</label>
+                                            <input type="text" class="form-control" id="useremail" placeholder="Enter email" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="school" class="form-label">School Name</label>
+                                            <select class="form-select" id="school" required>
+                                            <option value="" disabled selected hidden>Choose a school...</option>
+                                        <% for (i=0;i<refResults.length;i++) { if (refResults[i].type=="school name"){%>                         
+                                        <option value="<%= refResults[i].type_value%>"><%= refResults[i].type_value%></option>
+                                        <% }} %>
+                                      </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="language" class="form-label">Preferred Language</label>
+                                            <select class="form-select" id="language" required>
+                                          <option value="" disabled selected hidden>Choose a school...</option>
+                                                <% for (i=0;i<refResults.length;i++) { if (refResults[i].type=="language"){%>                         
+                                                    <option value="<%= refResults[i].type_value%>"><%= refResults[i].type_value%></option>
+                                                    <% }} %>
+                                      </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" onclick="add_edit()" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+            <br>
+        </div>
+
+        <%- include('a_footer.ejs') %>
+</body>
+
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('t_head.ejs') %>
+  <script src="https://cdn.tiny.cloud/1/57hyg5tgxtqqoxud9ulbtbpq7eba8ada4uz6zbt49e89bo44/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  <link type="html/javascript" href="/public/javascripts/plugin.min.js">
+  <script type="application/javascript" src="/javascripts/t_questions.js"></script>
+ <script src="https://cdn.tiny.cloud/1/57hyg5tgxtqqoxud9ulbtbpq7eba8ada4uz6zbt49e89bo44/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  <link type="html/javascript" href="/public/javascripts/plugin.min.js">
+  <header>
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/teacher">Exam Study Tool</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" style="border-left: 1px solid darkgray; " id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                    <li class="nav-item">
+                        <a class="nav-link " style="padding-left: 15px;" aria-current="page" href="/teacher">Class</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link " style="padding-left: 15px;color: blue;" aria-current="page" href="/teacher/questions">Questions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/teacher/status" >Status</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav ms-auto">
+                 <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/teacher/profile"><i
+                            style="padding-right: 4px;" class="fa fa-user"></i><%= user.user_name %></a>
+                </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="/">LOGOUT</a>
+                  </li>
+              </ul>
+          </div>
+        </div>
+    </nav>
+    <br>
+</header>
+  <script>
+      function hello() {
+            document.addEventListener('focusin', function(e) {
+                if (e.target.closest('.tox-tinymce-aux, .moxman-window, .tam-assetmanager-root') !== null) {
+                    e.stopImmediatePropagation();
+                }
+            });
+           
+  
+            tinymce.init({
+                selector: 'textarea#custom-plugin',
+                plugins: ['anchor', 'advlist', 'autolink', 'charmap', 'codesample', 'image', 'link', 'lists', 'media', 'searchreplace' , 'table', 'visualblocks', 'wordcount','tiny_mce_wiris'],
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image  table | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | charmap | removeformat | tiny_mce_wiris_formulaEditor  ',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Author name',
+                external_plugins: {
+                        'tiny_mce_wiris': '/js/plugin.min.js'
+                     },
+
+                      // This option allows us to introduce mathml formulas
+               extended_valid_elements: '[.]',
+               draggable_modal: true,
+              
+                images_upload_handler: function(blobInfo, success, failure) {
+                    return new Promise(function(resolve, reject) {
+                        var xhr, formData;
+                        xhr = new XMLHttpRequest();
+                        xhr.withCredentials = false;
+                        xhr.open('POST', '/s3/imageUpload');
+                        xhr.onload = function() {
+                            var json;
+                            if (xhr.status != 200) {
+                                failure(xhr.responseText);
+                                return;
+                            }
+
+                            json = JSON.parse(xhr.responseText);
+                            console.log(xhr.responseText)
+
+                            if (!json || typeof json.productImage != 'string') {
+                                console.log("hello");
+                                failure(xhr.responseText);
+                                return;
+                            }
+                            success(json.productImage);
+                            resolve(json.productImage)
+                        };
+
+                        formData = new FormData();
+                        formData.append('image', blobInfo.blob(), blobInfo.filename());
+                        xhr.send(formData);
+                    })
+                },
+                automatic_uploads: true,
+                mergetags_list: [{
+                    value: 'First.Name',
+                    title: 'First Name'
+                }, {
+                    value: 'Email',
+                    title: 'Email'
+                }, ]
+            });
+            
+         }
+
+  </script>
+   <style>
+    body{
+      background-image: linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%);
+      
+    }
+
+  </style>
+   <style>
+    .reddot {
+        height: 10px;
+        width: 10px;
+        background-color: red;
+        border-radius: 50%;
+        display: inline-block;
+    }
+    
+    .greendot {
+        height: 10px;
+        width: 10px;
+        background-color: green;
+        border-radius: 50%;
+        display: inline-block;
+    }
+</style>
+<body>
+    <div class="container-xl">
+        <div class="row">
+            <div class="col">
+                <a href="/teacher/questions" >  <button class="btn btn-dark"; type="button" >
+                  <i class="fa fa-arrow-left"> </i>
+                </button>
+                </a>
+             </div>
+        </div>
+    <div id="editquestion"  aria-labelledby="exampleModalLabel" >
+        <div  role="document">
+            <div  style="font-size: small;">
+                <div  class="center">
+                    <h5 id="exampleModalLabelToggleEditOrAdd"></h5>
+                   
+                  <span aria-hidden="true"></span>
+              </button>
+                </div>
+                <div  id="editQuestionModalBody">
+                    <!-- <h6 style="text-align: center;">Question Informantion</h6> -->
+     
+                </div>
+                <div class="center" >
+                     <button type="submit" onclick="cancel()" value="submit" class="btn btn-primary" > Cancel</button>   
+               <button type="submit" value="submit" class="btn btn-primary" onclick="uploadSubmitQuestionData()"> <i class="fa fa-plus"></i> &nbsp;Send For Approval</button>
+                </div>
+            </div>
+        </div>
+     </div>
+    </div>
+    <script>
+        function cancel() {
+          if (confirm("Are you sure you want to cancel?")) {
+            window.location.href = "/teacher/questions";
+          } else {
+            return false;
+          }
+        }
+        </script>
+    <script>
+        var heading = document.getElementById('exampleModalLabelToggleEditOrAdd')
+                heading.innerHTML = 'Add Question';
+                console.log("AddQuestion")
+                const url = './AddQuestionModal?questionId=-1';
+                $.get(url, function(data) {
+                    $('#editQuestionModalBody').html(data);
+                    // const editQuestionModalBody =document.getElementById('editQuestionModalBody');
+                    // editQuestionModalBody.innerHTML = data;  
+                });
+        
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

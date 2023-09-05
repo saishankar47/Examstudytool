@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Regent's Study Tool</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.2/extensions/filter-control/bootstrap-table-filter-control.min.css">
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <link href="/css/s_home.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/s_index.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .custom-dropdown {
+            display: inline-block;
+            position: relative;
+        }
+    
+        .custom-dropdown select {
+            appearance: none;
+            background-color: whitesmoke;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            padding: 10px;
+            outline: none;
+            transition: background-color 0.2s ease-in-out;
+
+        }
+    
+        .custom-dropdown select:hover {
+            background-color: #F1F1F7;
+        }
+    
+        .custom-dropdown::after {
+            content: '\25BC';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            pointer-events: none;
+        }
+    </style>
+    
+</head>
+
+<body>
+    
+    
+
+    <header>
+        <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/student">Exam Study Tool</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" style="border-left: 1px solid darkgray; " id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        <li class="nav-item active">
+                            <a class="nav-link" style="padding-left: 15px;" aria-current="page" href="/student">HOME</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">LEARNING</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/student/learning/topic">TOPICS</a></li>
+                                <li><a class="dropdown-item" href="/student/learning/archive">TEST ARCHIVE</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">ASSESSMENT</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/student/assessment/assigned">ASSIGNED BY TEACHER</a>
+                                </li>
+                                <li><a class="dropdown-item" href="/student/assessment/tests">PRACTICE TESTS</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/student/profile"><i
+                                    style="padding-right: 4px;" class="fa fa-user"></i><%= user.user_name %></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">LOGOUT</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main style="min-height: 77vh; background-color: #d9d9d9;
+    background-image: linear-gradient(315deg, #d9d9d9 0%, #f6f2f2 74%);">
+        
+
+
+        <div class="container">
+            <h1 class="display-4 text-center" style="padding: 20px; font-weight:320;">Welcome <%= user.user_name %>!</h1>
+            <div class="row my-3">
+                <div class="col">
+                    <h2>Performance Dashboard</h2>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-md-6 py-2">
+                    <div class="card">
+                        <h6 class="text-center py-3">Practice Tests - Untimed</h6>
+                        <div class="card-body">
+                            <canvas id="lineGraph"></canvas>                            
+                        </div>
+                        <div class="custom-dropdown">
+                            <select id="topicFilter" style="width: 97.5%;">
+                                <option value="all">All Topics</option>
+                            </select>
+                        </div>   
+                    </div>
+                </div>
+                <div class="col-md-6 py-2">
+                    <div class="card">
+                        <h6 class="text-center py-3">Assigned Tests</h6>
+                        <div class="card-body">
+                            <div id="chartContainer">
+                                <canvas id="assignedlineGraph"></canvas>
+                            </div>
+                        </div>
+                        <div class="custom-dropdown">
+                            <select id="classDropdown" style="width: 97.5%;">
+                                <option value="">All Classes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row py-2" >
+                    <div class="card" >
+                        <h5 class="text-center py-3">Practice Tests - Timed</h5>
+                        <div class="card-body" >
+                            <canvas id="timedGraph" height="70"></canvas>
+                        </div>
+                    <div class="custom-dropdown" >
+                        <select id="topicFilterTimed" style="width: 99%;">
+                            <option value="all">All Topics</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="background-color:white;">
+            <hr class="featurette-divider">
+
+            <div class="container">
+                <h1>Practice Tests</h1>
+
+                <table id="scores" data-toggle="table" data-search="true"
+                    data-filter-control="true" data-show-refresh="true" data-show-toggle="true"
+                    data-pagination="true" data-toolbar="#toolbar" class="table-responsive">
+                    <thead class="text-center">
+                        <tr>
+                            <th data-field="sno"></th>
+                            <th data-field="testname" data-filter-control="input" data-sortable="true">Test Name</th>
+                            <th data-field="topic" data-filter-control="input" data-sortable="true">Topic Name</th>
+                            <th data-field="chapter" data-filter-control="select" data-sortable="true">Chapter</th>
+                            <th data-field="date" data-filter-control="select" data-sortable="true">Submitted Date</th>
+                            <th data-field="percentage" data-sortable="true">Percentage</th>
+                            <th data-field="is_timed" data-sortable="true">Test Type</th>
+                        </tr>                        
+                    </thead>
+                    <tbody class="text-center">
+                        <% for (let i=0; i < data0.length; i++){ %>
+                                <tr>
+                                    <td><%= i+1 %></td>
+                                    <td class="text-capitalize"><%= data0[i].test_name %></td>
+                                    <td class="text-capitalize"><%= data0[i].topic %></td>
+                                    <td class="text-capitalize"><%= data0[i].sub_topic %></td>
+                                    <td><%= data0[i].submitted_date %></td>
+                                    <td><%= data0[i].percentage %>%</td>
+                                    <td><%= data0[i].is_timed === 1 ? 'Timed' : 'Not Timed' %></td>
+                                </tr>
+                        <% } %>
+                    </tbody>
+
+
+                </table>
+            </div>
+
+            <hr class="featurette-divider">
+        </div>
+
+
+        <!-- assigned by teacher table -->
+
+
+        <div class="container">
+            <h1>Assigned to You</h1>
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1" style="width: 100%;">
+                    <div class="panel panel-default panel-table">
+                        <div style="padding-bottom: 20px;" class="panel-heading">
+                            <div class="row">                                
+                                <div class="col col-xs-6 text-right">
+                                    <div class="pull-right">
+
+                                        <div class="btn-group" data-toggle="buttons">
+                                            <label class="btn btn-success btn-filter" data-target="completed">
+                                                <input type="radio" name="options" id="option1" autocomplete="off">
+                                                Completed
+                                            </label>
+                                            <label class="btn btn-warning btn-filter" data-target="pending">
+                                                <input type="radio" name="options" id="option2" autocomplete="off">
+                                                Pending
+                                            </label>
+                                            <label class="btn btn-secondary btn-filter active" data-target="all">
+                                                <input type="radio" name="options" id="option3" autocomplete="off"
+                                                    checked> All
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <table id="assignedtable" style="border-color:rgb(185, 185, 185);" class="table table-bordered table-list" class="table-responsive" data-search="true">
+                            <thead class="text-center">
+                                <tr>
+                                    <th class="col-text" data-sortable="true">Course</th>
+                                    <th class="col-text" data-sortable="true">Test Name</th>
+                                    <th class="col-text" data-sortable="true">Date Assigned</th>
+                                    <th class="col-text" data-sortable="true">Due Date</th>
+                                    <th class="col-text" data-sortable="true">Submitted Date</th>
+                                    <th class="col-text" data-sortable="true">Percentage</th>
+                                    <th class="col-text" data-sortable="true">Test Type</th>
+                                    <th class="col-text" data-sortable="true">Status</th>
+                                    <th class="col-text" data-sortable="true"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <% for (let i=0,j=1; i < data1.length; i++,j++){ %>
+                                    <% if (data1[i].is_submitted==1) { %>
+                                        <tr class="status completed">
+                                            <td  class="text-capitalize"><%= data1[i].course %></td>
+                                            <td  class="text-capitalize"><%= data1[i].test_name %></td>
+                                            <td><%= data1[i].assigned_date %></td>
+                                            <td><%= data1[i].due_date %></td>
+                                            <td><%= data1[i].submitted_date %></td>
+                                            <td><%= data1[i].percentage %>%</td>
+                                            <td><%= data1[i].is_timed === 1 ? 'Timed' : 'Not Timed' %></td>
+                                            <td>
+                                                <img src="https://cdn-icons-png.flaticon.com/128/9463/9463151.png"
+                                                    class="center" alt="Icon" width="24" height="24">
+                                            </td>
+                                            <td>
+                                                <a href="/student/assessment/assigned/questions/<%=data1[i].test_id%>/<%=data1[i].class_id%>/<%=data1[i].assigned_questions_id%>">
+                                                    <img id="test-link" src="/images/right-arrow_hover.png" onmouseover="this.src='/images/right-arrow.png';" onmouseout="this.src='/images/right-arrow_hover.png';"
+                                                    class="center" alt="Icon" width="24" height="24"></a>
+                                            </td>
+                                        </tr>
+                                    <% } else { %>
+                                        <tr class="status pending">
+                                            <td class="text-capitalize"><%= data1[i].course %></td>
+                                            <td class="text-capitalize"><%= data1[i].test_name %></td>
+                                            <td><%= data1[i].assigned_date %></td>
+                                            <td><%= data1[i].due_date %></td>
+                                            <td>Not Attempted</td>
+                                            <td>Not Attempted</td>
+                                            <td><%= data1[i].is_timed === 1 ? 'Timed' : 'Not Timed' %></td>
+                                            <td>
+                                                <img src="https://cdn-icons-png.flaticon.com/128/2972/2972543.png"
+                                                    class="center" alt="Icon" width="24" height="24">
+                                            </td>
+                                            <td>
+                                                <a href="/student/assessment/assigned/questions/<%=data1[i].test_id%>/<%=data1[i].class_id%>/<%=data1[i].assigned_questions_id%>">
+                                                    <img id="test-link" src="/images/right-arrow_hover.png" onmouseover="this.src='/images/right-arrow.png';" onmouseout="this.src='/images/right-arrow_hover.png';"
+                                                    class="center" alt="Icon" width="24" height="24"></a>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <ul id="pagination" class="pagination"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </main>
+
+    <div class="border-top" style="background-color: white; padding-bottom: 1.5rem;">
+        <div class="container">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3" style="margin-top: 1.5rem">
+                <p class="col-md-4 mb-0 text-muted">&copy; Exam Study Tool © 2023</p>
+    
+                <ul class="nav col-md-4 justify-content-end">
+                    <li class="nav-item"><a href="/student" class="nav-link px-2 text-muted">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Contact</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Terms and Conditions</a></li>
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let rowsPerPage = 10;
+            let currentPage = 1;
+            let filter = 'all';
+    
+            function updateTable() {
+                let rows = Array.from(document.querySelectorAll('#assignedtable tbody tr'));
+                let filteredRows = rows.filter(row => filter === 'all' || row.classList.contains(filter));
+                let numPages = Math.ceil(filteredRows.length / rowsPerPage);
+                let start = (currentPage - 1) * rowsPerPage;
+                let end = start + rowsPerPage;
+            
+                rows.forEach(row => row.style.display = 'none');
+                filteredRows.slice(start, end).forEach(row => row.style.display = 'table-row');
+            
+                // Update pagination
+                let pagination = document.getElementById('pagination');
+                pagination.innerHTML = '';
+            
+                for (let i = 1; i <= numPages; i++) {
+                    let li = document.createElement('li');
+                    li.classList.add('page-item');
+                    if (i === currentPage) li.classList.add('active');
+            
+                    let a = document.createElement('a');
+                    a.classList.add('page-link');
+                    a.textContent = i;
+                    a.href = '#';
+                    a.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        currentPage = i;
+                        updateTable();
+                    });
+            
+                    li.appendChild(a);
+                    pagination.appendChild(li);
+                }
+            }
+    
+            // Filter buttons
+            document.querySelectorAll('.btn-filter').forEach((button) => {
+                button.addEventListener('click', () => {
+                    filter = button.getAttribute('data-target');
+                    currentPage = 1;
+                    updateTable();
+                });
+            });
+    
+            updateTable();
+        });
+            
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get the data from the table
+            const tableData = document.querySelectorAll('#scores tbody tr');
+            const allData = [];
+            const uniqueTopics = new Set();
+    
+            // Extract data from the table (first 10 rows in reverse order)
+            for (let i = Math.min(tableData.length - 1, 14); i >= 0; i--) {
+                const row = tableData[i];
+                const testName = row.cells[1].textContent;
+                const topic = row.cells[2].textContent;
+                const date = row.cells[4].textContent;
+                const percentage = parseFloat(row.cells[5].textContent);
+                const isTimed = row.cells[6].textContent;
+    
+                // Check if the test is 'Not Timed'
+                if (isTimed === 'Not Timed') {
+                    allData.push({ testName, topic, date, percentage });
+                    uniqueTopics.add(topic);
+                }
+            }
+    
+            // Populate the topic filter dropdown with unique topic names
+            const topicFilter = document.getElementById('topicFilter');
+            uniqueTopics.forEach(topic => {
+                const option = document.createElement('option');
+                option.value = topic;
+                option.textContent = topic;
+                topicFilter.appendChild(option);
+            });
+    
+            let filteredData = [...allData];
+    
+            // Function to update the graph based on the selected topic
+            function updateGraph(topic) {
+                filteredData = topic === 'all' ? allData : allData.filter(data => data.topic === topic);
+                const submittedDates = filteredData.map(data => data.date);
+                const percentages = filteredData.map(data => data.percentage);
+    
+                lineGraph.data.labels = submittedDates;
+                lineGraph.data.datasets[0].data = percentages;
+                lineGraph.update();
+            }
+    
+            // Get the canvas and create a line graph
+            const ctx = document.getElementById('lineGraph').getContext('2d');
+            const lineGraph = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Test Percentage',
+                        data: [],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        tension: 0.2
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Submitted Date'
+                            },
+                            ticks: {
+                                maxRotation: 90,
+                                minRotation: 90
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Percentage'
+                            },
+                            min: 0,
+                            max: 100,
+                        }
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                const dataIndex = tooltipItem.index;
+                                const testName = filteredData[dataIndex].testName;
+                                return `Test Name: ${testName} | Submitted Date: ${tooltipItem.xLabel} | Percentage: ${tooltipItem.yLabel}%`;
+                            }
+                        }
+                    }
+                }
+            });
+    
+            // Add an event listener to the topic filter dropdown
+            topicFilter.addEventListener('change', () => {
+                updateGraph(topicFilter.value);
+            });
+    
+            // Initialize the graph with 'Not Timed' test data
+            updateGraph('all');
+        });
+    </script>
+    
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get the data from the table
+            const tableData = document.querySelectorAll('#assignedtable tbody tr.completed');
+            const graphData = [];
+    
+            // Extract data from the table (completed tests)
+            for (let i = 0; i < Math.min(tableData.length, 15); i++) {
+
+                const row = tableData[i];
+                const className = row.cells[0].textContent;
+                const testName = row.cells[1].textContent;
+                const submittedDate = row.cells[4].textContent;
+                const percentage = parseFloat(row.cells[5].textContent);
+                graphData.push({ className, testName, submittedDate, percentage });
+            }
+    
+            // Reverse the graphData array
+            graphData.reverse();
+    
+            // Create a set of unique class names
+            const classNames = [...new Set(graphData.map(data => data.className))];
+    
+            // Populate the class filter dropdown with unique class names
+            const classFilter = document.getElementById('classDropdown');
+            classNames.forEach(className => {
+                const option = document.createElement('option');
+                option.value = className;
+                option.textContent = className;
+                classFilter.appendChild(option);
+            });
+    
+            let filteredData = [...graphData];
+    
+            // Function to update the graph based on the selected class
+            function updateGraph(className) {
+                filteredData = className === '' ? graphData : graphData.filter(data => data.className === className);
+                const submittedDates = filteredData.map(data => data.submittedDate);
+                const percentages = filteredData.map(data => data.percentage);
+    
+                lineGraph.data.labels = submittedDates;
+                lineGraph.data.datasets[0].data = percentages;
+                lineGraph.update();
+            }
+    
+            // Get the canvas and create a line graph
+            const ctx = document.getElementById('assignedlineGraph').getContext('2d');
+            const lineGraph = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Test Percentage',
+                        data: [],
+                        backgroundColor: 'rgba(106, 90, 205, 0.2)',
+                        borderColor: 'rgba(106, 90, 205, 1)',
+                        borderWidth: 2,
+                        tension: 0.2
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Submitted Date'
+                            },
+                            ticks: {
+                                maxRotation: 90,
+                                minRotation: 90
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Percentage'
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                const dataIndex = tooltipItem.index;
+                                const testName = filteredData[dataIndex].testName;
+                                return `Test Name: ${testName} | Submitted Date: ${tooltipItem.xLabel} | Percentage: ${tooltipItem.yLabel}%`;
+                            }
+                        }
+                    }
+                }
+            });
+    
+            // Add an event listener to the class filter dropdown
+            classFilter.addEventListener('change', () => {
+                updateGraph(classFilter.value);
+            });
+    
+            // Initialize the graph with all data
+            updateGraph('');
+        });
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get the data from the table
+            const tableData = document.querySelectorAll('#scores tbody tr');
+            const allData = [];
+            const uniqueTopics = new Set();
+    
+            // Extract data from the table (first 10 rows in reverse order)
+            for (let i = Math.min(tableData.length - 1, 14); i >= 0; i--) {
+                const row = tableData[i];
+                const testName = row.cells[1].textContent;
+                const topic = row.cells[2].textContent;
+                const date = row.cells[4].textContent;
+                const percentage = parseFloat(row.cells[5].textContent);
+                const isTimed = row.cells[6].textContent;
+    
+                // Check if the test is 'Not Timed'
+                if (isTimed === 'Timed') {
+                    allData.push({ testName, topic, date, percentage });
+                    uniqueTopics.add(topic);
+                }
+            }
+    
+            // Populate the topic filter dropdown with unique topic names
+            const topicFilter = document.getElementById('topicFilterTimed');
+            uniqueTopics.forEach(topic => {
+                const option = document.createElement('option');
+                option.value = topic;
+                option.textContent = topic;
+                topicFilter.appendChild(option);
+            });
+    
+            let filteredData = [...allData];
+    
+            // Function to update the graph based on the selected topic
+            function updateGraph(topic) {
+                filteredData = topic === 'all' ? allData : allData.filter(data => data.topic === topic);
+                const submittedDates = filteredData.map(data => data.date);
+                const percentages = filteredData.map(data => data.percentage);
+    
+                lineGraph.data.labels = submittedDates;
+                lineGraph.data.datasets[0].data = percentages;
+                lineGraph.update();
+            }
+    
+            // Get the canvas and create a line graph
+            const ctx = document.getElementById('timedGraph').getContext('2d');
+            const lineGraph = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Test Percentage',
+                        data: [],
+                        backgroundColor: 'rgba(205,133,63, 0.2)',
+                        borderColor: 'rgba(205,133,63, 1)',
+                        borderWidth: 2,
+                        tension: 0.2
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Submitted Date'
+                            },
+                            ticks: {
+                                maxRotation: 90,
+                                minRotation: 90
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Percentage'
+                            },
+                            min: 0,
+                            max: 100,
+                        }
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                const dataIndex = tooltipItem.index;
+                                const testName = filteredData[dataIndex].testName;
+                                return `Test Name: ${testName} | Submitted Date: ${tooltipItem.xLabel} | Percentage: ${tooltipItem.yLabel}%`;
+                            }
+                        }
+                    }
+                }
+            });
+    
+            // Add an event listener to the topic filter dropdown
+            topicFilter.addEventListener('change', () => {
+                updateGraph(topicFilter.value);
+            });
+    
+            // Initialize the graph with 'Not Timed' test data
+            updateGraph('all');
+        });
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+        integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
+        crossorigin="anonymous"></script>
+
+    <script src="/js/s_home.js"></script>
+    <!-- <script src="/js/s_home_assigned_table.js"></script> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.2/bootstrap-table.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.2/extensions/editable/bootstrap-table-editable.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.2/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+
+</body>
+
+</html>

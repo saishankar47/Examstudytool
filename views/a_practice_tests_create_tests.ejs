@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('t_head') %>
+  <%- include('a_header.ejs') %>
+  <body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/sp-2.1.2/sl-1.6.2/datatables.min.css" rel="stylesheet"/>
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/sp-2.1.2/sl-1.6.2/datatables.min.js"></script>
+    <link href="/css/s_learning_archive.css" rel="stylesheet">
+
+    <script src="https://cdn.tiny.cloud/1/57hyg5tgxtqqoxud9ulbtbpq7eba8ada4uz6zbt49e89bo44/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  
+    <script type="text/javascript" src="/js/plugin.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <!-- <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script> -->
+
+
+
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML"></script> MathJAX -->
+    <style>
+            body{
+              background-image: linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%);  
+            }
+            div .HiddenText {
+                display: none;
+                -webkit-font-smoothing: antialiased;
+            }
+            div .HiddenText1 {
+                display: none;
+                -webkit-font-smoothing: antialiased;
+            }
+            div .DivForHoverItem:hover .HiddenText {
+                display:block;
+            }
+            div .DivForHoverItem:hover .HiddenText1 {
+                display:block;
+            }
+            div .DivForHoverItem:hover .initialTextData {
+                display: none;
+            }
+            #hidden{
+                background-color: rgb(255, 255, 255);
+                width: 200px;
+                height: 65px;
+                /* border: 1px solid black; */
+                overflow: hidden;
+              }
+              .input-error {
+                border-color: red;
+              }
+    </style>  
+ 
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML"></script> 
+   <script>
+    let results = [];
+    $(document).ready(function () {
+      MathJax.Hub.Config({
+               tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+            });
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+            $('previewq').DataTable({
+                        'order': [[0, 'asc']],
+            });
+      });
+
+      
+   </script>
+  
+   <script>
+
+      $(document).ready(function () {
+        
+        let table2 = $('#assigntask2').DataTable({
+          
+                  'order': [[0, 'asc']],  
+                  columnDefs: [
+                    { width: 400, targets: 1 },
+                    { width: 100, targets: 2 },
+                    { width: 250, targets: 3 },
+                    { width: 250, targets: 4 }
+                ],
+                'drawCallback': function( settings ) {
+                      //  MathJax.Hub.Config({
+                      //     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                      //  });
+              
+                      MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+                  }
+    
+            });
+
+        let table = $('#assigntask').DataTable({
+            language: {
+                      searchPanes: {
+                          clearMessage: 'Obliterate Selections',
+                          collapse: {0: 'Filters', _: 'Filters (%d)'}
+                              }
+                    },   
+             buttons: [{ 
+                    extend: 'searchPanes',
+                    className: 'buttons-searchPanes',
+                              config: {
+                              cascadePanes: true,
+                              }
+                  }],
+              columnDefs: [{ 
+                          searchPanes: {
+                            show: true
+                            },
+                            targets: [2,3,4]
+                        },
+                        { width: 400, targets: 1 },
+                        { width: 100, targets: 2 },
+                        { width: 250, targets: 3 },
+                        { width: 250, targets: 4 }
+                      ],
+                dom: 'Bftrip',
+              'order': [[0, 'asc']],  
+                          'drawCallback': function( settings ) {
+        //  MathJax.Hub.Config({
+        //     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+        //  });
+ 
+         MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+     }
+              
+          });
+
+          $('#assigntask tbody').on('click', 'tr', function () {
+                  $(this).toggleClass('selected');
+                  let rows = table.rows('.selected').data();
+                  table2.destroy();
+                  table2 = $('#assigntask2').DataTable({
+                       'order': [[0, 'asc']],
+                       'drawCallback': function( settings ) {
+                      //  MathJax.Hub.Config({
+                      //     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                      //  });
+              
+                      MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+                  }   
+                  });
+            table2.clear().draw();
+            for(let ind = 0; ind<rows.length; ind+=1){
+              table2.row.add(rows[ind]).draw(); 
+            }
+          });
+          //  Assign button   
+          const assignBtn = document.querySelector('#assign-button');
+
+          assignBtn.addEventListener('click', () => {
+                let rows = table.rows('.selected').data();  
+                let questionIds = [];
+                rows.each(function(rowData) {
+                  const questionId = rowData[0];
+                    if (!questionIds.includes(questionId)) {
+                      questionIds.push(questionId);
+                    }
+                });
+                if (!questionIds || questionIds.length === 0) {
+                    alert("Please select at least one question.");
+                    return;
+                  }
+                const assignmentName = document.getElementById("assignment-name").value;
+                const topic = document.getElementById("topic-name").value;
+                const sub_topic = document.getElementById("sub-topic").value;
+                const coursevalue = document.getElementById("course-value").value;
+              
+                
+                if (!assignmentName || !coursevalue  || !topic || !sub_topic) {
+  let errorMessage = "Please provide the following details: ";
+  if (!assignmentName) {
+    errorMessage += "assignment name, ";
+    document.getElementById("assignment-name").classList.add("input-error");
+    document.getElementById("assignment-name").focus();
+  } else {
+    document.getElementById("assignment-name").classList.remove("input-error");
+  }
+  if (!coursevalue) {
+    errorMessage += "course value, ";
+    if (!document.activeElement || document.activeElement.tagName.toLowerCase() != 'input') {
+      document.getElementById("course-value").classList.add("input-error");
+      document.getElementById("course-value").focus();
+    }
+  } else {
+    document.getElementById("course-value").classList.remove("input-error");
+  }
+  
+  if (!topic) {
+    errorMessage += "topic name, ";
+    if (!document.activeElement || document.activeElement.tagName.toLowerCase() != 'select') {
+      document.getElementById("topic-name").classList.add("input-error");
+      document.getElementById("topic-name").focus();
+    }
+  } else {
+    document.getElementById("topic-name").classList.remove("input-error");
+  }
+  if (!sub_topic) {
+    errorMessage += "subtopic name, ";
+    if (!document.activeElement || document.activeElement.tagName.toLowerCase() != 'select') {
+      document.getElementById("sub-topic").classList.add("input-error");
+      document.getElementById("sub-topic").focus();
+    }
+  } else {
+    document.getElementById("sub-topic").classList.remove("input-error");
+  }
+  errorMessage = errorMessage.slice(0, -2) + "."; // remove last ", " and add a "."
+  alert(errorMessage);
+  return;
+}
+
+            
+               
+                const data = { questionIds,assignmentName,coursevalue,topic,sub_topic};
+                console.log("data1",data)
+                if(questionIds.length!=0 )
+                {
+                  console.log(data);
+                  fetch('/admin/newtests1', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(data)
+                })
+                .then(response => {
+                    // handle response from server
+                    if (response.ok) {
+                      
+                    } else {
+                      throw new Error('Network response was not ok.');
+                    }
+                  })
+                  .then(data => {
+                    // redirect to the next route
+                    window.location.href = `/admin/tests`;
+                  })
+                  .catch(error => {
+                    // handle error
+                  });
+                }
+               
+              });
+
+ //Assign button
+ let previewModal;
+
+       const preview1 = document.querySelector('#preview-button1');
+
+       preview1.addEventListener('click', () => {
+  let rows = table.rows('.selected').data();
+  let questionIds = [];
+  rows.each(function(rowData) {
+    const questionId = rowData[0];
+    if (!questionIds.includes(questionId)) {
+      questionIds.push(questionId);
+    }
+  });
+  
+  const data = { questionIds };
+  console.log(data);
+  if (questionIds.length != 0) {
+    fetch('/admin/practicepreview', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        const questionContainer = document.getElementById('question-container1');
+        questionContainer.innerHTML = '';
+        data.forEach((question) => {
+          const questionElement = document.createElement('div');
+          questionElement.className = 'question-item';
+          questionElement.innerHTML = `
+            <div class="row">
+              <div class="col border-end">
+                <div class="row" style="padding: 10px;">
+                  <p class="fw-bold" id="newline">
+                    ${question.question}
+                    <div>
+                      <img src="${question.question_url}" class="img-fluid" alt="">
+                    </div>
+                  </p>
+                  <div>
+                    <input type="radio">
+                    <input type="radio">
+                    <input type="radio">
+                    <input type="radio">
+                    <label for="one" class="box first">
+                      <div class="course">
+                        <span class="circle"></span>
+                        <span class="subject">A. ${question.option_1}</span>
+                      </div>
+                    </label>
+                    <label for="two" class="box second">
+                      <div class="course">
+                        <span class="circle"></span>
+                        <span class="subject">B. ${question.option_2}</span>
+                      </div>
+                    </label>
+                    <label for="three" class="box third">
+                      <div class="course">
+                        <span class="circle"></span>
+                        <span class="subject">C. ${question.option_3}</span>
+                      </div>
+                    </label>
+                    <label for="four" class="box forth">
+                      <div class="course">
+                        <span class="circle"></span>
+                        <span class="subject">D. ${question.option_4}</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+          questionContainer.appendChild(questionElement);
+        });
+
+        // Add MathJax script
+        const mathJaxScript = document.createElement('script');
+        mathJaxScript.type = 'text/javascript';
+        mathJaxScript.text = `
+          MathJax.Hub.Config({
+            tex2jax: {
+              inlineMath: [['$','$'], ['\\(','\\)']]
+            },
+            "HTML-CSS": { linebreaks: { automatic: true } },
+            SVG: { linebreaks: { automatic: true } }
+          });
+          MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        `;
+        questionContainer.appendChild(mathJaxScript);
+      })
+      .catch((error) => {
+        // handle error
+      });
+  }
+});
+
+                 
+            document.querySelector('.btn-close').addEventListener('click', () => {
+              if (previewModal) {
+                previewModal.hide();
+              }
+            });
+            document.getElementById('close-modal-btn').addEventListener('click', () => {
+              if (previewModal) {
+                previewModal.hide();
+              }
+              
+            });
+
+});
+</script>
+  <script>
+    $(document).ready(function() {
+      // Add event listener to checkbox
+      $('#timed-assignment').change(function() {
+        if ($(this).is(':checked')) {
+          // Show countdown timer input field
+          $('#due-date').prop('required', false);
+          $('#due-date').show();
+          $('#countdown-timer').show();
+          $('#countdown-time').prop('required', true);
+        } else {
+          // Show due date input field
+          $('#due-date').prop('required', true);
+          $('#due-date').show();
+          $('#countdown-timer').hide();
+          $('#countdown-time').prop('required', false);
+        }
+      });
+   
+    });
+</script>
+
+  <script>
+$(document).ready(function() {
+    $("#course-value").on("change", function() {
+        var courseValue = $("#course-value").val();
+        if (courseValue) {
+            $.ajax({
+                url: "/admin/getTopics",
+                type: "POST",
+                data: {course: courseValue},
+                dataType: "json",
+                success: function(data) {
+                  console.log(data)
+                    $("#topic-name").empty();
+                    $("#topic-name").append('<option value="" selected disabled>Select a Topic</option>');
+                    $.each(data, function(key, value) {
+                      $("#topic-name").append('<option value="' + value + '">' + value + '</option>');
+                });
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+      }
+        // Load sub-topics based on selected topic and course
+        $("#topic-name").change(function() {
+            var topicValue = $(this).val();
+            $.ajax({
+                url: "/admin/getSubTopics",
+                type: "POST",
+                data: {course: courseValue, topic: topicValue},
+                dataType: "json",
+                success: function(data) {
+                    $("#sub-topic").empty();
+                    $("#sub-topic").append('<option value="" selected disabled>Select a Sub-Topic</option>');
+                    $.each(data, function(key, value) {
+                        $("#sub-topic").append('<option value="' + value.sub_topic + '">' + value.sub_topic + '</option>');
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+          })
+        });
+      });
+
+</script>
+
+   
+    <!-- header -->
+    <div class="container-xl">
+      <div class="row">
+        <div class="col shadow p-4 mb-5 bg-white rounded">
+          <div class="row">
+            <div class="col">
+             
+              <a href="/admin/tests" >  <button class="btn btn-dark"; type="button" >
+                <i class="fa fa-arrow-left"> </i>
+              </button>
+              </a>
+           </div>
+
+            <div class="col-12"><h4 style="text-align: center;">Creating New Practice Test</h4></div>
+          </div>
+          
+          <div class="row">
+            
+            <div class="row">
+              <div class="col-5">
+                  <div class="input-group mb-3">
+                      <label for="assignment-name" class="input-group-text">Assignment Name: <span class="text-danger">*</span></label>
+                      <input type="text" id="assignment-name" class="form-control" aria-label="Assignment Name" placeholder="Assignment Name" required>
+                      <div class="invalid-feedback">
+                          Please enter an assignment name.
+                      </div>
+                  </div>
+              </div>
+              <div class="col-4">
+                  <div class="input-group mb-3">
+                      <label for="course-value" class="input-group-text"><span class="text-danger">*</span> Course:</label>
+                      <select id="course-value" class="form-select" aria-label="Course Name" required>
+                          <option value="" selected disabled>Select a course value</option>
+                          <% for (let i=0; i < data1.length; i++){ %>
+                              <option value="<%= data1[i].course %>"><%= data1[i].course %></option>
+                          <% } %>
+                      </select>
+                      <div class="invalid-feedback">
+                          Please select a course.
+                      </div>
+                  </div>
+              </div>
+            
+          </div>
+          <div class="row">
+              <div class="col">
+                  <div class="input-group mb-3">
+                      <label for="topic-name" class="input-group-text"><span class="text-danger">*</span> Topic:</label>
+                      <select id="topic-name" class="form-select" aria-label="Topic Name" required>
+                          <option value="" selected disabled>Select a Topic</option>
+                      </select>
+                      <div class="invalid-feedback">
+                          Please select a Topic name.
+                      </div>
+                  </div>
+              </div>
+              <div class="col">
+                  <div class="input-group mb-3">
+                      <label for="sub-topic" class="input-group-text"><span class="text-danger">*</span> Sub-Topic:</label>
+                      <select id="sub-topic" class="form-select" aria-label="Sub-Topic" required>
+                          <option value="" selected disabled>Select a Sub-Topic</option>
+                      </select>
+                      <div class="invalid-feedback">
+                          Please select a Sub-Topic name.
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+
+          <style>
+            hr.dotted {
+              border-top: 3px dotted #bbb;
+            }
+          </style>  
+          <hr class="dotted"> 
+          <br><br>
+          <div class="row" >
+            <h5 style="padding: 0%;"><small>Questions to be selected</small> </h5>
+            <div class="col-sm">
+            
+              <div class="row" style="background-color:aliceblue">
+                <div class="col-sm">
+                  
+                  <table class="display compact cell-border" id="assigntask" style="font-size: small;">
+                    <thead>
+                      <tr>
+                       
+                        <th ></th>
+                        <th scope="col">Question</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Topic</th>
+                        <th scope="col">Sub-Topic</th>
+                        <th scope="col">Month</th>
+                        <th scope="col">Year</th>
+                        <!-- <th scope="col">Standard</th>
+                        <th scope="col">Difficulty</th> -->
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                      <% for (let i=0; i < data0.length; i++){ %>
+                      <tr class="text-capitalize">
+                        <td ><%- data0[i].question_id %></td>
+                       
+                        <td>
+                          <% if(data0[i].question.length>350) {%>
+                          <% if(data0[i].question.includes("<math")){%>
+                              <%-data0[i].question.replace(/^<p>|<\/p>$/g, '').replace(/<\/?math[^>]*>/g, '').slice(0,50)  %>
+                          <% }else{ %>
+                              <%- data0[i].question.slice(0,350)  %>
+                              <% }}else{ %>
+                                  <%- data0[i].question  %>
+                                  <% } %>
+                            <%if(data0[i].question_url!=null){%>
+                              <img src="<%=data0[i].question_url%>">
+                              <%}%>
+                      </td> 
+                        <td><%= data0[i].course %></td>
+
+                        <td><%= data0[i].topic %></td>
+                        <td><%= data0[i].sub_topic %></td>
+                        <td><%= data0[i].month %></td>
+                        <td><%= data0[i].year %></td>
+                        <!-- <td><%= data0[i].standard %></td>
+                        <td><%= data0[i].difficulty %></td> -->
+                      </tr>
+                      <% } %>
+                    </tbody>
+                 
+                  </table>
+                </div>
+                
+              </div>
+            </div>
+       
+          </div>
+
+        <!-- container -->
+       
+        <style>
+          hr.dotted {
+            border-top: 3px dotted #bbb;
+          }
+      </style>  
+      <hr class="dotted"> 
+     
+      
+          <div class="row">
+            <div class="col">
+              <table class="display  cell-border" id="assigntask2" style="font-size: small;" >
+                <thead>
+                  <tr>
+                    <th ></th>
+                    <th scope="col">Question</th>
+                    <th scope="col">Course</th>
+                    <th scope="col">Topic</th>
+                    <th scope="col">Sub-Topic</th>
+                    <th scope="col">Month</th>
+                    <th scope="col">Year</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                </tbody>
+              </table>
+            </div>
+            
+          </div>
+       
+        <br>
+        <div class="row">
+        <div class="col-4"></div><div class="col-4 center">
+
+          
+            <div class="btn-group " role="group" aria-label="First group">
+              <a href="/admin/tests" > <button type="button" class="btn btn-primary">Cancel</button></a>
+              
+            </div>
+            
+            <div class="btn-group" role="group" aria-label="Third group">
+              <button id="preview-button1" type="button"   class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Preview Assignment</button>
+            </div>
+            
+            <div class="btn-group" role="group" aria-label="Third group">
+              <button type="button" id="assign-button" class="btn btn-primary">Assign</button>
+            </div>
+ 
+        </div><div class="col-4"></div>
+        </div>
+  
+</div>
+</div>
+
+
+
+    </div>
+     
+<!-- modal -->
+<div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Preview Questions</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <div id="question-container1">
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" data-bs-dismiss="modal" id="close-modal-btn" class="btn btn-secondary" >Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- modal -->
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  
+
+
+<div style="flex-grow:1"></div>
+<%- include('t_footer.ejs') %>
+  </body>
+
+ 
+
+  </html>

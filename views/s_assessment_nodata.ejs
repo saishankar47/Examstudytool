@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Exam Study Tool</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/s_index.css" rel="stylesheet">
+    <link href="/css/s_learning_archive.css" rel="stylesheet">
+
+
+    <style>
+
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #F1F1F7;/* Add a background color to the footer */
+}
+
+.nav-item.active .nav-link {
+    color: white !important;
+    border-bottom: 3px solid white !important;
+  }
+
+    </style>
+    
+</head>
+
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/student">Exam Study Tool</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" style="border-left: 1px solid darkgray; " id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        <li class="nav-item">
+                            <a class="nav-link" style="padding-left: 15px;" aria-current="page" href="/student">HOME</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">LEARNING</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/student/learning/topic">TOPICS</a></li>
+                                <li><a class="dropdown-item" href="/student/learning/archive">TEST ARCHIVE</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item active dropdown">
+                            <a class="nav-link dropdown-toggle " href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">ASSESSMENT</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/student/assessment/assigned">ASSIGNED BY TEACHER</a>
+                                </li>
+                                <li><a class="dropdown-item" href="/student/assessment/tests">PRACTICE TESTS</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/student/profile"><i
+                                    style="padding-right: 4px;" class="fa fa-user"></i>
+                                <%= user.user_name %>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">LOGOUT</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="container d-flex align-items-center justify-content-center">
+            <h3 class="mb-4 display-5 text-center row" style="padding: 50px; padding-top:120px;">
+                There aren't any questions on this test.
+            </h3>
+        </div>
+        <div class="container d-flex align-items-center justify-content-center">
+            <img src="/images/sad.gif" alt="No Questions" class="img-fluid mt-3 row" style="max-width: 300px;">
+        </div>
+    </main>
+
+    
+    
+    
+    
+    
+    <footer class="footer fixed-footer bg-dark text-light d-flex flex-wrap justify-content-between align-items-center py-3 border-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 item">
+                  <p class="copyright">Exam Study Tool © 2023</p>
+                </div>
+                <div class="col-md-1 item text">
+                        <a class="text-light" style="text-decoration: none;" href="#">Home</a>
+                </div>
+                <div class="col-md-1 item text">
+                        <a class="text-light" style="text-decoration: none;" href="#">Contact</a>
+                </div>
+                <div class="col-md-2 item text">
+                        <a class="text-light" style="text-decoration: none;" href="#">Terms and Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>    
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

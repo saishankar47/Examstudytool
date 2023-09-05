@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script type="application/javascript" src="/javascripts/a_requests_questions.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML"></script> 
+<script>
+    $(document).ready(function () {
+   MathJax.Hub.Config({
+            tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+         });
+         MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        
+   });
+   </script>
+    <style>
+        .reddot {
+            height: 10px;
+            width: 10px;
+            background-color: red;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .greendot {
+            height: 10px;
+            width: 10px;
+            background-color: green;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+    <%- include('a_head.ejs') %>
+
+</head>
+
+<body>
+    <script>
+        var refResults = JSON.parse('<%- JSON.stringify(refResults) %>');
+    </script>
+    <%- include('a_header.ejs') %>
+
+        <div style="background-color:#f1f1f7; background-image: linear-gradient(to bottom, #e6e6e6, #f2f2f2);">
+            <br><br>
+
+            <div class="container" style="max-width: fit-content;">
+                <div class="row">
+                    <div class="col-md-12">&nbsp;</div>
+                </div>
+
+                <div class="row">
+                    <div class="col shadow p-3 mb-3 bg-light rounded">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-md-12" align="center">
+                                        <h5><i class="fa fa-paper-plane"></i>&nbsp;Question Approval Requests</h5>
+                                    </div>
+                                </div>
+                            </div>
+                         
+                        <div class="card-body">
+                            <div class="container">
+
+
+                                <script>
+                                    $(document).ready(function() {
+                                        $('#questionTable').DataTable({
+                                            order: [
+                                                [1, 'desc']
+                                            ],
+                                            'drawCallback': function( settings ) {
+                                                    //  MathJax.Hub.Config({
+                                                    //     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                                                    //  });
+                                            
+                                                    MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
+                                                }
+                                        });
+                                    });
+                                </script>
+                                <div class="row">
+
+                                    <div class="col-md-12" align="center">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-hover display" id="questionTable" style="font-size:small; margin-bottom: 2px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Raised By</th>
+                                                        <th scope="col">Question</th>
+                                                        <!-- <th scope="col">Option 1</th>
+                                        <th scope="col">Option 2</th>
+                                        <th scope="col">Option 3</th>
+                                        <th scope="col">Option 4</th> -->
+                                                        <!-- <th scope="col">Answer</th> -->
+                                                        <th scope="col">Date</th>
+                                                        <th scope="col">Standard</th>
+                                                        <th scope="col">Course</th>
+                                                        <!-- <th scope="col">Question Url</th>
+                                        <th scope="col">Answer Url</th> -->
+                                                        <th scope="col">Year</th>
+                                                        <th scope="col">Month</th>
+                                                        <th scope="col">Topic</th>
+                                                        <th scope="col" style="writing-mode: horizontal-tb !important;">
+                                                            Sub Topic
+                                                        </th>
+                                                        <th scope="col"> Approval</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% for(var i=0;i<results.length;i++) {%>
+                                                        <tr>
+                                                            <td scope="row">
+                                                                <%= (i+1) %>
+                                                            </td>
+                                                            <td scope="">
+                                                                <%= results[i].user_name %>
+                                                            </td>
+                                                            <td>
+                                                                <% if(results[i].question.length>350) {%>
+                                                                    <% if(results[i].question.includes("<math")){%>
+                                                                        <%=results[i].question.replace(/^<p>|<\/p>$/g, '').replace(/<\/?math[^>]*>/g, '').slice(0,50)  %>
+                                                                    <% }else{ %>
+                                                                        <%- results[i].question.slice(0,350)  %>
+                                                                        <% }}else{ %>
+                                                                            <%- results[i].question  %>
+                                                                            <% } %>
+                                                            </td>
+                                                            <!-- <td>
+                                                                <%= results[i].answer %>
+                                                            </td> -->
+                                                            <td scope="">
+                                                                <%= results[i].created_date1 %>
+                                                            </td>
+                                                            <td>
+                                                                <%= results[i].standard %>
+                                                            </td>
+                                                            <td>
+                                                                <%= results[i].course %>
+                                                            </td>
+                                                            <td>
+                                                                <%= results[i].year %>
+                                                            </td>
+                                                            <td>
+                                                                <%= results[i].month %>
+                                                            </td>
+                                                            <td>
+                                                                <%= results[i].topic %>
+                                                            </td>
+                                                            <td>
+                                                                <%= results[i].sub_topic %>
+                                                            </td>
+                                                            <td><button data-bs-toggle="modal" onclick="gettransilation('<%= results[i].question_id %>')" data-bs-target="#editquestion" class="btn btn-secondary btn-sm"><i
+                                                                        class="fa fa-eye"></i>&nbsp;<%=
+                                                                        results[i].approval %></button></td>
+                                                        </tr>
+                                                        <% } %>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                               
+                        </div>
+ 
+                        <br>
+                    </div>
+
+
+
+
+                    <!-- Button trigger modal -->
+
+
+                    <!-- Modal -->
+
+                    <div class="modal fade" id="editquestion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl" role="document">
+                            <div class="modal-content" style="font-size: small;">
+                                <div class="modal-header">
+                                    <h5 class="modal-title fs-5" id="exampleModalLabelToggleEditOrAdd">Question Approval Request (Read Only)</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="editQuestionModalBody">
+                                    <!-- <h6 style="text-align: center;">Question Informantion</h6> -->
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" onclick="rejectQuestion()" data-bs-dismiss="modal">Reject</button>
+                                    <button type="submit" value="submit" class="btn btn-success" onclick="approveQuestion()"> <i class="fa fa-check"></i> &nbsp;Approve</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+            </div>
+        </div>
+        
+        <%- include('a_footer.ejs') %>
+
+</body>
+
+</html>

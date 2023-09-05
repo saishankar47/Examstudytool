@@ -1,0 +1,154 @@
+{
+    "main_topics":
+        [
+            {
+            "name": "Algebra1",
+            "topics":
+                [
+                    {
+                    "name": "NUMBERS, OPERATIONS AND PROPERTIES",
+                    "sub_topics":
+                        [
+                            {
+                            "name": "Order of Operations",
+                            "under_sub_topics":
+                                [
+                                    {
+                                    "name": "Order of Operations 1a"
+                                    },
+                                    {
+                                    "name": "Order of Operations 1b"
+                                    }
+                                ]
+                            },
+                            {
+                            "name": "Evaluating Expressions",
+                            "under_sub_topics":
+                                [
+                                    {
+                                    "name": "Under Sub-Topic 1.1.2.1"
+                                    },
+                                    {
+                                    "name": "Under Sub-Topic 1.1.2.2"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                    "name": "EXPRESSIONS AND EQUATIONS",
+                    "sub_topics":
+                        [
+                            {
+                            "name": "Dependent and Independent Variables",
+                            "under_sub_topics":
+                                [
+                                    {
+                                    "name": "Regents-Modeling Expressions 1"
+                                    },
+                                    {
+                                    "name": "Regents-Modeling Expressions 1"
+                                    }
+                                ]
+                            },
+                            {
+                            "name": "Sub-Topic 1.2.2",
+                            "under_sub_topics":
+                                [
+                                    {
+                                    "name": "Under Sub-Topic 1.2.2.1"
+                                    },
+                                    {
+                                    "name": "Under Sub-Topic 1.2.2.2"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+            "name": "Main Topic 2",
+            "topics":
+                [
+                    {
+                    "name": "Topic 2.1",
+                    "sub_topics":
+                        [
+                            {
+                            "name": "Sub-Topic 2.1.1",
+                            "under_sub_topics":
+                                [
+                                    {
+                                    "name": "Under Sub-Topic 2.1.1.1"
+                                    },
+                                    {
+                                    "name": "Under Sub-Topic 2.1.1.2"
+                                    }
+                                ]
+                            },
+                            {
+                            "name": "Sub-Topic 2.1.2",
+                            "under_sub_topics":
+                                [
+                                    {
+                                    "name": "Under Sub-Topic 2.1.2.1"
+                                    },
+                                    {
+                                    "name": "Under Sub-Topic 2.1.2.2"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                    "name": "Topic 2.2",
+                    "sub_topics":
+                        [
+                            {
+                            "name": "Sub-Topic 2.2.1",
+                            "under_sub_topics":
+                                [
+                                    {
+                                    "name": "Under Sub-Topic 2.2.1.1"
+                                    },
+                                    {
+                                    "name": "Under Sub-Topic 2.2.1.2"
+                                    }
+                                ]
+                            },
+                            {
+                            "name": "Sub-Topic 2.2.2",
+                            "under_sub_topics":
+                                [
+                                    {
+                                    "name": "Under Sub-Topic 2.2.2.1"
+                                    },
+                                    {
+                                    "name": "Under Sub-Topic 2.2.2.2"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+    "preferred_languages":
+        [
+        "English",
+        "Arabic",
+        "Spanish",
+        "Bengali",
+        "Simplified",
+        "Traditional",
+        "Haitian Creole ",
+        "Korean",
+        "Russian"
+        ],
+    "schools_list":
+        [
+        "City Honors School at Fosdick Masten Park",
+        "Williamsville East High School"
+        ]
+    }

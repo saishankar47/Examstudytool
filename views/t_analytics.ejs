@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('t_head.ejs') %>
+<body>
+    <style>
+        body{
+          background-image: linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%);
+          
+        }
+  
+      </style>
+<header>
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/teacher">Exam Study Tool</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" style="border-left: 1px solid darkgray; " id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                    <li class="nav-item">
+                        <a class="nav-link" style="padding-left: 15px;color: blue;" aria-current="page" href="/teacher">Class</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " style="padding-left: 15px;" aria-current="page" href="/teacher/questions">Questions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/teacher/status" >Status</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" aria-current="page" href="#"><i style="padding-right: 4px;"
+                                class="fa fa-user"></i>USERNAME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">LOGOUT</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br>
+</header>
+<script>
+    $(document).ready(function () {
+     
+         $('#example1').dataTable({
+            order: [[0, 'asc']],
+        });
+        
+    });
+</script>
+
+  <style>
+    hr.dotted {
+      border-top: 3px dotted #bbb;
+    }
+</style>  
+<hr class="dotted"> 
+  
+
+    <div class="container-xl">
+    <div class="row">
+        <div class="col shadow p-3 mb-5 bg-white rounded">
+            <div class="row">
+                <div class="col">
+                    <div class="col">
+                        <a href="/teacher" >  <button class="btn btn-dark"; type="button" >
+                          <i class="fa fa-arrow-left"> </i>
+                        </button>
+                        </a>
+                    </div>
+                        <div class="col-12"><h4 style="text-align: center;">"<%=class_name%>" Analytics</h4></div>
+                </div>
+            </div>
+        
+          <br>
+          <!-- Table -->
+          <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="display center" id="example1"  style="width:100%">
+          
+                        <thead>
+                              <tr>
+                                  <th>Test Name</th>
+                                  <th>Date Assigned</th>
+                                  <th>Due Date</th>
+                                  <th>Class Average</th>
+                                  <th>Total No. of Questions</th>
+                                  <th>Number of Students attempted</th>
+                                  <th>Not attempted</th>
+                              </tr>
+                          </thead>
+                          
+                          <tbody>
+                            <% for (let i=0; i < data0.length; i++){ %>
+                            <tr class="text-capitalize">
+                              <td><%=data0[i].test_name%></td>
+                              <td><%=data0[i].created_date%></td>
+                              <td><%=data0[i].due_date%></td>
+                              <td><%=data0[i].avg_score%></td>
+                              <td><%=data0[i].total%></td>
+                              <td><%=data0[i].num_attempted%></td>
+                              <td><%=data0[i].not_attempted_count%></td>
+                            </tr>
+                            <% } %>
+                          </tbody>
+                          
+                      
+                  </table>
+              </div>
+            </div>
+           </div>
+           <!-- Table -->
+        </div>
+    </div>
+    </div>
+
+
+
+
+ 
+   
+    <br><br><br>
+    <div style="flex-grow:1"></div>
+    <%- include('t_footer.ejs') %>
+</body>
+
+
+
+</html>

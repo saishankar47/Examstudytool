@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('t_head.ejs') %>
+  <%- include('a_header.ejs') %>
+<body>
+
+
+<script>
+    $(document).ready(function () {
+     
+         $('#example1').dataTable({
+            order: [[0, 'asc']],
+        });
+        
+    });
+</script>
+<div class="row">
+    <div class="col">
+        <div class="col">
+            <a href="/admin/student" >  <button class="btn btn-dark"; type="button" >
+              <i class="fa fa-arrow-left"> </i>
+            </button>
+            </a>
+        </div>
+            <div class="col-12"><h4 style="text-align: center;">"<%=student_name%>" Analytics</h4></div>
+    </div>
+</div>
+  <style>
+    hr.dotted {
+      border-top: 3px dotted #bbb;
+    }
+</style>  
+<hr class="dotted"> 
+  <br><br>
+
+    <div class="container-xl">
+    <div class="row">
+        <div class="col shadow p-3 mb-5 bg-white rounded">
+          
+        
+          <br>
+          <!-- Table -->
+          <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="display" id="example1"  style="width:100%">
+          
+                        <thead>
+                              <tr>
+                                <th>#</th>
+                                  <th>Assignment Name</th>
+                                  <!-- <th>View</th> -->
+                                  <th>Date Assigned</th>
+                                  <th>Due Date</th>
+                                  <th>Score</th>
+                                  <!-- <th>Total No. of Questions</th> -->
+                                  <th>Percentage</th>
+                                 
+                                 
+                              </tr>
+                          </thead>
+                          
+                          <tbody>
+                            <% for (let i=0; i < data0.length; i++){ %>
+                            <tr>
+                                <td><%=i+1%></td>
+                              <td><%=data0[i].test_name%></td>
+                              <!-- <td><a href=""><img src="https://cdn-icons-png.flaticon.com/128/8347/8347446.png" class="center" alt="View Task" width="24" height="24"></a></td> -->
+                   
+                              <td><%=data0[i].created_date%></td>
+                              <td><%=data0[i].due_date%></td>
+                                 <% if(data0[i].score!=null){ %>
+                              <td><%=data0[i].score%>/<%=data0[i].question_count%></td>
+                                <%}else{%>
+                                <td>Not Attempted</td>
+                                <%}%>
+                                <!-- <td><%=data0[i].question_count%></td> -->
+                             
+                              <td><%=data0[i].percentage%></td>
+                             
+                            </tr>
+                            <% } %>
+                          </tbody>
+                          
+                      
+                  </table>
+              </div>
+            </div>
+           </div>
+           <!-- Table -->
+        </div>
+    </div>
+    </div>
+
+
+
+
+ 
+   
+    <br><br><br>
+    <div style="flex-grow:1"></div>
+    <%- include('a_footer.ejs') %>
+</body>
+
+
+
+</html>
