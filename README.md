@@ -1,4 +1,4 @@
-# Examstudytool
+# Examstudytool (https://www.examstudytool.com/)
 
 Developed a comprehensive web platform enabling students and teachers to engage in effective exam preparation, utilizing multilingual support for tests and English translation.Facilitated teacher capabilities to create customizable tests, classes, and question sets using TinyMCE, thereby enriching the learning experience for students.
 Leveraged ExpressJS for efficient back-end request handling and deployed the application on AWS EC2, ensuring reliable and scalable cloud-based hosting.Implemented a secure and user-friendly login system by integrating Google OAuth.
